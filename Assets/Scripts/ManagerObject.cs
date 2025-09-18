@@ -1,4 +1,3 @@
-using UnityEditor;
 using UnityEngine;
 
 public class ManagerObject : MonoBehaviour
@@ -6,6 +5,7 @@ public class ManagerObject : MonoBehaviour
     public static ManagerObject instance;
     public MapManager mapManager = new MapManager();
     public ResourceManager resourceManager = new ResourceManager();
+    public InputManager inputManager = new InputManager();
 
     private void Awake()
     {
@@ -37,6 +37,6 @@ public class ManagerObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        inputManager.OnUpdate();
     }
 }

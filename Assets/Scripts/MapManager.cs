@@ -1,105 +1,92 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
 public class MapManager
 {
-    private HexBlock[,] board;
-    private Transform boardRoot;
-    private LevelDef level;
+    private List<List<GameObject>> board = new List<List<GameObject>>();
+    private JSONVars level;
 
-    private const float xStep = 0.9f;
-    private const float yStep = 0.78f;
+    private const float xStep = 0.6f;
+    private const float yStep = 0.7f;
 
-    // 배치 후 중앙블록(=보드 무게중심에 가장 가까운 블록)을 0,0으로 이동하기 위해 보관
-    private readonly List<(Transform t, Vector3 lp)> placed = new List<(Transform, Vector3)>();
+    private int maxX =-1;
+    private int maxY = -1;
 
     public void OnAwake()
     {
-        var res = ManagerObject.instance.resourceManager;
-        if (res == null || res.mapJSON == null || string.IsNullOrEmpty(res.mapJSON.text)) return;
-
-        level = JsonUtility.FromJson<LevelDef>(res.mapJSON.text);
-
-        var rootObj = GameObject.Find("BoardRoot");
-        if (rootObj == null) rootObj = new GameObject("BoardRoot");
-        boardRoot = rootObj.transform;
-
-        for (int i = boardRoot.childCount - 1; i >= 0; i--)
-            Object.DestroyImmediate(boardRoot.GetChild(i).gameObject);
-
-        board = new HexBlock[level.width, level.height];
-        placed.Clear();
-
-        BuildBoardFromJson(level);
-
-        // 중앙 블록을 (0,0)에 두도록 오프셋 적용 (맵 구조는 그대로)
+        //JSON 읽기
+        level = JsonUtility.FromJson<JSONVars>(ManagerObject.instance.resourceManager.mapJSON.text);
+        
+        setBlocks();
+        setBlocksBack();
         MoveMiddleBlockToOrigin();
     }
 
-    private void BuildBoardFromJson(LevelDef def)
+    private void setBlocks()
     {
-        var res = ManagerObject.instance.resourceManager;
-        if (res.blockPrefab == null) return;
-
-        foreach (CellDef cell in def.cells)
+        foreach (var cell in level.grids)
         {
-            int r = cell.r, c = cell.c;
-            if (!InBounds(c, r, def.width, def.height)) continue;
+            // 행 확장
+            while (board.Count <= cell.y)
+                board.Add(new List<GameObject>());
 
-            Vector3 lp = HexToLocal(c, r);
+            // 열 확장
+            while (board[cell.y].Count <= cell.x)
+                board[cell.y].Add(null);
 
-            GameObject go = Object.Instantiate(res.blockPrefab, boardRoot);
-            go.transform.localPosition = lp;
-            go.name = $"r{r}c{c}";
+            // 부모 오브젝트 없으면 생성
+            if (board[cell.y][cell.x] == null)
+            {
+                board[cell.y][cell.x] = Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab);
+                Object.Instantiate(ManagerObject.instance.resourceManager.blockBackPrefab, board[cell.y][cell.x].transform);
+            }
+            // 블록 생성 (부모 = parentObject)
+            Object.Instantiate(
+                ManagerObject.instance.resourceManager.blockPrefab,
+                board[cell.y][cell.x].transform
+            );
 
-            var b = go.GetComponent<HexBlock>();
-            if (b != null && cell.color >= 0) b.SetColor(cell.color);
-
-            board[c, r] = b;
-            placed.Add((go.transform, lp));
+            // 좌표/이름 지정
+            Vector3 lp = new Vector3(
+                cell.x * xStep,
+                -cell.y * yStep + ((cell.x % 2 == 1) ? yStep * 0.5f : 0f), //유니티는 y좌표가 오를 수록 위로 가기 때문에 배열 상 11시 방향부터 아래로 내려오도록
+                0f
+            );
+            board[cell.y][cell.x].transform.localPosition = lp;
+            board[cell.y][cell.x].name = $"r{cell.y}c{cell.x}";
         }
     }
 
-    // 보드의 무게중심을 구하고, 그 점에 가장 가까운 블록을 (0,0)으로 이동시키는 오프셋 적용
+    private void setBlocksBack()
+    {
+
+    }
+
+
     private void MoveMiddleBlockToOrigin()
     {
-        if (placed.Count == 0) return;
+        var allBlocks = board.SelectMany(row => row).Where(go => go != null).ToList();
+        if (allBlocks.Count == 0) return;
 
-        // 1) 무게중심(로컬)
+        // 무게중심
         Vector2 centroid = Vector2.zero;
-        foreach (var p in placed) centroid += (Vector2)p.lp;
-        centroid /= placed.Count;
+        foreach (var go in allBlocks)
+            centroid += (Vector2)go.transform.localPosition;
+        centroid /= allBlocks.Count;
 
-        // 2) 무게중심에 가장 가까운 블록 선택(= 중앙 블록)
-        int midIdx = 0;
-        float best = float.PositiveInfinity;
-        for (int i = 0; i < placed.Count; i++)
-        {
-            float d = Vector2.SqrMagnitude((Vector2)placed[i].lp - centroid);
-            if (d < best) { best = d; midIdx = i; }
-        }
+        // 중앙 블록 탐색
+        GameObject midBlock = allBlocks
+            .OrderBy(go => Vector2.SqrMagnitude((Vector2)go.transform.localPosition - centroid))
+            .First();
 
-        Vector3 midPos = placed[midIdx].lp;   // 중앙블록의 현재 로컬좌표
-
-        // 3) 모든 자식의 로컬좌표에서 midPos만큼 빼서 중앙블록을 (0,0)으로
-        Vector3 offset = -midPos;
-        for (int i = 0; i < placed.Count; i++)
-        {
-            var tr = placed[i].t;
-            tr.localPosition += offset;
-        }
+        // 오프셋 적용
+        Vector3 offset = -midBlock.transform.localPosition;
+        foreach (var go in allBlocks)
+            go.transform.localPosition += offset;
     }
 
-    private static bool InBounds(int x, int y, int w, int h)
-    {
-        return x >= 0 && x < w && y >= 0 && y < h;
-    }
 
-    // odd-r 오프셋 → 로컬 좌표
-    private static Vector3 HexToLocal(int x, int y)
-    {
-        float xPos = x * xStep + ((y % 2 == 1) ? xStep * 0.5f : 0f);
-        float yPos = y * yStep;
-        return new Vector3(xPos, yPos, 0f);
-    }
+
+
+
 }

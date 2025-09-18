@@ -30,6 +30,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 60528e8283317534a97d43202e18c794
+    m_Address: BlockParentObjectPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ea04ee7111e16a4ebf14aafa6f4fd5a
+    m_Address: BlockBackPrefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b427b238b44aeda4b880d311bf0a1239
     m_Address: Bg_Stage001
     m_ReadOnly: 0
