@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -45,8 +46,8 @@ public class MapManager
             
             
             GameObject block = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[grid.y][grid.x].transform);
-            block.GetComponent<Block>().setGridPosition(grid.y, grid.x);
-
+            block.GetOrAddComponent<BlockBase>().setGridPosition(grid.y, grid.x); //조커를 포함한 모든 블럭에 BlockBase 적용
+            //TODO 조커와 같은 클릭이 안되는 프리팹은 마스크 자체가 다르기 떄문에 따로 코드 필요 X
 
             Vector3 lp;
 
@@ -155,14 +156,14 @@ public class MapManager
     // 전달된 트랜스폼이 블록이면 그 부모(셀)로 정규화
     private Transform ResolveCell(Transform t)
     {
-        return t.GetComponent<Block>() != null ? t.parent : t;
+        return t.GetComponent<BlockBase>() != null ? t.parent : t;
     }
 
     // 셀의 "직계 자식" 중 Block 달린 것만 반환
     private Transform GetDirectBlockChild(Transform cell)
     {
         foreach (Transform ch in cell)
-            if (ch.GetComponent<Block>() != null) return ch;
+            if (ch.GetComponent<BlockBase>() != null) return ch;
         return null;
     }
 
@@ -215,14 +216,14 @@ public class MapManager
     private int RunLen(List<List<GameObject>> b, int y, int x, int dir)
     {
         int cnt = 0;
-        var cur = b[y][x]?.GetComponent<Block>();
+        var cur = b[y][x]?.GetComponent<BlockBase>();
         int cx = x, cy = y;
 
         while (true)
         {
             (cx, cy) = StepOddQ(cx, cy, dir);
             if (!InBounds(b, cy, cx)) break;
-            var nb = b[cy][cx]?.GetComponent<Block>();
+            var nb = b[cy][cx]?.GetComponent<BlockBase>();
             if (nb == null || !cur.IsSameColor(nb)) break;
             cnt++;
         }
@@ -246,7 +247,7 @@ public class MapManager
         {
             for (int x = 0; x < b[y].Count; x++)
             {
-                var cur = b[y][x]?.GetComponent<Block>();
+                var cur = b[y][x]?.GetComponent<BlockBase>();
                 if (cur == null) continue;
 
                 foreach (var ax in axes)

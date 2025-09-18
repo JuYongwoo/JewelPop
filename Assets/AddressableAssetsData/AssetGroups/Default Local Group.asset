@@ -15,16 +15,6 @@ MonoBehaviour:
   m_GroupName: Default Local Group
   m_GUID: a9b28435c0a521d4fba3303cbb952f93
   m_SerializeEntries:
-  - m_GUID: 15217d65457e4c64ea82737515663d43
-    m_Address: BackgroundTile_Glow
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 17bf7c9213ecbb64ebafd44882f2c308
-    m_Address: BackgroundTile
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 60528e8283317534a97d43202e18c794
     m_Address: BlockParentObjectPrefab
     m_ReadOnly: 0
@@ -35,18 +25,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b427b238b44aeda4b880d311bf0a1239
-    m_Address: Bg_Stage001
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dfa7064a1bcf43e43b8c15d5d1eb51fd
     m_Address: MapJSON
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: dfe12a970019403438bc389e18a1b846
-    m_Address: BlockTextures
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
