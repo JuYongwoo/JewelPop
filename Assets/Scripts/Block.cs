@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-    public class HexBlock : MonoBehaviour
+    public class Block : MonoBehaviour
     {
 
         public Vector2Int girdPos = new Vector2Int();
@@ -17,11 +17,11 @@ using UnityEngine.UI;
         public void SetColor(int index)
         {
             colorIndex = index;
-            if (ManagerObject.instance.resourceManager.blockTextures != null && index >= 0 && index < ManagerObject.instance.resourceManager.blockTextures.objects.Length)
-                this.gameObject.GetComponent<SpriteRenderer>().sprite = ManagerObject.instance.resourceManager.blockTextures.objects[index];
+            if (ManagerObject.instance.resourceManager.blockTextures != null && index >= 0 && index < ManagerObject.instance.resourceManager.blockTextures.GetObjects<Sprite>().Length)
+                this.gameObject.GetComponent<SpriteRenderer>().sprite = ManagerObject.instance.resourceManager.blockTextures.GetObject<Sprite>(index);
         }
 
-        public bool IsSameColor(HexBlock other)
+        public bool IsSameColor(Block other) //색을 통해서 블록 파괴, 핵심 함수
         {
             return other != null && other.colorIndex == colorIndex;
         }

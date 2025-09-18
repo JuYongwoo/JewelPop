@@ -9,17 +9,13 @@ public class MapManager
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
 
-    private int maxX =-1;
-    private int maxY = -1;
-
     public void OnAwake()
     {
         //JSON 읽기
-        level = JsonUtility.FromJson<JSONVars>(ManagerObject.instance.resourceManager.mapJSON.text);
+        level = JsonUtility.FromJson<JSONVars>(ManagerObject.instance.resourceManager.mapJSON.text); //JSON 파일을 JSONVars로 읽어온다
         
         setBlocks();
-        setBlocksBack();
-        MoveMiddleBlockToOrigin();
+        MoveMiddleBlockToOrigin(); //전체 위치 옮겨서 중앙으로 끌고온다
     }
 
     private void setBlocks()
@@ -57,10 +53,6 @@ public class MapManager
         }
     }
 
-    private void setBlocksBack()
-    {
-
-    }
 
 
     private void MoveMiddleBlockToOrigin()

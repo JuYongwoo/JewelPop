@@ -8,7 +8,7 @@ public class ResourceManager
     public GameObject blockParentObjectPrefab;
     public GameObject blockPrefab;
     public GameObject blockBackPrefab;
-    public BlockTextures blockTextures;
+    public ObjectsSO blockTextures;
 
     public void OnAwake()
     {
@@ -16,7 +16,7 @@ public class ResourceManager
         blockParentObjectPrefab = Addressables.LoadAssetAsync<GameObject>("BlockParentObjectPrefab").WaitForCompletion();
         blockPrefab = Addressables.LoadAssetAsync<GameObject>("BlockPrefab").WaitForCompletion();
         blockBackPrefab = Addressables.LoadAssetAsync<GameObject>("BlockBackPrefab").WaitForCompletion();
-        blockTextures = Addressables.LoadAssetAsync<BlockTextures>("BlockTextures").WaitForCompletion();
+        blockTextures = Addressables.LoadAssetAsync<ObjectsSO>("BlockTextures").WaitForCompletion();
     }
 
 }

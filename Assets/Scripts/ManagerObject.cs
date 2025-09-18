@@ -5,6 +5,7 @@ public class ManagerObject : MonoBehaviour
     public static ManagerObject instance;
     public MapManager mapManager = new MapManager();
     public ResourceManager resourceManager = new ResourceManager();
+    public ActionManager actionManager = new ActionManager();
     public InputManager inputManager = new InputManager();
 
     private void Awake()
