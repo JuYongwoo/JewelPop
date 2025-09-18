@@ -52,8 +52,6 @@ public class InputManager
 
     private void HandleClicking()
     {
-        Debug.Log($"클릭중 {startBlock.name}");
-
 
         //맞은 객체가 바뀌는 순간 그 블럭과 교체한다.
 

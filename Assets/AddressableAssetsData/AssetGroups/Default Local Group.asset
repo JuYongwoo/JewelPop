@@ -25,11 +25,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5325cb7451affca4dbfaff5fce72d3d8
-    m_Address: BlockPrefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 60528e8283317534a97d43202e18c794
     m_Address: BlockParentObjectPrefab
     m_ReadOnly: 0

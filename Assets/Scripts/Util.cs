@@ -59,7 +59,7 @@ public class Util
     }
 
     // deprecated: Resources → Addressables 권장 (원본 유지)
-    public static Dictionary<T, T2> mapDictionaryWithLoad<T, T2>(string filePath) where T : Enum where T2 : UnityEngine.Object
+    public static Dictionary<T, T2> mapEumToObjectDEPRECATED<T, T2>(string filePath) where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         foreach (T s in Enum.GetValues(typeof(T)))
@@ -67,7 +67,7 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<T, T2> mapDictionaryWithKeyLoad<T, T2>() where T : Enum where T2 : UnityEngine.Object
+    public static Dictionary<T, T2> mapEnumToObjectWithEnumKey<T, T2>() where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         foreach (T s in Enum.GetValues(typeof(T)))
@@ -75,14 +75,13 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<TEnum, TObject> MapEnumToAddressables<TEnum, TObject>(string label)
-        where TEnum : Enum where TObject : UnityEngine.Object
+    public static Dictionary<TEnum, TObject> MapEnumToObjectWithLabelAndEnumKey<TEnum, TObject>(string label) where TEnum : Enum where TObject : UnityEngine.Object
     {
         var dict = new Dictionary<TEnum, TObject>();
         var locHandle = Addressables.LoadResourceLocationsAsync(label, typeof(TObject));
-        var locations = locHandle.WaitForCompletion();
+        var addressList = locHandle.WaitForCompletion();
 
-        if (locations == null || locations.Count == 0)
+        if (addressList == null || addressList.Count == 0)
         {
             Debug.LogWarning($"[Util] No Addressable assets found for label {label}");
             return dict;
@@ -91,11 +90,11 @@ public class Util
         foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
         {
             string enumName = e.ToString();
-            foreach (var loc in locations)
+            foreach (var addr in addressList)
             {
-                if (loc.PrimaryKey.Equals(enumName, StringComparison.OrdinalIgnoreCase))
+                if (addr.PrimaryKey.Equals(enumName, StringComparison.OrdinalIgnoreCase))
                 {
-                    var assetHandle = Addressables.LoadAssetAsync<TObject>(loc);
+                    var assetHandle = Addressables.LoadAssetAsync<TObject>(addr);
                     var asset = assetHandle.WaitForCompletion();
                     dict[e] = asset;
                     break;
@@ -110,8 +109,7 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<TEnum, TObject> MapEnumToAddressablesByLabels<TEnum, TObject>(string commonLabel)
-        where TEnum : Enum where TObject : UnityEngine.Object
+    public static Dictionary<TEnum, TObject> MapEnumToObjectWithOnlyLabels<TEnum, TObject>(string commonLabel) where TEnum : Enum where TObject : UnityEngine.Object
     {
         var dict = new Dictionary<TEnum, TObject>();
         foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
@@ -135,7 +133,7 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<string, TObject> MapStringKeyToKeyWithLabel<TObject>(string commonLabel)
+    public static Dictionary<string, TObject> MapStringKeyToObjectWithLabel<TObject>(string commonLabel)
     where TObject : UnityEngine.Object
     {
         var dict = new Dictionary<string, TObject>();
@@ -156,7 +154,7 @@ public class Util
         return dict;
     }
 
-    public static T LoadOneResourceInFolder<T>(string filePath) where T : UnityEngine.Object
+    public static T LoadOneResourceInFolderDEPRECATED<T>(string filePath) where T : UnityEngine.Object
     {
         T[] resources = Resources.LoadAll<T>(filePath);
         if (resources.Length == 0)
@@ -169,7 +167,7 @@ public class Util
         return resources[0];
     }
 
-    public static Dictionary<TEnum, TAsset> MapEnumToChildFile<TEnum, TAsset>(string basePath, string fileName)
+    public static Dictionary<TEnum, TAsset> MapEnumToChildFileDEPRECATED<TEnum, TAsset>(string basePath, string fileName)
         where TEnum : Enum where TAsset : UnityEngine.Object
     {
         var dict = new Dictionary<TEnum, TAsset>();

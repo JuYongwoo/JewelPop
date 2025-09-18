@@ -4,30 +4,11 @@ using System.Linq;
 using UnityEngine;
 
 
-public enum BlockColor
-{
-    Green,
-    Orange,
-    Pink,
-    Purple,
-    Red,
-    Yellow,
-    Cnt
-
-}
 public class MapManager
 {
     private List<List<GameObject>> board = new List<List<GameObject>>();
     private JSONVars jsonVars;
-    private Dictionary<string, BlockColor> stringToColor = new Dictionary<string, BlockColor>
-{
-    { "g", BlockColor.Green },
-    { "o", BlockColor.Orange },
-    { "p", BlockColor.Pink },
-    { "pp", BlockColor.Purple },
-    { "r", BlockColor.Red },
-    { "y", BlockColor.Yellow }
-};
+
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
 
@@ -63,9 +44,8 @@ public class MapManager
             }
             
             
-            GameObject block = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefab, board[grid.y][grid.x].transform);
-            block.GetComponent<Block>().setPosition(grid.y, grid.x);
-            block.GetComponent<Block>().SetColor(stringToColor[grid.color]);
+            GameObject block = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[grid.y][grid.x].transform);
+            block.GetComponent<Block>().setGridPosition(grid.y, grid.x);
 
 
             Vector3 lp;
