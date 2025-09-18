@@ -1,38 +1,37 @@
 {
   "id": 1,
-  "palette": { "0":"blue", "1":"yellow", "2":"red", "3":"green", "4":"purple" },
   "grids": [
 
-    {"y":0,"x":0,"type":"block","color":0},
-    {"y":0,"x":1,"type":"block","color":3},
-    {"y":0,"x":2,"type":"block","color":3},
-    {"y":0,"x":4,"type":"block","color":3},
-    {"y":0,"x":5,"type":"block","color":0},
-    {"y":0,"x":6,"type":"block","color":0},
+    {"y":0,"x":0,"type":"block","color":"p"},
+    {"y":0,"x":1,"type":"block","color":"g"},
+    {"y":0,"x":2,"type":"block","color":"r"},
+    {"y":0,"x":4,"type":"block","color":"y"},
+    {"y":0,"x":5,"type":"block","color":"g"},
+    {"y":0,"x":6,"type":"block","color":"g"},
     
-    {"y":1,"x":0,"type":"block","color":2},
-    {"y":1,"x":1,"type":"block","color":2},
-    {"y":1,"x":2,"type":"block","color":2},
-    {"y":1,"x":3,"type":"block","color":2},
-    {"y":1,"x":4,"type":"block","color":2},
-    {"y":1,"x":5,"type":"block","color":1},
-    {"y":1,"x":6,"type":"block","color":3},
+    {"y":1,"x":0,"type":"block","color":"y"},
+    {"y":1,"x":1,"type":"block","color":"y"},
+    {"y":1,"x":2,"type":"block","color":"g"},
+    {"y":1,"x":3,"type":"block","color":"p"},
+    {"y":1,"x":4,"type":"block","color":"p"},
+    {"y":1,"x":5,"type":"block","color":"g"},
+    {"y":1,"x":6,"type":"block","color":"pp"},
 
-    {"y":2,"x":0,"type":"block","color":2},
-    {"y":2,"x":1,"type":"block","color":2},
-    {"y":2,"x":2,"type":"block","color":2},
-    {"y":2,"x":3,"type":"block","color":2},
-    {"y":2,"x":4,"type":"block","color":2},
-    {"y":2,"x":5,"type":"block","color":1},
-    {"y":2,"x":6,"type":"block","color":3},
+    {"y":2,"x":0,"type":"block","color":"g"},
+    {"y":2,"x":1,"type":"block","color":"pp"},
+    {"y":2,"x":2,"type":"block","color":"pp"},
+    {"y":2,"x":3,"type":"block","color":"p"},
+    {"y":2,"x":4,"type":"block","color":"y"},
+    {"y":2,"x":5,"type":"block","color":"pp"},
+    {"y":2,"x":6,"type":"block","color":"p"},
 
     
-    {"y":3,"x":1,"type":"block","color":2},
-    {"y":3,"x":2,"type":"block","color":2},
-    {"y":3,"x":3,"type":"block","color":2},
-    {"y":3,"x":4,"type":"block","color":2},
-    {"y":3,"x":5,"type":"block","color":1},
+    {"y":3,"x":1,"type":"block","color":"p"},
+    {"y":3,"x":2,"type":"block","color":"g"},
+    {"y":3,"x":3,"type":"block","color":"y"},
+    {"y":3,"x":4,"type":"block","color":"p"},
+    {"y":3,"x":5,"type":"block","color":"p"},
 
-    {"y":4,"x":3,"type":"block","color":2}
+    {"y":4,"x":3,"type":"block","color":"p"}
   ]
 }

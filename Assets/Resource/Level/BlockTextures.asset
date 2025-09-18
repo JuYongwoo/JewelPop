@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c42edc4f172084280b581bc8edbfaa, type: 3}
   m_Name: BlockTextures
   m_EditorClassIdentifier: 
-  objects:
+  _objects:
   - {fileID: 21300000, guid: 6d723e8a7b6c14141aa127f4d9366fa3, type: 3}
   - {fileID: 21300000, guid: 0fe131565715d6947bf6093c6fd731a0, type: 3}
   - {fileID: 21300000, guid: 0b75733ae9da505479dae26c96a73af0, type: 3}

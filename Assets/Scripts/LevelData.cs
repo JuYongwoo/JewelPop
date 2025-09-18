@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 
 [Serializable]
-public class Grid { public int x; public int y; public string type; public int color; }
+public class Grid { public int x; public int y; public string type; public string color; }
 // r=row(y), c=col(x)
 
 [Serializable]

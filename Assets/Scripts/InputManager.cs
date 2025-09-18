@@ -65,7 +65,10 @@ public class InputManager
 
             if (hit.collider.gameObject != startBlock)
             {
+                //여기서 두 오브젝트가 바꿨을때 터지는지 확인, ActionManager를 통해서 Util과 연락
+                //바꿔서 터지면 바꾸고 터트린다, 안터지는애면 잠깐갔다온다(연출만)
                 Debug.Log("전환");
+                ManagerObject.instance.actionManager.blockChangeAction(hit.collider.gameObject, startBlock);
                 UnClick();
             }
         }
