@@ -87,8 +87,7 @@ public class MapManager
             
             
             GameObject block = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[grid.y][grid.x].transform);
-            board[grid.y][grid.x].GetOrAddComponent<BlockBase>().setPosition((grid.y, grid.x)); //조커를 포함한 모든 블럭에 BlockBase 적용
-            board[grid.y][grid.x].GetOrAddComponent<BlockBase>().setBlockType(grid.type); // < 자식 교환시 반드시 서로 바꿔줘야함
+            board[grid.y][grid.x].GetOrAddComponent<BlockParent>().setPosition((grid.y, grid.x)); //조커를 포함한 모든 블럭에 BlockBase 적용
             //TODO 조커와 같은 클릭이 안되는 프리팹은 마스크 자체가 다르기 떄문에 따로 코드 필요 X
 
             Vector3 lp;
@@ -142,9 +141,9 @@ public class MapManager
     {
         if (_isSwapping) return;
 
-        if (!getNeighbors(startArg.GetComponent<BlockBase>().getPosition()).Contains(nextArg.GetComponent<BlockBase>().getPosition()))
+        if (!getNeighbors(startArg.GetComponent<BlockParent>().getPosition()).Contains(nextArg.GetComponent<BlockParent>().getPosition()))
         {
-            Debug.Log(getNeighbors(startArg.GetComponent<BlockBase>().getPosition()) + "     " + nextArg.GetComponent<BlockBase>().getPosition());
+            Debug.Log(getNeighbors(startArg.GetComponent<BlockParent>().getPosition()) + "     " + nextArg.GetComponent<BlockParent>().getPosition());
             return; //이웃이 아니면 리턴
         }
 
@@ -217,9 +216,9 @@ public class MapManager
             if (!isValid(baseYX) || !isValid(p1) || !isValid(p2)) continue;
             if (board[baseYX.y][baseYX.x] == null || board[p1.y][p1.x] == null || board[p2.y][p2.x] == null) continue;
 
-            string type0 = board[baseYX.y][baseYX.x].GetComponent<BlockBase>().getBlockType();
-            string type1 = board[p1.y][p1.x].GetComponent<BlockBase>().getBlockType();
-            string type2 = board[p2.y][p2.x].GetComponent<BlockBase>().getBlockType();
+            string type0 = board[baseYX.y][baseYX.x].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
+            string type1 = board[p1.y][p1.x].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
+            string type2 = board[p2.y][p2.x].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
 
             if (type0.Equals(type1) && type0.Equals(type2))
             {
@@ -250,86 +249,6 @@ public class MapManager
         }
     }
 
-    private void dropAllBlockesAndSpawn()
-    {
-        //아래가 빈 블럭은 아래로 옮기고 맨위에는 새로운 블럭이 추가된다.
-    }
-
-
-
-
-    // 보드 경계 체크 (들쑥날쑥 행 길이 대응)
-    private bool InBounds(List<List<GameObject>> b, int y, int x)
-    {
-        return y >= 0 && y < b.Count && x >= 0 && x < b[y].Count && b[y][x] != null;
-    }
-
-    // odd-q(홀수 열이 아래로) 기준 이웃 한 칸 이동
-    // dir: 0=E, 1=W, 2=NE, 3=SW, 4=NW, 5=SE
-    private (int nx, int ny) StepOddQ(int x, int y, int dir)
-    {
-        bool isOdd = (x & 1) == 1;
-        switch (dir)
-        {
-            case 0: return (x + 1, y);                     // E
-            case 1: return (x - 1, y);                     // W
-            case 2: return isOdd ? (x, y - 1) : (x + 1, y - 1); // NE
-            case 3: return isOdd ? (x, y + 1) : (x - 1, y + 1); // SW
-            case 4: return isOdd ? (x - 1, y - 1) : (x, y - 1);        // NW
-            case 5: return isOdd ? (x + 1, y + 1) : (x, y + 1);        // SE
-            default: return (x, y);
-        }
-    }
-
-    // 한 방향으로 같은 색 몇 개 이어지는지(현재 칸 제외)
-    private int RunLen(List<List<GameObject>> b, int y, int x, int dir)
-    {
-        int cnt = 0;
-        var cur = b[y][x]?.GetComponent<BlockBase>();
-        int cx = x, cy = y;
-
-        while (true)
-        {
-            (cx, cy) = StepOddQ(cx, cy, dir);
-            if (!InBounds(b, cy, cx)) break;
-            var nb = b[cy][cx]?.GetComponent<BlockBase>();
-            if (nb == null || !cur.IsSameColor(nb)) break;
-            cnt++;
-        }
-        return cnt;
-    }
-
-    // 육각 3축(E-W, NE-SW, NW-SE)으로 3개 이상 연속 검사
-    private bool checkIsThere3Chain(List<List<GameObject>> b)
-    {
-        if (b == null || b.Count == 0) return false;
-
-        // 축 정의: (정/역) 방향 쌍
-        int[][] axes = new int[][]
-        {
-        new int[]{ 0, 1 }, // E-W
-        new int[]{ 2, 3 }, // NE-SW
-        new int[]{ 4, 5 }, // NW-SE
-        };
-
-        for (int y = 0; y < b.Count; y++)
-        {
-            for (int x = 0; x < b[y].Count; x++)
-            {
-                var cur = b[y][x]?.GetComponent<BlockBase>();
-                if (cur == null) continue;
-
-                foreach (var ax in axes)
-                {
-                    int len = 1; // 현재 칸 포함
-                    len += RunLen(b, y, x, ax[0]);
-                    len += RunLen(b, y, x, ax[1]);
-                    if (len >= 3) return true;
-                }
-            }
-        }
-        return false;
-    }
 
 
 }

@@ -5,7 +5,7 @@ using UnityEngine;
 public class BlockChild : MonoBehaviour
 {
 
-    private string blockType = "";
+    public string blockType = "";
 
 
     public void setBlockType(string blockType)

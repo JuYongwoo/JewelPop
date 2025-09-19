@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8727442547569613752}
   - component: {fileID: 6927065368067367853}
+  - component: {fileID: -2423396684022361002}
   m_Layer: 0
   m_Name: BlockPrefab 1
   m_TagString: Untagged
@@ -87,3 +88,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &-2423396684022361002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3752399415614177505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5da87aa95da30d498e8b55f08f09a3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockType: o
