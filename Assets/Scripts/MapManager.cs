@@ -305,9 +305,8 @@ public class MapManager
     {
         // y가 큰 블럭부터 검사 (위에서 아래로 내려오기 때문에)
 
-        //TODO 자식이 있는 것 중에서 탐색
-
-        var keys = board.Keys.OrderBy(k => k.Item1).ToList();
+        
+        var keys = board.Keys.OrderByDescending(k => k.Item1).ToList(); //내림차순, y값이 높을 수록 아래에 위치 // 아래에서 위로 탐색
 
         foreach (var key in keys)
         {
