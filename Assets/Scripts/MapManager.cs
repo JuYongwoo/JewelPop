@@ -12,11 +12,13 @@ public class MapManager
 {
 
 
-    private List<List<GameObject>> board = new List<List<GameObject>>();
+    private Dictionary<(int, int), BlockParent> board = new Dictionary<(int, int), BlockParent>();
     private JSONVars jsonVars;
 
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
+
+    private bool _isSwapping = false;
 
 
 
@@ -71,44 +73,14 @@ public class MapManager
     {
         foreach (var grid in jsonVars.grids)
         {
-            // 행 확장
-            while (board.Count <= grid.y)
-                board.Add(new List<GameObject>());
+            board.Add((grid.y, grid.x),Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab).GetOrAddComponent<BlockParent>());
+            board[(grid.y, grid.x)].name = $"y{grid.y}x{grid.x}";
 
-            // 열 확장
-            while (board[grid.y].Count <= grid.x)
-                board[grid.y].Add(null);
-
-            // 부모 오브젝트 없으면 생성
-            if (board[grid.y][grid.x] == null)
-            {
-                board[grid.y][grid.x] = Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab);
-            }
+            Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[(grid.y, grid.x)].transform);
             
             
-            GameObject block = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[grid.y][grid.x].transform);
-            board[grid.y][grid.x].GetOrAddComponent<BlockParent>().setPosition((grid.y, grid.x)); //조커를 포함한 모든 블럭에 BlockBase 적용
-            //TODO 조커와 같은 클릭이 안되는 프리팹은 마스크 자체가 다르기 떄문에 따로 코드 필요 X
-
-            Vector3 lp;
-
-
-
-
-            //유니티는 y좌표가 오를 수록 위로 가기 때문에 배열 상 11시 방향부터 아래로 내려오도록
-            if (grid.x % 2 == 1) //홀수 x들
-            {
-                lp = new Vector2(grid.x * xStep, -grid.y * yStep + yStep * 0.5f); //(반 칸 올린다)
-
-            }
-            else
-            {
-                lp = new Vector2(grid.x * xStep, -grid.y * yStep);
-
-            }
-           
-            board[grid.y][grid.x].transform.localPosition = lp;
-            board[grid.y][grid.x].name = $"r{grid.y}c{grid.x}";
+            board[(grid.y, grid.x)].setPositionYX((grid.y, grid.x)); //그리드 좌표
+            board[(grid.y, grid.x)].setUnityPositionYX(grid.x % 2 == 1 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep) : (-grid.y * yStep, grid.x * xStep)); //지그재그, 홀수 X는 위로 반칸
         }
     }
 
@@ -116,44 +88,48 @@ public class MapManager
 
     private void MoveMiddleBlockToOrigin()
     {
-        var allBlocks = board.SelectMany(row => row).Where(go => go != null).ToList();
-        if (allBlocks.Count == 0) return;
 
         // 무게중심
         Vector2 centroid = Vector2.zero;
-        foreach (var go in allBlocks)
+        foreach (var go in board.Values)
             centroid += (Vector2)go.transform.localPosition;
-        centroid /= allBlocks.Count;
+        centroid /= board.Count;
 
         // 중앙 블록 탐색
-        GameObject midBlock = allBlocks
-            .OrderBy(go => Vector2.SqrMagnitude((Vector2)go.transform.localPosition - centroid))
-            .First();
+        BlockParent midBlock = board.Values.OrderBy(blockParent => Vector2.SqrMagnitude((Vector2)blockParent.transform.localPosition - centroid)).First();
 
         // 오프셋 적용
         Vector3 offset = -midBlock.transform.localPosition;
-        foreach (var go in allBlocks)
+        foreach (var go in board.Values)
             go.transform.localPosition += offset;
     }
-    private bool _isSwapping = false;
 
     private void blockChange(GameObject startArg, GameObject nextArg)
     {
         if (_isSwapping) return;
 
-        if (!getNeighbors(startArg.GetComponent<BlockParent>().getPosition()).Contains(nextArg.GetComponent<BlockParent>().getPosition()))
+        if (!getNeighbors(startArg.transform.parent.GetComponent<BlockParent>().getPosition()).Contains(nextArg.transform.parent.GetComponent<BlockParent>().getPosition()))
         {
-            Debug.Log(getNeighbors(startArg.GetComponent<BlockParent>().getPosition()) + "     " + nextArg.GetComponent<BlockParent>().getPosition());
+            Debug.Log(getNeighbors(startArg.transform.parent.GetComponent<BlockParent>().getPosition()) + "     " + nextArg.transform.parent.GetComponent<BlockParent>().getPosition());
             return; //이웃이 아니면 리턴
         }
 
 
         _isSwapping = true;
-        ManagerObject.instance.StartCoroutine(SwapBlocksBetweenParents(startArg, nextArg)); //보내는 클릭된 게임 오브젝트는 부모오브젝트
+        ManagerObject.instance.StartCoroutine(swapBlockChild(startArg.transform.parent.gameObject, nextArg.transform.parent.gameObject)); //클릭된 게임 오브젝트는 부모오브젝트
+        //TODO 서로 바꾸는게 아니라 하나가 이동하는것으로, 여기선 서로가 이동해서 각자가 한번씩, 총 두번 실행하도록 해야함
     }
 
-    private IEnumerator SwapBlocksBetweenParents(GameObject startBlockGO, GameObject nextBlockGO) //자식 오브젝트끼리 바꿔야함
+
+    private IEnumerator swapBlockChild(GameObject startBlockGO, GameObject nextBlockGO) //자식 오브젝트끼리 바꿔야함
     {
+
+        // 두 부모 밑에 자식이 없는 경우 → 교환 불가
+        if (startBlockGO.transform.childCount == 0 || nextBlockGO.transform.childCount == 0)
+        {
+            _isSwapping = false;
+            yield break;
+        }
 
         float t = 0f, speed = 5f, snap2 = 0.01f * 0.01f;
         while (true)
@@ -163,23 +139,56 @@ public class MapManager
             startBlockGO.transform.GetChild(0).position = Vector3.Lerp(startBlockGO.transform.position, nextBlockGO.transform.position, t);
             nextBlockGO.transform.GetChild(0).position = Vector3.Lerp(nextBlockGO.transform.position, startBlockGO.transform.position, t);
 
-            if ((startBlockGO.transform.GetChild(0).position - nextBlockGO.transform.position).sqrMagnitude <= snap2 &&
-                (nextBlockGO.transform.GetChild(0).position - startBlockGO.transform.position).sqrMagnitude <= snap2)
+            if ((startBlockGO.transform.GetChild(0).position - nextBlockGO.transform.position).sqrMagnitude <= snap2
+                && (nextBlockGO.transform.GetChild(0).position - startBlockGO.transform.position).sqrMagnitude <= snap2)
                 break;
             yield return null;
         }
 
-        // 부모 교환: 반드시 "셀"로, world 유지
-        startBlockGO.transform.GetChild(0).SetParent(nextBlockGO.transform, true); //setparent해서 먼저 넘기더라도, 새로 추가된것은 두번째 자식으로 추가되기 때문에 아래에서 getchild(0)유효
-        nextBlockGO.transform.GetChild(0).SetParent(startBlockGO.transform, true);
 
-        // 셀 중심으로 스냅
-        startBlockGO.transform.GetChild(0).localPosition = Vector3.zero;
-        nextBlockGO.transform.GetChild(0).localPosition = Vector3.zero;
+        UnityEngine.Transform go1 = startBlockGO.transform.GetChild(0);
+        go1.SetParent(nextBlockGO.transform, true);
+        go1.localPosition = Vector3.zero;
+
+
+        UnityEngine.Transform go2 = nextBlockGO.transform.GetChild(0);
+        go2.SetParent(startBlockGO.transform, true);
+        go2.localPosition = Vector3.zero;
 
 
 
         _isSwapping = false;
+
+        clearAll3Chains();
+
+    }
+
+
+    private IEnumerator moveBlockChild(GameObject startBlockGO, GameObject nextBlockGO) //자식 오브젝트끼리 바꿔야함
+    {
+
+        float t = 0f, speed = 5f, snap2 = 0.01f * 0.01f;
+        while (true)
+        {
+            t += Time.deltaTime * speed; if (t > 1f) t = 1f;
+
+            startBlockGO.transform.GetChild(0).position = Vector3.Lerp(startBlockGO.transform.position, nextBlockGO.transform.position, t);
+
+            if ((startBlockGO.transform.GetChild(0).position - nextBlockGO.transform.position).sqrMagnitude <= snap2)
+                break;
+            yield return null;
+        }
+
+
+        UnityEngine.Transform go = startBlockGO.transform.GetChild(0);
+        go.SetParent(nextBlockGO.transform, true);
+        go.localPosition = Vector3.zero;
+
+
+
+
+        clearAll3Chains();
+
     }
 
 
@@ -214,11 +223,18 @@ public class MapManager
             var p2 = (y: baseYX.y + directions[i + 1].dy, x: baseYX.x + directions[i + 1].dx);
 
             if (!isValid(baseYX) || !isValid(p1) || !isValid(p2)) continue;
-            if (board[baseYX.y][baseYX.x] == null || board[p1.y][p1.x] == null || board[p2.y][p2.x] == null) continue;
+            if (board[(baseYX.y, baseYX.x)] == null || board[(p1.y, p1.x)] == null || board[(p2.y, p2.x)] == null) continue;
 
-            string type0 = board[baseYX.y][baseYX.x].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
-            string type1 = board[p1.y][p1.x].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
-            string type2 = board[p2.y][p2.x].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
+
+
+            // 자식 없으면 스킵
+            if (board[(baseYX.y, baseYX.x)].transform.childCount == 0
+                || board[(p1.y, p1.x)].transform.childCount == 0
+                || board[(p2.y, p2.x)].transform.childCount == 0) continue;
+
+            string type0 = board[(baseYX.y, baseYX.x)].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
+            string type1 = board[(p1.y, p1.x)].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
+            string type2 = board[(p2.y, p2.x)].transform.GetChild(0).GetComponent<BlockChild>().getBlockType();
 
             if (type0.Equals(type1) && type0.Equals(type2))
             {
@@ -233,22 +249,28 @@ public class MapManager
 
     private bool isValid((int y, int x) pos)
     {
-        return pos.y >= 0 && pos.y < board.Count &&
-               pos.x >= 0 && pos.x < board[pos.y].Count;
+        return board.ContainsKey(pos) ? true : false;
     }
 
 
     private void clearAll3Chains()
     {
-        for (int i = 0; i < board.Count; i++)
-        {
-            for (int j = 0; j < board[i].Count; j++)
-            {
-                Debug.Log("터져야 할 블록 수 = " + checkIsBurstable((i, j)).Count);
-            }
-        }
+
+        List<(int y, int x)> dels = new List<(int y, int x)>();
+        foreach(var grid in board)
+            foreach(var del in checkIsBurstable(grid.Key))
+                dels.Add(del);
+
+
+        foreach (var a in dels)
+            board[a].transform.GetChild(0).GetComponent<BlockChild>().destroySelf();
     }
 
+
+    private void dropAllBlocks() //중력에 의해 y+ 칸이 비면 +로 이동시킨다.
+    {
+
+    }
 
 
 }

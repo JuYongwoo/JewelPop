@@ -35,9 +35,11 @@ public class InputManager
         if (hit.collider != null)
         {
             startBlock = hit.collider.gameObject;
+            clicking = true;
 
         }
-        clicking = true;
+
+        if(startBlock == null) UnClick();
     }
 
     private void UnClick()
