@@ -63,7 +63,7 @@ public class InputManager
 
             if (hit.collider.gameObject != startBlock)
             {
-                ManagerObject.instance.actionManager.blockChangeAction(hit.collider.gameObject, startBlock);
+                ManagerObject.instance.actionManager.blockChangeAction(startBlock, hit.collider.gameObject);
                 UnClick();
             }
         }

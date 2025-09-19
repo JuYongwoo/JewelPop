@@ -1,3 +1,4 @@
+using System.Buffers.Text;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,13 @@ public class MapManager
         //JSON 읽기
         jsonVars = JsonUtility.FromJson<JSONVars>(ManagerObject.instance.resourceManager.mapJSON.text); //JSON 파일을 JSONVars로 읽어온다
         
+        //맵 제작
         setBlocks();
-        MoveMiddleBlockToOrigin(); //전체 위치 옮겨서 중앙으로 끌고온다
 
+        //위치 중앙으로
+        MoveMiddleBlockToOrigin();
+
+        //액션 intermediate
         ManagerObject.instance.actionManager.blockChangeAction = blockChange;
 
     }
@@ -41,12 +46,11 @@ public class MapManager
             if (board[grid.y][grid.x] == null)
             {
                 board[grid.y][grid.x] = Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab);
-                Object.Instantiate(ManagerObject.instance.resourceManager.blockBackPrefab, board[grid.y][grid.x].transform);
             }
             
             
             GameObject block = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[grid.y][grid.x].transform);
-            block.GetOrAddComponent<BlockBase>().setGridPosition(grid.y, grid.x); //조커를 포함한 모든 블럭에 BlockBase 적용
+            board[grid.y][grid.x].GetOrAddComponent<BlockBase>().setPosition((grid.y, grid.x)); //조커를 포함한 모든 블럭에 BlockBase 적용
             //TODO 조커와 같은 클릭이 안되는 프리팹은 마스크 자체가 다르기 떄문에 따로 코드 필요 X
 
             Vector3 lp;
@@ -100,66 +104,48 @@ public class MapManager
     {
         if (_isSwapping) return;
 
-        var startCell = ResolveCell(startArg.transform);
-        var nextCell = ResolveCell(nextArg.transform);
+        if (!getNeighbors(startArg.GetComponent<BlockBase>().getPosition()).Contains(nextArg.GetComponent<BlockBase>().getPosition()))
+        {
+            Debug.Log(getNeighbors(startArg.GetComponent<BlockBase>().getPosition()) + "     " + nextArg.GetComponent<BlockBase>().getPosition());
+            return; //이웃이 아니면 리턴
+        }
 
-        var startBlockTf = GetDirectBlockChild(startCell);
-        var nextBlockTf = GetDirectBlockChild(nextCell);
-        if (startBlockTf == null || nextBlockTf == null) return;
 
         _isSwapping = true;
-        ManagerObject.instance.StartCoroutine(
-            SwapBlocksBetweenParents(startBlockTf.gameObject, nextBlockTf.gameObject, startCell, nextCell));
+        ManagerObject.instance.StartCoroutine(SwapBlocksBetweenParents(startArg, nextArg)); //보내는 클릭된 게임 오브젝트는 부모오브젝트
     }
 
-    private IEnumerator SwapBlocksBetweenParents(
-        GameObject startBlockGO, GameObject nextBlockGO,
-        Transform startCell, Transform nextCell)
+    private IEnumerator SwapBlocksBetweenParents(GameObject startBlockGO, GameObject nextBlockGO) //자식 오브젝트끼리 바꿔야함
     {
-        Vector3 startFrom = startBlockGO.transform.position;
-        Vector3 nextFrom = nextBlockGO.transform.position;
-        Vector3 startGoal = nextCell.TransformPoint(Vector3.zero);
-        Vector3 nextGoal = startCell.TransformPoint(Vector3.zero);
 
         float t = 0f, speed = 5f, snap2 = 0.01f * 0.01f;
         while (true)
         {
             t += Time.deltaTime * speed; if (t > 1f) t = 1f;
 
-            startBlockGO.transform.position = Vector3.Lerp(startFrom, startGoal, t);
-            nextBlockGO.transform.position = Vector3.Lerp(nextFrom, nextGoal, t);
+            startBlockGO.transform.GetChild(0).position = Vector3.Lerp(startBlockGO.transform.position, nextBlockGO.transform.position, t);
+            nextBlockGO.transform.GetChild(0).position = Vector3.Lerp(nextBlockGO.transform.position, startBlockGO.transform.position, t);
 
-            if ((startBlockGO.transform.position - startGoal).sqrMagnitude <= snap2 &&
-                (nextBlockGO.transform.position - nextGoal).sqrMagnitude <= snap2)
+            if ((startBlockGO.transform.GetChild(0).position - nextBlockGO.transform.position).sqrMagnitude <= snap2 &&
+                (nextBlockGO.transform.GetChild(0).position - startBlockGO.transform.position).sqrMagnitude <= snap2)
                 break;
             yield return null;
         }
 
         // 부모 교환: 반드시 "셀"로, world 유지
-        startBlockGO.transform.SetParent(nextCell, true);
-        nextBlockGO.transform.SetParent(startCell, true);
+        startBlockGO.transform.GetChild(0).SetParent(nextBlockGO.transform, true); //setparent해서 먼저 넘기더라도, 새로 추가된것은 두번째 자식으로 추가되기 때문에 아래에서 getchild(0)유효
+        nextBlockGO.transform.GetChild(0).SetParent(startBlockGO.transform, true);
 
         // 셀 중심으로 스냅
-        startBlockGO.transform.localPosition = Vector3.zero;
-        nextBlockGO.transform.localPosition = Vector3.zero;
+        startBlockGO.transform.GetChild(0).localPosition = Vector3.zero;
+        nextBlockGO.transform.GetChild(0).localPosition = Vector3.zero;
 
-        // Block이 항상 Back 위로 오게
-        startBlockGO.transform.SetAsLastSibling();
-        nextBlockGO.transform.SetAsLastSibling();
+
 
         _isSwapping = false;
     }
 
 
-
-
-    // 전달된 트랜스폼이 블록이면 그 부모(셀)로 정규화
-    private Transform ResolveCell(Transform t)
-    {
-        return t.GetComponent<BlockBase>() != null ? t.parent : t;
-    }
-
-    // 셀의 "직계 자식" 중 Block 달린 것만 반환
     private Transform GetDirectBlockChild(Transform cell)
     {
         foreach (Transform ch in cell)
@@ -168,10 +154,77 @@ public class MapManager
     }
 
 
+    private List<(int y, int x)> getNeighbors(GameObject go)
+    {
+        (int y, int x) baseYX = go.GetComponent<BlockBase>().getPosition();
+        List<(int y, int x)> neighbors = new List<(int y, int x)>();
+
+
+        if (baseYX.x % 2 == 1)
+        {
+            neighbors.Add((baseYX.y - 1, baseYX.x - 1));
+            neighbors.Add((baseYX.y - 1, baseYX.x));
+            neighbors.Add((baseYX.y - 1, baseYX.x + 1));
+            neighbors.Add((baseYX.y, baseYX.x - 1));
+            neighbors.Add((baseYX.y, baseYX.x + 1));
+            neighbors.Add((baseYX.y + 1, baseYX.x));
+        }
+        else
+        {
+            neighbors.Add((baseYX.y + 1, baseYX.x - 1));
+            neighbors.Add((baseYX.y + 1, baseYX.x));
+            neighbors.Add((baseYX.y + 1, baseYX.x + 1));
+            neighbors.Add((baseYX.y, baseYX.x - 1));
+            neighbors.Add((baseYX.y, baseYX.x + 1));
+            neighbors.Add((baseYX.y - 1, baseYX.x));
+        }
+        return neighbors;
+    }
+
+
+
+    private List<(int y, int x)> getNeighbors((int y, int x) baseYX)
+    {
+
+        List<(int y, int x)> neighbors = new List<(int y, int x)>();
+
+        if (baseYX.x % 2 == 1)
+        {
+            neighbors.Add((baseYX.y - 1, baseYX.x - 1));
+            neighbors.Add((baseYX.y - 1, baseYX.x));
+            neighbors.Add((baseYX.y - 1, baseYX.x + 1));
+            neighbors.Add((baseYX.y, baseYX.x - 1));
+            neighbors.Add((baseYX.y, baseYX.x + 1));
+            neighbors.Add((baseYX.y + 1, baseYX.x));
+        }
+        else
+        {
+            neighbors.Add((baseYX.y + 1, baseYX.x - 1));
+            neighbors.Add((baseYX.y + 1, baseYX.x));
+            neighbors.Add((baseYX.y + 1, baseYX.x + 1));
+            neighbors.Add((baseYX.y, baseYX.x - 1));
+            neighbors.Add((baseYX.y, baseYX.x + 1));
+            neighbors.Add((baseYX.y - 1, baseYX.x));
+        }
+
+        return neighbors;
+
+    }
+
 
     private bool checkIsThere3Chain()
     {
-        //모든 블록을 돌며 연속 3라인이 있는지 확인한다.
+        for(int i = 0; i < board.Count; i++)
+        {
+            for(int j = 0; j < board[i].Count; j++)
+            {
+                if (board[i][j] == null) continue; //빈 곳 생략
+
+                
+
+
+            }
+        }
 
         return false;
     }

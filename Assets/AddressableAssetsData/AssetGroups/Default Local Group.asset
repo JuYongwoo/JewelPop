@@ -20,11 +20,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 9ea04ee7111e16a4ebf14aafa6f4fd5a
-    m_Address: BlockBackPrefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dfa7064a1bcf43e43b8c15d5d1eb51fd
     m_Address: MapJSON
     m_ReadOnly: 0
