@@ -3,7 +3,7 @@ using UnityEngine;
 public class ManagerObject : MonoBehaviour
 {
     public static ManagerObject instance;
-    public MapManager mapManager = new MapManager();
+    public GameManager mapManager = new GameManager();
     public ResourceManager resourceManager = new ResourceManager();
     public ActionManager actionManager = new ActionManager();
     public InputManager inputManager = new InputManager();

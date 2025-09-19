@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FX_JackInTheBox Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 4895686144000110, guid: ad92e0231e893dd4b84c0cdb9a531553, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2
+      objectReference: {fileID: 0}
     - target: {fileID: 4994838517550516, guid: ad92e0231e893dd4b84c0cdb9a531553, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -58,14 +62,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1714317768936726, guid: ad92e0231e893dd4b84c0cdb9a531553, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -7404891047119996403}
+      addedObject: {fileID: 5938044115089269641}
   m_SourcePrefab: {fileID: 100100000, guid: ad92e0231e893dd4b84c0cdb9a531553, type: 3}
 --- !u!1 &1386802588466082425 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1714317768936726, guid: ad92e0231e893dd4b84c0cdb9a531553, type: 3}
   m_PrefabInstance: {fileID: 1385136930147712879}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &-7404891047119996403
+--- !u!114 &5938044115089269641
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -74,7 +78,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1386802588466082425}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5da87aa95da30d498e8b55f08f09a3b, type: 3}
+  m_Script: {fileID: 11500000, guid: da03ba8874bec9b43926bd5aa0bdc5ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockType: 
