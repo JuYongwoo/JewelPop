@@ -3,31 +3,28 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Unity.VisualScripting.ReorderableList.Internal;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class Node : IComparable<Node>
-{
-    public Vector2Int pos;
-    public float priority; // fScore
-
-    public Node(Vector2Int p, float f)
-    {
-        pos = p;
-        priority = f;
-    }
-
-    public int CompareTo(Node other)
-    {
-        // priority가 낮을수록 우선순위가 높도록 //AStar 계산 시 휴리스틱 계산값이 들어갈 것임
-        return -priority.CompareTo(other.priority);
-    }
-}
 public class Util
 {
-    // ====== 기존 유틸 메서드들 (원본 유지) ======
-    public static Dictionary<T, T2> mapDictionaryInChildren<T, T2>(GameObject go) where T : Enum where T2 : UnityEngine.Object
+
+    public static Dictionary<string, T2> mapDictionaryInChildrenAll<T2>(GameObject go) where T2 : UnityEngine.Object
+    {
+        Dictionary<string, T2> dict = new Dictionary<string, T2>();
+        Transform[] children = go.GetComponentsInChildren<Transform>();
+
+        foreach (Transform child in children)
+        {
+            if (typeof(T2) == typeof(GameObject))
+                dict[child.name] = (T2)(object)child.gameObject;
+            else
+                dict[child.name] = child.GetComponent<T2>();
+        }
+        return dict;
+    }
+
+    public static Dictionary<T, T2> mapDictionaryInChildrenWithEnum<T, T2>(GameObject go) where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         Transform[] children = go.GetComponentsInChildren<Transform>();
@@ -58,7 +55,6 @@ public class Util
         return null;
     }
 
-    // deprecated: Resources → Addressables 권장 (원본 유지)
     public static Dictionary<T, T2> mapEumToObjectDEPRECATED<T, T2>(string filePath) where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();

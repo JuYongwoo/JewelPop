@@ -3,10 +3,11 @@ using UnityEngine;
 public class ManagerObject : MonoBehaviour
 {
     public static ManagerObject instance;
-    public GameManager mapManager = new GameManager();
+    public MapManager mapManager = new MapManager();
     public ResourceManager resourceManager = new ResourceManager();
     public ActionManager actionManager = new ActionManager();
     public InputManager inputManager = new InputManager();
+    public GameManager gameManager = new GameManager();
 
     private void Awake()
     {

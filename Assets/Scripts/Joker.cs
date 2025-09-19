@@ -19,6 +19,7 @@ public class Joker : BlockChild
     public void motionStart()
     {
         ismotionactive = true;
+        ManagerObject.instance.gameManager.deltaScore(1);
     }
     private void jokerMotion()
     {

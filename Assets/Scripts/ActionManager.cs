@@ -5,5 +5,6 @@ public class ActionManager
 {
 
     public Action<GameObject, GameObject> blockChangeAction;
+    public Action<int> setScoreUI;
 
 }
