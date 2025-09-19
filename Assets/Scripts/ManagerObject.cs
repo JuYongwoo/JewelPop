@@ -33,6 +33,8 @@ public class ManagerObject : MonoBehaviour
     {
         Screen.SetResolution(900, 1600, false);
 
+        mapManager.OnStart();
+
     }
 
     // Update is called once per frame

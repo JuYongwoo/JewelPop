@@ -4,15 +4,47 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.RuleTile.TilingRuleOutput;
+
 
 
 public class MapManager
 {
+
+
     private List<List<GameObject>> board = new List<List<GameObject>>();
     private JSONVars jsonVars;
 
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
+
+
+
+    (int dy, int dx)[] oddXDirections = new(int dy, int dx)[] {
+        //각 두개마다 base가 들어가면 연속 3블럭
+        (-1, -1),
+        (0, 1),
+
+
+        (-1, 1),
+        (0, -1),
+
+        (-1, 0),
+        (1, 0),
+    };
+
+    (int dy, int dx)[] evenXDirections = new (int dy, int dx)[] {
+        (1, -1),
+        (0, 1),
+
+
+        (1, 1),
+        (0, -1),
+
+        (1, 0),
+        (-1, 0),
+    };
+
 
     public void OnAwake()
     {
@@ -28,6 +60,11 @@ public class MapManager
         //액션 intermediate
         ManagerObject.instance.actionManager.blockChangeAction = blockChange;
 
+    }
+
+    public void OnStart()
+    {
+        clearAll3Chains();
     }
 
     private void setBlocks()
@@ -51,6 +88,7 @@ public class MapManager
             
             GameObject block = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[grid.y][grid.x].transform);
             board[grid.y][grid.x].GetOrAddComponent<BlockBase>().setPosition((grid.y, grid.x)); //조커를 포함한 모든 블럭에 BlockBase 적용
+            board[grid.y][grid.x].GetOrAddComponent<BlockBase>().setBlockType(grid.type); // < 자식 교환시 반드시 서로 바꿔줘야함
             //TODO 조커와 같은 클릭이 안되는 프리팹은 마스크 자체가 다르기 떄문에 따로 코드 필요 X
 
             Vector3 lp;
@@ -146,41 +184,6 @@ public class MapManager
     }
 
 
-    private Transform GetDirectBlockChild(Transform cell)
-    {
-        foreach (Transform ch in cell)
-            if (ch.GetComponent<BlockBase>() != null) return ch;
-        return null;
-    }
-
-
-    private List<(int y, int x)> getNeighbors(GameObject go)
-    {
-        (int y, int x) baseYX = go.GetComponent<BlockBase>().getPosition();
-        List<(int y, int x)> neighbors = new List<(int y, int x)>();
-
-
-        if (baseYX.x % 2 == 1)
-        {
-            neighbors.Add((baseYX.y - 1, baseYX.x - 1));
-            neighbors.Add((baseYX.y - 1, baseYX.x));
-            neighbors.Add((baseYX.y - 1, baseYX.x + 1));
-            neighbors.Add((baseYX.y, baseYX.x - 1));
-            neighbors.Add((baseYX.y, baseYX.x + 1));
-            neighbors.Add((baseYX.y + 1, baseYX.x));
-        }
-        else
-        {
-            neighbors.Add((baseYX.y + 1, baseYX.x - 1));
-            neighbors.Add((baseYX.y + 1, baseYX.x));
-            neighbors.Add((baseYX.y + 1, baseYX.x + 1));
-            neighbors.Add((baseYX.y, baseYX.x - 1));
-            neighbors.Add((baseYX.y, baseYX.x + 1));
-            neighbors.Add((baseYX.y - 1, baseYX.x));
-        }
-        return neighbors;
-    }
-
 
 
     private List<(int y, int x)> getNeighbors((int y, int x) baseYX)
@@ -188,23 +191,12 @@ public class MapManager
 
         List<(int y, int x)> neighbors = new List<(int y, int x)>();
 
-        if (baseYX.x % 2 == 1)
+        (int dy, int dx)[] directions = (baseYX.x % 2 == 1) ? oddXDirections : evenXDirections;
+
+        for (int i = 0; i < directions.Length; i++)
         {
-            neighbors.Add((baseYX.y - 1, baseYX.x - 1));
-            neighbors.Add((baseYX.y - 1, baseYX.x));
-            neighbors.Add((baseYX.y - 1, baseYX.x + 1));
-            neighbors.Add((baseYX.y, baseYX.x - 1));
-            neighbors.Add((baseYX.y, baseYX.x + 1));
-            neighbors.Add((baseYX.y + 1, baseYX.x));
-        }
-        else
-        {
-            neighbors.Add((baseYX.y + 1, baseYX.x - 1));
-            neighbors.Add((baseYX.y + 1, baseYX.x));
-            neighbors.Add((baseYX.y + 1, baseYX.x + 1));
-            neighbors.Add((baseYX.y, baseYX.x - 1));
-            neighbors.Add((baseYX.y, baseYX.x + 1));
-            neighbors.Add((baseYX.y - 1, baseYX.x));
+            neighbors.Add((baseYX.y + directions[i].dy, baseYX.x + directions[i].dx));
+
         }
 
         return neighbors;
@@ -212,26 +204,50 @@ public class MapManager
     }
 
 
-    private bool checkIsThere3Chain()
+    private List<(int y, int x)> checkIsBurstable((int y, int x) baseYX)
     {
-        for(int i = 0; i < board.Count; i++)
+        List<(int y, int x)> burstables = new List<(int y, int x)>();
+        (int dy, int dx)[] directions = (baseYX.x % 2 == 1) ? oddXDirections : evenXDirections;
+
+        for (int i = 0; i < directions.Length; i += 2)
         {
-            for(int j = 0; j < board[i].Count; j++)
+            var p1 = (y: baseYX.y + directions[i].dy, x: baseYX.x + directions[i].dx);
+            var p2 = (y: baseYX.y + directions[i + 1].dy, x: baseYX.x + directions[i + 1].dx);
+
+            if (!isValid(baseYX) || !isValid(p1) || !isValid(p2)) continue;
+            if (board[baseYX.y][baseYX.x] == null || board[p1.y][p1.x] == null || board[p2.y][p2.x] == null) continue;
+
+            string type0 = board[baseYX.y][baseYX.x].GetComponent<BlockBase>().getBlockType();
+            string type1 = board[p1.y][p1.x].GetComponent<BlockBase>().getBlockType();
+            string type2 = board[p2.y][p2.x].GetComponent<BlockBase>().getBlockType();
+
+            if (type0.Equals(type1) && type0.Equals(type2))
             {
-                if (board[i][j] == null) continue; //빈 곳 생략
-
-                
-
-
+                burstables.Add(baseYX);
+                burstables.Add(p1);
+                burstables.Add(p2);
             }
         }
 
-        return false;
+        return burstables;
     }
+
+    private bool isValid((int y, int x) pos)
+    {
+        return pos.y >= 0 && pos.y < board.Count &&
+               pos.x >= 0 && pos.x < board[pos.y].Count;
+    }
+
 
     private void clearAll3Chains()
     {
-        //모든 연속 3라인을 없앤다.
+        for (int i = 0; i < board.Count; i++)
+        {
+            for (int j = 0; j < board[i].Count; j++)
+            {
+                Debug.Log("터져야 할 블록 수 = " + checkIsBurstable((i, j)).Count);
+            }
+        }
     }
 
     private void dropAllBlockesAndSpawn()
