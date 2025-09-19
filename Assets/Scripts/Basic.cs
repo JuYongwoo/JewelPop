@@ -12,7 +12,7 @@ public class Basic : BlockChild
         StartCoroutine(BlockCrushMotion());
     }
 
-    IEnumerator BlockCrushMotion()
+    private IEnumerator BlockCrushMotion()
     {
         turnoff();
         Instantiate(ManagerObject.instance.resourceManager.blockCrush, transform);

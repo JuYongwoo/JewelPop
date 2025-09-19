@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-public class BlockChild : MonoBehaviour
+public abstract class BlockChild : MonoBehaviour
 {
 
     [HideInInspector]
@@ -18,12 +18,10 @@ public class BlockChild : MonoBehaviour
         return blockType;
     }
 
-    public virtual void DestroySelf() // 블럭마다 파괴 모션이 다를 수 있으므로 virtual
-    {
-        Destroy(gameObject);
-    }
+    public abstract void DestroySelf();// 블럭종류마다 파괴 모션이 다르므로 자식에서 구현 강제화
 
-    public void turnoff() // 삭제하지 않고 파괴 연출을 위해 게임에 지장 없도록 기능만 끈다.
+
+    protected void turnoff() // 삭제하지 않고 파괴 연출을 위해 게임에 지장 없도록 기능만 끈다.
     {
         GetComponent<SpriteRenderer>().enabled = false;
         transform.SetParent(null);// 부모 벗어나고 neighbor감지 안되도록

@@ -27,4 +27,9 @@ public class Joker : BlockChild
         ismotionactive = false;
 
     }
+
+    public override void DestroySelf()
+    {
+        Debug.Log("This can't be destroyed");
+    }
 }
