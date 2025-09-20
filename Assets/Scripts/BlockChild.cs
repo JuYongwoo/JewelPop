@@ -1,19 +1,16 @@
-using System.Collections;
 using UnityEngine;
-
-
 
 public abstract class BlockChild : MonoBehaviour
 {
 
     [HideInInspector]
-    private string blockType = ""; //GameManage에서 오브젝트 생성과 함께 JSON에서 받아온 타입이 대입
+    private BlockType blockType; //GameManage에서 오브젝트 생성과 함께 JSON에서 받아온 타입이 대입
 
-    public void SetBlockType(string blockType)
+    public void SetBlockType(BlockType blockType)
     {
         this.blockType = blockType;
     }
-    public string GetBlockType()
+    public BlockType GetBlockType()
     {
         return blockType;
     }

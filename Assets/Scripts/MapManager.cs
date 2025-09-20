@@ -1,11 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
+public enum BlockType{
+    g,
+    p,
+    pp,
+    y,
+    o,
+    r,
+    j
 
+}
 
 public class MapManager
 {
@@ -72,15 +80,15 @@ public class MapManager
         {
             //JSON에 작성되어있는 그리드 좌표에 맞춰 오브젝트(BlockParent 컴포넌트가 있는) 생성 & 딕셔너리 매핑
             //부모 오브젝트
-            board.Add((grid.y, grid.x),Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab).GetComponent<BlockParent>());
+            board.Add((grid.y, grid.x),UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab).GetComponent<BlockParent>());
             board[(grid.y, grid.x)].name = $"y{grid.y}x{grid.x}"; //이름
             board[(grid.y, grid.x)].SetGridPositionYX((grid.y, grid.x)); //그리드 좌표
             board[(grid.y, grid.x)].SetUnityPositionYX(grid.x % 2 == 1 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep) : (-grid.y * yStep, grid.x * xStep)); //유니티 좌표, 지그재그, 홀수 X는 위로 반칸
 
 
             //자식 오브젝트(블록)
-            GameObject child = Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[(grid.y, grid.x)].transform);
-            child.GetComponent<BlockChild>().SetBlockType(grid.type); // 여기서 타입을 설정
+            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[(BlockType)Enum.Parse(typeof(BlockType), grid.type)], board[(grid.y, grid.x)].transform);
+            child.GetComponent<BlockChild>().SetBlockType((BlockType)Enum.Parse(typeof(BlockType), grid.type)); // 여기서 타입을 설정
 
         }
     }
@@ -160,14 +168,15 @@ public class MapManager
 
     private IEnumerator MoveBlockChild(GameObject startBlockGO, GameObject nextBlockGO) //자식 오브젝트끼리 바꿔야함
     {
+        Transform child = startBlockGO.transform.GetChild(0);
 
 
         //움직이기 전 위치 기록, 서로의 목적지는 이 변수만을 사용
-        Vector3 startInit = new Vector3(startBlockGO.transform.position.x, startBlockGO.transform.position.y, startBlockGO.transform.GetChild(0).position.z); //서로의 이동 시작 당시 위치, z축은 자식 기준
-        Vector3 nextInit = new Vector3(nextBlockGO.transform.position.x, nextBlockGO.transform.position.y, startBlockGO.transform.GetChild(0).position.z);
+        Vector3 startInit = new Vector3(startBlockGO.transform.position.x, startBlockGO.transform.position.y, child.position.z); //서로의 이동 시작 당시 위치, z축은 자식 기준
+        Vector3 nextInit = new Vector3(nextBlockGO.transform.position.x, nextBlockGO.transform.position.y, child.position.z);
 
         //함수 호출하자마자 부모 변경, 연출은 그 뒤에
-        startBlockGO.transform.GetChild(0).SetParent(nextBlockGO.transform, true);
+        child.SetParent(nextBlockGO.transform, true);
 
 
 
@@ -177,15 +186,15 @@ public class MapManager
         {
             t += Time.deltaTime * speed; if (t > 1f) t = 1f;
 
-            nextBlockGO.transform.GetChild(0).position = Vector3.Lerp(startInit, nextInit, t);
+            child.position = Vector3.Lerp(startInit, nextInit, t);
 
-            if ((nextBlockGO.transform.GetChild(0).position - nextInit).sqrMagnitude <= snap2)
+            if ((child.position - nextInit).sqrMagnitude <= snap2)
                 break;
             yield return null;
         }
 
         //자식의 위치를 부모의 원점으로 맞춰준다
-        nextBlockGO.transform.GetChild(0).position = nextInit;
+        child.position = nextInit;
 
 
 
@@ -236,9 +245,9 @@ public class MapManager
                 || board[(p1.y, p1.x)].transform.childCount == 0
                 || board[(p2.y, p2.x)].transform.childCount == 0) continue;
 
-            string type0 = board[(baseYX.y, baseYX.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
-            string type1 = board[(p1.y, p1.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
-            string type2 = board[(p2.y, p2.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
+            var type0 = board[(baseYX.y, baseYX.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
+            var type1 = board[(p1.y, p1.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
+            var type2 = board[(p2.y, p2.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
 
             if (type0.Equals(type1) && type0.Equals(type2))
             {

@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
@@ -24,7 +22,7 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<T, T2> mapDictionaryInChildrenWithEnum<T, T2>(GameObject go) where T : Enum where T2 : UnityEngine.Object
+    public static Dictionary<T, T2> MapDictionaryInChildrenWithEnum<T, T2>(GameObject go) where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         Transform[] children = go.GetComponentsInChildren<Transform>();
@@ -46,7 +44,7 @@ public class Util
         return dict;
     }
 
-    public static GameObject getObjectInChildren(GameObject go, string childName)
+    public static GameObject GetObjectInChildren(GameObject go, string childName)
     {
         Transform[] children = go.GetComponentsInChildren<Transform>();
         foreach (Transform child in children)
@@ -55,7 +53,7 @@ public class Util
         return null;
     }
 
-    public static Dictionary<T, T2> mapEumToObjectDEPRECATED<T, T2>(string filePath) where T : Enum where T2 : UnityEngine.Object
+    public static Dictionary<T, T2> MapEumToObjectDEPRECATED<T, T2>(string filePath) where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         foreach (T s in Enum.GetValues(typeof(T)))
@@ -63,7 +61,7 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<T, T2> mapEnumToObjectWithEnumKey<T, T2>() where T : Enum where T2 : UnityEngine.Object
+    public static Dictionary<T, T2> MapEnumToObjectWithEnumKey<T, T2>() where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         foreach (T s in Enum.GetValues(typeof(T)))
@@ -129,6 +127,7 @@ public class Util
         return dict;
     }
 
+    /*
     public static Dictionary<string, TObject> MapStringKeyToObjectWithLabel<TObject>(string commonLabel)
     where TObject : UnityEngine.Object
     {
@@ -149,6 +148,7 @@ public class Util
 
         return dict;
     }
+    */
 
     public static T LoadOneResourceInFolderDEPRECATED<T>(string filePath) where T : UnityEngine.Object
     {

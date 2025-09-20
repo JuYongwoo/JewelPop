@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using System.Threading.Tasks;
 
 public class ManagerObject : MonoBehaviour
 {
@@ -21,25 +23,19 @@ public class ManagerObject : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
 
-
+        // ResourceManager 리소스 로딩 (완료될 때까지 대기)
         resourceManager.OnAwake();
+        // 여기까지 오면 blockPrefabs 무조건 로드 완료됨
         mapManager.OnAwake();
-
     }
 
-
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+    private void Start()
     {
         Screen.SetResolution(900, 1600, false);
-
-        mapManager.OnStart();
-
+        mapManager.OnStart(); // blockPrefabs 로딩 완료 후라 안전
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         inputManager.OnUpdate();
     }

@@ -10,52 +10,52 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: BlockPrefabs
+  m_Name: BlockChildPrefabs
   m_EditorClassIdentifier: 
-  m_GroupName: BlockPrefabs
+  m_GroupName: BlockChildPrefabs
   m_GUID: b493011b797a7d145a9beffcd46474e9
   m_SerializeEntries:
   - m_GUID: 5325cb7451affca4dbfaff5fce72d3d8
     m_Address: g
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockPrefabs
+    - BlockChildPrefabs
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7cd5505067afd674588527acad8d34b4
     m_Address: y
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockPrefabs
+    - BlockChildPrefabs
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8082a2d34a0b3274e96d12cda4590cf4
     m_Address: j
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockPrefabs
+    - BlockChildPrefabs
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: aa044294a45051e44bca4cb6764d75a0
     m_Address: p
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockPrefabs
+    - BlockChildPrefabs
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b0c48d01ba49c7743bc704afae2c7725
     m_Address: o
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockPrefabs
+    - BlockChildPrefabs
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: be9e6ffee3657eb4c995d156f3b70368
     m_Address: pp
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockPrefabs
+    - BlockChildPrefabs
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c23b6f4226213cf4ebf3a9d07c800857
     m_Address: r
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockPrefabs
+    - BlockChildPrefabs
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}
