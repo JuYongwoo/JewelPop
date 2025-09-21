@@ -79,15 +79,15 @@ public class MapManager
     public void OnUpdate()
     {
 
-        DropAllBlocks(); //이동부분을 관장, 이동하면 아래 isChanged = true
-        if (!inMotion) //모션 중이 아닐 때만 생성&파괴
+        if (isChanged)
         {
-            
+            DropAllBlocks(); //이동부분을 관장
 
 
-            if (isChanged)
+
+            if (!inMotion) //모션 중이 아닐때만 생성&파괴
             {
-                var dels = check3Chains();
+                var dels = checkChains();
                 if (dels.Count != 0)
                 {
                     DestroyBlocks(dels);
@@ -98,10 +98,8 @@ public class MapManager
                 {
                     AddNewBlocks(tops);
                 }
-                else
-                {
-                    isChanged = false; //채울 수 있는 것이 없다 = 보드 상태가 안정됨
-                }
+
+                if(dels.Count == 0 && tops.Count == 0) isChanged = false; //생성도 파괴도 할 것이 없으면 안정된 상태
 
             }
         }
@@ -202,7 +200,7 @@ public class MapManager
 
 
 
-    private List<(int y, int x)> check3Chains()
+    private List<(int y, int x)> checkChains()
     {
         List<(int y, int x)> dels = new List<(int y, int x)>();
         foreach (var grid in board)
