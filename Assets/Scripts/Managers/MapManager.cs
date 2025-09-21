@@ -150,7 +150,6 @@ public class MapManager
 
         if (!GetNeighbors(startArg.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()).Contains(nextArg.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()))
         {
-            Debug.Log(GetNeighbors(startArg.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()) + "     " + nextArg.transform.parent.GetComponent<BlockParent>().GetGridPositionYX());
             return; //이웃이 아니면 리턴
         }
 

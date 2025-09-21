@@ -11,15 +11,15 @@ public class BlockParent : MonoBehaviour
 
     }
 
-    public void SetUnityPositionYX((float y, float x) yx)
+    public (int, int) GetGridPositionYX() // //
     {
-        this.gameObject.transform.localPosition = new Vector2(yx.x, yx.y);
+        return yx;
     }
 
 
-    public (int, int) GetGridPositionYX() //유니티 상의 위치가 아닌 그리드 상의 x,y 좌표
+    public void SetUnityPositionYX((float y, float x) yx)
     {
-        return yx;
+        this.gameObject.transform.localPosition = new Vector2(yx.x, yx.y);
     }
 
 

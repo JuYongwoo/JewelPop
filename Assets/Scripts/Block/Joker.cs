@@ -29,6 +29,7 @@ public class Joker : BlockChild
 
     public override void DestroySelf()
     {
-        Debug.Log("This can't be destroyed");
+        //조커는 사라지지 않음
+        return;
     }
 }

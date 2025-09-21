@@ -27,7 +27,6 @@ public class InputManager
     }
     private void Click()
     {
-        Debug.Log("0");
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         LayerMask mask = LayerMask.GetMask("Block");
 
@@ -46,7 +45,6 @@ public class InputManager
     {
         if (!clicking) return; //이미 블럭 전환해서 실행할 필요 X
 
-        Debug.Log("2");
         startBlock = null;
         clicking = false;
 
