@@ -79,15 +79,31 @@ public class MapManager
     public void OnUpdate()
     {
 
-        if (!inMotion)
+        DropAllBlocks(); //이동부분을 관장, 이동하면 아래 isChanged = true
+        if (!inMotion) //모션 중이 아닐 때만 생성&파괴
         {
-            var dels = check3Chains();
-            if (dels.Count != 0)
+            
+
+
+            if (isChanged)
             {
-                DestroyBlocks(dels);
+                var dels = check3Chains();
+                if (dels.Count != 0)
+                {
+                    DestroyBlocks(dels);
+                }
+
+                var tops = checkEmptyTops();
+                if (tops.Count != 0)
+                {
+                    AddNewBlocks(tops);
+                }
+                else
+                {
+                    isChanged = false; //채울 수 있는 것이 없다 = 보드 상태가 안정됨
+                }
+
             }
-                AddNewBlocks();
-                DropAllBlocks();
         }
     }
 
@@ -167,7 +183,7 @@ public class MapManager
         child.SetParent(targetParent, true);
         float t = 0f, speed = 5f, snap2 = 0.01f * 0.01f;
         
-        inMotion = true;
+        inMotion = true; //모션중
         isChanged = true; // 어딘가 움직였다는 것은 보드 상태가 변했다는 것을 의미
         
         while (true)
@@ -212,18 +228,8 @@ public class MapManager
     }
 
 
-    private void AddNewBlocks()
+    private void AddNewBlocks(List<(int y, int x)> tops)
     {
-
-        List<(int y, int x)> tops = new List<(int y, int x)>();
-
-        foreach (var key in board.Keys)
-        {
-            if (IsTop(key) && board[key].transform.childCount == 0) //맨위에 있고 자식이 없으면
-            {
-                tops.Add(key);
-            }
-        }
 
 
         // tops에 있는 위치에 새 블록 소환
@@ -236,6 +242,19 @@ public class MapManager
 
 
     }
+    private List<(int y, int x)> checkEmptyTops()
+    {
+        List<(int y, int x)> tops = new List<(int y, int x)>();
+        foreach (var key in board.Keys)
+        {
+            if (IsTop(key) && board[key].transform.childCount == 0) //맨위에 있고 자식이 없으면
+            {
+                tops.Add(key);
+            }
+        }
+        return tops;
+    }
+
     private void DropAllBlocks()
     {
         // y가 큰 블럭부터 검사 (위에서 아래로 내려오기 때문에)
