@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 
-public enum BlockType{
+public enum BlockType{ //
     g,
     p,
     pp,
@@ -26,7 +24,8 @@ public class MapManager
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
 
-    private bool haveToCheck = false;
+    private bool inMotion = false; //블럭이 움직이는 중인지
+    private bool isChanged = false;//보드 상태가 바뀐 상태인지
 
 
 
@@ -79,10 +78,16 @@ public class MapManager
 
     public void OnUpdate()
     {
-        if (haveToCheck)
+
+        if (!inMotion)
         {
-            haveToCheck = false;
-            ClearAll3Chains();
+            var dels = check3Chains();
+            if (dels.Count != 0)
+            {
+                DestroyBlocks(dels);
+            }
+                AddNewBlocks();
+                DropAllBlocks();
         }
     }
 
@@ -160,8 +165,11 @@ public class MapManager
     private IEnumerator MoveChild(UnityEngine.Transform child, UnityEngine.Transform targetParent, Vector3 startPos, Vector3 endPos)
     {
         child.SetParent(targetParent, true);
-
         float t = 0f, speed = 5f, snap2 = 0.01f * 0.01f;
+        
+        inMotion = true;
+        isChanged = true; // 어딘가 움직였다는 것은 보드 상태가 변했다는 것을 의미
+        
         while (true)
         {
             t += Time.deltaTime * speed; if (t > 1f) t = 1f;
@@ -172,22 +180,26 @@ public class MapManager
 
         child.position = endPos;
 
-        haveToCheck = true; // 이동 끝나자마자 체크 예약
+        inMotion = false;
     }
 
 
 
 
-
-
-    private void ClearAll3Chains()
+    private List<(int y, int x)> check3Chains()
     {
-
         List<(int y, int x)> dels = new List<(int y, int x)>();
-        foreach(var grid in board)
-            foreach(var del in CheckIsBurstable(grid.Key))
+        foreach (var grid in board)
+            foreach (var del in CheckIsBurstable(grid.Key))
                 dels.Add(del);
 
+
+        return dels;
+    }
+
+
+    private void DestroyBlocks(List<(int y, int x)> dels)
+    {
 
         foreach (var a in dels)
         {
@@ -197,11 +209,10 @@ public class MapManager
             }
         }
 
-        AddAndDrop();
     }
 
 
-    private void AddAndDrop()
+    private void AddNewBlocks()
     {
 
         List<(int y, int x)> tops = new List<(int y, int x)>();
@@ -223,8 +234,6 @@ public class MapManager
             child.GetComponent<BlockChild>().SetBlockType(randomType); // 여기서 타입을 설정
         }
 
-
-        DropAllBlocks();//낙하
 
     }
     private void DropAllBlocks()
