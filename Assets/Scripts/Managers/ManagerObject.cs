@@ -31,12 +31,13 @@ public class ManagerObject : MonoBehaviour
 
     private void Start()
     {
-        Screen.SetResolution(900, 1600, false);
+        Application.targetFrameRate = 60; // 프레임 레이트 설정 (안드로이드 30프레임 저하 차단)
         mapManager.OnStart(); // blockPrefabs 로딩 완료 후라 안전
     }
 
     private void Update()
     {
         inputManager.OnUpdate();
+        mapManager.OnUpdate();
     }
 }

@@ -18,7 +18,7 @@ public abstract class BlockChild : MonoBehaviour
     public abstract void DestroySelf();// 블럭종류마다 파괴 모션이 다르므로 자식에서 구현 강제화
 
 
-    protected void turnoff() // 삭제하지 않고 파괴 연출을 위해 게임에 지장 없도록 기능만 끈다.
+    protected void turnoff() // 파괴 연출을 위해 게임에 지장 없도록 삭제하지 않고 기능만 끄는 함수.
     {
         GetComponent<SpriteRenderer>().enabled = false;
         transform.SetParent(null);// 부모 벗어나고 neighbor감지 안되도록
