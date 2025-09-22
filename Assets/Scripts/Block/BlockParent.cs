@@ -3,15 +3,15 @@ using UnityEngine;
 public class BlockParent : MonoBehaviour
 {
 
-    private (int y, int x) yx;
+    private YX yx;
 
-    public void SetGridPositionYX((int y, int x) yx) //유니티 상의 위치가 아닌 그리드 상의 x,y 좌표
+    public void SetGridPositionYX(YX yx) //유니티 상의 위치가 아닌 그리드 상의 x,y 좌표
     {
         this.yx = yx;
 
     }
 
-    public (int, int) GetGridPositionYX() // //
+    public YX GetGridPositionYX() // //
     {
         return yx;
     }

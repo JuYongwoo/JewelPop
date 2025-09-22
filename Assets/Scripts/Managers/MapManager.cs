@@ -1,14 +1,21 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public struct YX
+{
+    public YX(int y, int x) {
+        this.y = y;
+        this.x = x;
+    }
+    public int y;
+    public int x;
+}
 
 public class MapManager
 {
 
-    private Dictionary<(int, int), BlockParent> board = new Dictionary<(int, int), BlockParent>();
+    private Dictionary<YX, BlockParent> board = new Dictionary<YX, BlockParent>();
     private JSONVars jsonVars;
 
     private const float xStep = 0.6f;
@@ -77,7 +84,7 @@ public class MapManager
 
             if (!isInMotion) //모션 중이 아닐때만 생성&파괴
             {
-                var dels = checkChains();
+                var dels = checkAllChains();
                 if (dels.Count != 0)
                 {
                     DestroyBlocks(dels);
@@ -102,14 +109,15 @@ public class MapManager
         {
             //JSON에 작성되어있는 그리드 좌표에 맞춰 오브젝트(BlockParent 컴포넌트가 있는) 생성 & 딕셔너리 매핑
             //부모 오브젝트
-            board.Add((grid.y, grid.x),UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab).GetComponent<BlockParent>());
-            board[(grid.y, grid.x)].name = $"y{grid.y}x{grid.x}"; //이름
-            board[(grid.y, grid.x)].SetGridPositionYX((grid.y, grid.x)); //그리드 좌표
-            board[(grid.y, grid.x)].SetUnityPositionYX(grid.x % 2 == 1 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep) : (-grid.y * yStep, grid.x * xStep)); //유니티 좌표, 지그재그, 홀수 X는 위로 반칸
+            YX yx = new YX(grid.y, grid.x);
+            board.Add(yx, UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockParentObjectPrefab).GetComponent<BlockParent>());
+            board[yx].name = $"y{grid.y}x{grid.x}"; //이름
+            board[yx].SetGridPositionYX(yx); //그리드 좌표
+            board[yx].SetUnityPositionYX(grid.x % 2 == 1 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep) : (-grid.y * yStep, grid.x * xStep)); //유니티 좌표, 지그재그, 홀수 X는 위로 반칸
 
 
             //자식 오브젝트(블록)
-            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[(grid.y, grid.x)].transform);
+            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[yx].transform);
             child.GetComponent<BlockChild>().SetBlockType(grid.type); // 여기서 타입을 설정
 
         }
@@ -137,21 +145,51 @@ public class MapManager
 
     private void InputBlockChangeEvent(GameObject startChild, GameObject endChild)
     {
-
+        YX startYX = startChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX();
+        YX endYX = endChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX();
         if (!GetNeighbors(startChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()).Contains(endChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()))
         {
             return; //이웃이 아니면 리턴
         }
 
 
+        Dictionary<YX, BlockParent> fakeBoard = new Dictionary<YX, BlockParent>(board); //얕은 복사
 
+        // 블록 위치를 교환 시뮬레이션
+        (fakeBoard[startChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()], fakeBoard[endChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()])
+            = (fakeBoard[endChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()], fakeBoard[startChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()]);
+
+        HashSet<YX> cates = new HashSet<YX>();
+
+        foreach (var n in GetNeighbors(startChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX(), fakeBoard))
+        {
+            cates.Add(n); //시작지점의 이웃들 추가
+        }
+        foreach (var n in GetNeighbors(endChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX(), fakeBoard))
+        {
+            cates.Add(n); //도착지점의 이웃들 추가
+        }
+
+
+        //이 후보지들 중에 3라인이 가능한 곳이 있는가?
+        bool canBurst = false;
+
+        foreach (var c in cates)
+        {
+            var bursts = CheckIsBurstable(c, fakeBoard);
+            if (bursts.Count != 0)
+            {
+                canBurst = true;
+                break;
+            }
+        }
 
 
 
         //TODO JYW
-        //이동해봤는데 CheckIsBurstable(새로운 위치) 의 개수가 0이면 moveandback
+        //이동해봤는데 CheckIsBurstable(새로운 위치와 그 neighbors) 의 개수가 0이면 moveandback
         //이동해봤는데 개수가 1이상이면 move
-
+        //이동해 볼 때 가짜 보드를 하나 만들고
 
 
 
@@ -161,9 +199,18 @@ public class MapManager
         var startParentTransform = startChild.transform.parent;
         var endParentTransform = endChild.transform.parent;
 
-        //startChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(endParentTransform);
-        startChild.GetComponent<IMoveAndDesroyable>().Move(endParentTransform);
-        endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
+
+        if (canBurst)
+        {
+            startChild.GetComponent<IMoveAndDesroyable>().Move(endParentTransform);
+            endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
+
+        }
+        else if (!canBurst)
+        {
+            startChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(endParentTransform);
+            endChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(startParentTransform);
+        }
 
 
         //moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
@@ -172,9 +219,9 @@ public class MapManager
 
 
 
-    private List<(int y, int x)> checkChains()
+    private List<YX> checkAllChains()
     {
-        List<(int y, int x)> dels = new List<(int y, int x)>();
+        List<YX> dels = new List<YX>();
         foreach (var grid in board)
             foreach (var del in CheckIsBurstable(grid.Key))
                 dels.Add(del);
@@ -184,7 +231,7 @@ public class MapManager
     }
 
 
-    private void DestroyBlocks(List<(int y, int x)> dels)
+    private void DestroyBlocks(List<YX> dels)
     {
         HashSet<ISpecial> specials = new HashSet<ISpecial>(); //중복 참조 방지, 셋 사용
 
@@ -220,7 +267,7 @@ public class MapManager
     }
 
 
-    private void AddNewBlocks(List<(int y, int x)> tops)
+    private void AddNewBlocks(List<YX> tops)
     {
 
         string[] str = new string[] {"r", "p", "pp", "o", "r", "y" };
@@ -234,9 +281,9 @@ public class MapManager
 
 
     }
-    private List<(int y, int x)> checkEmptyTops()
+    private List<YX> checkEmptyTops()
     {
-        List<(int y, int x)> tops = new List<(int y, int x)>();
+        List<YX> tops = new List<YX>();
         foreach (var key in board.Keys)
         {
             if (IsTop(key) && board[key].transform.childCount == 0) //맨위에 있고 자식이 없으면
@@ -252,27 +299,27 @@ public class MapManager
         // y가 큰 블럭부터 검사 (위에서 아래로 내려오기 때문에)
 
         
-        var keys = board.Keys.OrderByDescending(k => k.Item1).ToList(); //내림차순, y값이 높을 수록 아래에 위치 // 아래에서 위로 탐색
+        var keys = board.Keys.OrderByDescending(k => k.y).ToList(); //내림차순, y값이 높을 수록 아래에 위치 // 아래에서 위로 탐색
 
         foreach (var key in keys)
         {
             if (!IsValid(key)) continue; //시작 지점은 isvalid로 자식 있는지 확인
 
             var block = board[key];
-            int y = key.Item1;
-            int x = key.Item2;
+            int y = key.y;
+            int x = key.x;
 
             int newY = y;
 
             // 밑으로 갈 수 있는 만큼 내림(아래칸의 자식 오브젝트가 없으면)
-            while (board.ContainsKey((newY+1, x)) && board[(newY+1, x)].transform.childCount==0)
+            while (board.ContainsKey(new YX(newY+1, x)) && board[new YX(newY + 1, x)].transform.childCount==0)
             {
                 newY++;
             }
 
             if (newY != y)
             {
-                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>().Move(board[(newY, x)].transform); //아래로 이동
+                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>().Move(board[new YX(newY, x)].transform); //아래로 이동
             }
         }
 
@@ -281,18 +328,20 @@ public class MapManager
     }
 
 
-    private bool IsValid((int y, int x) pos) //움직이고 부수는 블럭은 CommonBlock만 해당
+    private bool IsValid(YX pos, Dictionary<YX, BlockParent> pBoard = null) //움직이고 부수는 블럭은 CommonBlock만 해당
     {
-        if (board.ContainsKey(pos)
-            && board[pos].transform.childCount != 0
-            && board[pos].GetComponent<IMoveAndDesroyable>() == null) return true; //유효성 검사
+        if(pBoard == null) pBoard = board;
+
+        if (pBoard.ContainsKey(pos)
+            && pBoard[pos].transform.childCount != 0
+            && pBoard[pos].GetComponent<IMoveAndDesroyable>() == null) return true; //유효성 검사
         else return false;
 
     }
 
-    private bool IsTop((int y, int x) yx)
+    private bool IsTop(YX yx)
     {
-        if (board.ContainsKey((yx.y - 1, yx.x)))
+        if (board.ContainsKey(new YX(yx.y - 1, yx.x)))
         {
             return false;
         }
@@ -303,17 +352,19 @@ public class MapManager
     }
 
 
-    private List<(int y, int x)> GetNeighbors((int y, int x) baseYX)
+    private List<YX> GetNeighbors(YX baseYX, Dictionary<YX, BlockParent> pBoard = null)
     {
+        if (pBoard == null) pBoard = board;
 
-        List<(int y, int x)> neighbors = new List<(int y, int x)>();
+        List<YX> neighbors = new List<YX>();
 
         (int dy, int dx)[] directions = (baseYX.x % 2 == 1) ? oddXDirections : evenXDirections;
 
         for (int i = 0; i < directions.Length; i++)
         {
-            if (IsValid((baseYX.y + directions[i].dy, baseYX.x + directions[i].dx)))
-                neighbors.Add((baseYX.y + directions[i].dy, baseYX.x + directions[i].dx));
+            YX newYX = new YX(baseYX.y + directions[i].dy, baseYX.x + directions[i].dx);
+            if (IsValid(newYX))
+                neighbors.Add(newYX);
 
         }
 
@@ -322,18 +373,20 @@ public class MapManager
     }
 
 
-    private HashSet<(int y, int x)> CheckIsBurstable((int y, int x) baseYX)
+    private HashSet<YX> CheckIsBurstable(YX baseYX, Dictionary<YX, BlockParent> pBoard = null)
     {
-        HashSet<(int y, int x)> burstables = new HashSet<(int y, int x)>();
+        if(pBoard == null) pBoard = board;
+
+        HashSet<YX> burstables = new HashSet<YX>();
         (int dy, int dx)[] directions = (baseYX.x % 2 == 1) ? oddXDirections : evenXDirections;
 
         for (int i = 0; i < directions.Length; i += 2)
         {
-            var p1 = (y: baseYX.y + directions[i].dy, x: baseYX.x + directions[i].dx);
-            var p2 = (y: baseYX.y + directions[i + 1].dy, x: baseYX.x + directions[i + 1].dx);
+            YX p1 = new YX(baseYX.y + directions[i].dy, baseYX.x + directions[i].dx);
+            YX p2 = new YX(baseYX.y + directions[i + 1].dy, baseYX.x + directions[i + 1].dx);
 
             if (!IsValid(baseYX) || !IsValid(p1) || !IsValid(p2)) continue;
-            if (board[(baseYX.y, baseYX.x)] == null || board[(p1.y, p1.x)] == null || board[(p2.y, p2.x)] == null) continue;
+            if (pBoard[baseYX] == null || pBoard[p1] == null || pBoard[p2] == null) continue;
 
 
 
@@ -342,9 +395,9 @@ public class MapManager
             //    || board[(p1.y, p1.x)].transform.childCount == 0
             //    || board[(p2.y, p2.x)].transform.childCount == 0) continue;
 
-            var type0 = board[(baseYX.y, baseYX.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
-            var type1 = board[(p1.y, p1.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
-            var type2 = board[(p2.y, p2.x)].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
+            var type0 = pBoard[baseYX].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
+            var type1 = pBoard[p1].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
+            var type2 = pBoard[p2].transform.GetChild(0).GetComponent<BlockChild>().GetBlockType();
 
             if (type0.Equals(type1) && type0.Equals(type2))
             {
