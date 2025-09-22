@@ -15,7 +15,7 @@ public abstract class BlockChild : MonoBehaviour
         return blockType;
     }
 
-    protected void turnoff() // 파괴 연출을 위해 게임에 지장 없도록 삭제하지 않고 기능만 끄는 함수.
+    protected void Turnoff() // 파괴 연출을 위해 게임에 지장 없도록 삭제하지 않고 기능만 끄는 함수.
     {
         GetComponent<SpriteRenderer>().enabled = false;
         transform.SetParent(null);// 부모 벗어나고 neighbor감지 안되도록

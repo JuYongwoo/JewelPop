@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: a9b28435c0a521d4fba3303cbb952f93
   m_currentHash:
     serializedVersion: 2
-    Hash: 862b6463c9536b0d714cc20232df011f
+    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_CatalogRequestsTimeout: 0
@@ -61,6 +61,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 5ca7c0d6dd9545e4e811c9650d8172ae, type: 2}
   - {fileID: 11400000, guid: ca542a559ff88e34bb9aee20e4ec0e93, type: 2}
+  - {fileID: 11400000, guid: e9ed175c72a97044882a318e79778a64, type: 2}
   m_BuildSettings:
     m_LogResourceManagerExceptions: 1
     m_BundleBuildPath: Temp/com.unity.addressables/AssetBundles
@@ -100,6 +101,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - BlockChildPrefabs
+    - BlockCrushFX
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 4de53f1cee6e45e4d941ce287b9be5c9, type: 2}

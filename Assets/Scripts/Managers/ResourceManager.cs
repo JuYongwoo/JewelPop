@@ -9,7 +9,7 @@ public class ResourceManager
     public GameObject blockParentObjectPrefab;
     public Dictionary<string, GameObject> blockPrefabs = new Dictionary<string, GameObject>();
 
-    public GameObject blockCrushFxPrefab;
+    public Dictionary<string, GameObject> blockCrushFxPrefabs;
     public GameObject jokerScoreFxPrefab;
 
 
@@ -20,7 +20,7 @@ public class ResourceManager
         blockParentObjectPrefab = Addressables.LoadAssetAsync<GameObject>("BlockParentObjectPrefab").WaitForCompletion();
         blockPrefabs = Util.LoadDictByLabel<GameObject>("BlockChildPrefabs");
 
-        blockCrushFxPrefab = Addressables.LoadAssetAsync<GameObject>("BlockCrush").WaitForCompletion();
+        blockCrushFxPrefabs = Util.LoadDictByLabel<GameObject>("BlockCrushFX");
         jokerScoreFxPrefab = Addressables.LoadAssetAsync<GameObject>("JokerScore").WaitForCompletion();
     
     }

@@ -1,12 +1,12 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class JokerScore : MonoBehaviour
+public class JokerFX : MonoBehaviour
 {
     private Transform goalTranform;
 
     [SerializeField]
-    private float moveSpeed = 5f; //기본 값 5
+    private float moveSpeed = 3f; //기본 값 3
 
     void Start()
     {

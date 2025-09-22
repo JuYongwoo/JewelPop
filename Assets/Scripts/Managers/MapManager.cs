@@ -145,8 +145,8 @@ public class MapManager
         var startParentTransform = startChild.transform.parent;
         var endParentTransform = endChild.transform.parent;
 
-        startChild.GetComponent<IMoveAndDesroyable>().move(endParentTransform);
-        endChild.GetComponent<IMoveAndDesroyable>().move(startParentTransform);
+        startChild.GetComponent<IMoveAndDesroyable>().Move(endParentTransform);
+        endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
 
 
         //moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
@@ -196,7 +196,7 @@ public class MapManager
 
         foreach (var special in specials)
         {
-            special.specialMotion();
+            special.SpecialMotion();
         }
 
 
@@ -255,7 +255,7 @@ public class MapManager
 
             if (newY != y)
             {
-                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>().move(board[(newY, x)].transform); //아래로 이동
+                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>().Move(board[(newY, x)].transform); //아래로 이동
             }
         }
 

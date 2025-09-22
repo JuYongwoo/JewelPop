@@ -3,7 +3,7 @@ using UnityEngine;
 
 
 
-public class BlockCrush : MonoBehaviour
+public class BlockCrushFX : MonoBehaviour
 {
 
 

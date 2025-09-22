@@ -10,52 +10,46 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: BlockChildPrefabs
+  m_Name: BlockCrushFX
   m_EditorClassIdentifier: 
-  m_GroupName: BlockChildPrefabs
+  m_GroupName: BlockCrushFX
   m_GUID: b493011b797a7d145a9beffcd46474e9
   m_SerializeEntries:
-  - m_GUID: 5325cb7451affca4dbfaff5fce72d3d8
-    m_Address: g
+  - m_GUID: 4188ab313fed855498627de32ba85223
+    m_Address: BlockCrush_o
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockChildPrefabs
+    - BlockCrushFX
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7cd5505067afd674588527acad8d34b4
-    m_Address: y
+  - m_GUID: 4389fcb9b105bfc4dba55d2353ab26e6
+    m_Address: BlockCrush_g
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockChildPrefabs
+    - BlockCrushFX
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 8082a2d34a0b3274e96d12cda4590cf4
-    m_Address: j
+  - m_GUID: 7741476c8819b944497d1685705cfb6b
+    m_Address: BlockCrush_pp
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockChildPrefabs
+    - BlockCrushFX
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: aa044294a45051e44bca4cb6764d75a0
-    m_Address: p
+  - m_GUID: 93a1759212b1c9b44a26ddbe3cd0907b
+    m_Address: BlockCrush_y
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockChildPrefabs
+    - BlockCrushFX
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b0c48d01ba49c7743bc704afae2c7725
-    m_Address: o
+  - m_GUID: e196a0a815d57a24dbef4bbeecb51ce5
+    m_Address: BlockCrush_p
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockChildPrefabs
+    - BlockCrushFX
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: be9e6ffee3657eb4c995d156f3b70368
-    m_Address: pp
+  - m_GUID: f67b76532b6da8e4f93978bcb77b40eb
+    m_Address: BlockCrush_r
     m_ReadOnly: 0
     m_SerializedLabels:
-    - BlockChildPrefabs
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: c23b6f4226213cf4ebf3a9d07c800857
-    m_Address: r
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockChildPrefabs
+    - BlockCrushFX
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}

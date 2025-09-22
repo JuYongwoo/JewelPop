@@ -9,7 +9,7 @@ public class JokerBlock : BlockChild, ISpecial
     //public event Action motionEvent;
 
 
-    public void specialMotion()
+    public void SpecialMotion()
     {
         //motionEvent += MotionEvent;
         gameObject.GetComponent<Animator>().SetTrigger("open");
