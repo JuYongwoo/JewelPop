@@ -159,8 +159,8 @@ public class MapManager
         var startParentTransform = startChild.transform.parent;
         var endParentTransform = endChild.transform.parent;
 
-        startChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(endParentTransform);
-        //endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
+        //startChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(endParentTransform);
+        endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
 
 
         //moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
