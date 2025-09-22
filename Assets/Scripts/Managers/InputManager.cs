@@ -8,7 +8,7 @@ public class InputManager
 
     public void OnUpdate()
     {
-
+        if(ManagerObject.instance.actionManager.getIsInMotion() || ManagerObject.instance.actionManager.getIsBoardChanged()) return; //이동 중에는 입력 무시
         if (Input.GetMouseButtonDown(0))
         {
             Click();

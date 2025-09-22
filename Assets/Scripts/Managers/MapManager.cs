@@ -58,7 +58,9 @@ public class MapManager
 
         //¾×¼Ç intermediate
         ManagerObject.instance.actionManager.inputBlockChangeAction = InputBlockChangeEvent;
+        ManagerObject.instance.actionManager.getIsInMotion = () => { return isInMotion; };
         ManagerObject.instance.actionManager.setIsInMotion = (a) => { isInMotion = a; };
+        ManagerObject.instance.actionManager.getIsBoardChanged = () => { return isChanged; };
         ManagerObject.instance.actionManager.setIsBoardChanged = (a) => { isChanged = a; };
 
     }
@@ -160,6 +162,7 @@ public class MapManager
         var endParentTransform = endChild.transform.parent;
 
         //startChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(endParentTransform);
+        startChild.GetComponent<IMoveAndDesroyable>().Move(endParentTransform);
         endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
 
 
