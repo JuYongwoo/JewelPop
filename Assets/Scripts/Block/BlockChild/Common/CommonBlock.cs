@@ -54,7 +54,7 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
 
     }
 
-    public void moveAndBack(Transform targetParent)
+    public void MoveAndBack(Transform targetParent)
     {
         var aPos = new Vector3(transform.parent.position.x, transform.transform.parent.position.y, transform.position.z);
         var bPos = new Vector3(targetParent.position.x, targetParent.position.y, transform.position.z);
@@ -64,10 +64,12 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
     private IEnumerator moveAndBackCoroutine(Transform targetParent, Vector3 startPos, Vector3 endPos)
     {
         float t = 0f;
+        float t2 = 0f;
         float endDist = 0.01f * 0.01f;
 
         ManagerObject.instance.actionManager.setIsInMotion(true);
         ManagerObject.instance.actionManager.setIsBoardChanged(true);
+
 
         while (true)
         {
@@ -76,16 +78,19 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
             if (t > 1f) t = 1f;
             transform.position = Vector3.Lerp(startPos, endPos, t);
             //            transform.position = Vector3.MoveTowards(transform.position, endPos, speed * Time.deltaTime);
-            if ((transform.position - endPos).sqrMagnitude <= endDist) break;
+            if ((transform.position - endPos).sqrMagnitude <= endDist)
+            {
+                break;
+            }
             yield return null;
         }
 
         while (true)
         {
             if (transform == null) yield break; //ÆÄ±«µÈ °æ¿ì
-            t += Time.deltaTime * speed;
-            if (t > 1f) t = 1f;
-            transform.position = Vector3.Lerp(endPos, startPos, t);
+            t2 += Time.deltaTime * speed;
+            if (t2 > 1f) t2 = 1f;
+            transform.position = Vector3.Lerp(endPos, startPos, t2);
             //            transform.position = Vector3.MoveTowards(transform.position, endPos, speed * Time.deltaTime);
             if ((transform.position - startPos).sqrMagnitude <= endDist) break;
             yield return null;
@@ -94,7 +99,7 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
 
 
         ManagerObject.instance.actionManager.setIsInMotion(false);
-        transform.position = endPos;
+        transform.position = startPos;
 
     }
 

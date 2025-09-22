@@ -142,11 +142,25 @@ public class MapManager
         }
 
 
+
+
+
+
+        //TODO JYW
+        //이동해봤는데 CheckIsBurstable(새로운 위치) 의 개수가 0이면 moveandback
+        //이동해봤는데 개수가 1이상이면 move
+
+
+
+
+
+
+
         var startParentTransform = startChild.transform.parent;
         var endParentTransform = endChild.transform.parent;
 
-        startChild.GetComponent<IMoveAndDesroyable>().Move(endParentTransform);
-        endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
+        startChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(endParentTransform);
+        //endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
 
 
         //moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
