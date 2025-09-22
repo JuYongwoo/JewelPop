@@ -142,54 +142,14 @@ public class MapManager
         }
 
 
-        //var startParentTransform = startChild.transform.parent;
-        //var endParentTransform = endChild.transform.parent;
+        var startParentTransform = startChild.transform.parent;
+        var endParentTransform = endChild.transform.parent;
 
-        //startChild.GetComponent<Basic>().move(endParentTransform);
-        //endChild.GetComponent<Basic>().move(startParentTransform);
-
-
-        moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
-    }
-
-    public void moveTo(GameObject startArg, GameObject nextArg, bool isSwap = false) //반드시 이 함수를 통해 이동
-    {
+        startChild.GetComponent<IMoveAndDesroyable>().move(endParentTransform);
+        endChild.GetComponent<IMoveAndDesroyable>().move(startParentTransform);
 
 
-        var aPos = new Vector3(startArg.transform.position.x, startArg.transform.position.y, startArg.transform.GetChild(0).position.z);
-        var bPos = new Vector3(nextArg.transform.position.x, nextArg.transform.position.y, startArg.transform.GetChild(0).position.z);
-
-        ManagerObject.instance.StartCoroutine(MoveChild(startArg.transform.GetChild(0), nextArg.transform, aPos, bPos));
-        if (isSwap)
-        {
-            ManagerObject.instance.StartCoroutine(MoveChild(nextArg.transform.GetChild(0), startArg.transform, bPos, aPos));
-
-        }
-
-    }
-
-
-    // 자식 Transform을 직접 받아서 이동 (부모에서 다시 GetChild(0) 하지 않음)
-    private IEnumerator MoveChild(UnityEngine.Transform child, UnityEngine.Transform targetParent, Vector3 startPos, Vector3 endPos)
-    {
-        child.SetParent(targetParent, true);
-        float t = 0f, speed = 5f, snap2 = 0.01f * 0.01f;
-        
-        isInMotion = true; //모션중
-        isChanged = true; // 어딘가 움직였다는 것은 보드 상태가 변했다는 것을 의미
-        
-        while (true)
-        {
-            if(child == null) yield break; //파괴된 경우
-            t += Time.deltaTime * speed; if (t > 1f) t = 1f;
-            child.position = Vector3.Lerp(startPos, endPos, t);
-            if ((child.position - endPos).sqrMagnitude <= snap2) break;
-            yield return null;
-        }
-
-        child.position = endPos;
-
-        isInMotion = false;
+        //moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
     }
 
 
@@ -209,7 +169,7 @@ public class MapManager
 
     private void DestroyBlocks(List<(int y, int x)> dels)
     {
-        HashSet<SpecialBlock> specials = new HashSet<SpecialBlock>(); //중복 참조 방지, 셋 사용
+        HashSet<ISpecial> specials = new HashSet<ISpecial>(); //중복 참조 방지, 셋 사용
 
         foreach (var a in dels)
         {
@@ -219,16 +179,16 @@ public class MapManager
 
                 foreach (var n in GetNeighbors(a))
                 {
-                    if (board[n].transform.GetChild(0).GetComponent<SpecialBlock>() != null) //blockparent의 type으로 검사해도 무방
+                    if (board[n].transform.GetChild(0).GetComponent<ISpecial>() != null) //blockparent의 type으로 검사해도 무방
                     {
-                        specials.Add(board[n].transform.GetChild(0).GetComponent<SpecialBlock>());
+                        specials.Add(board[n].transform.GetChild(0).GetComponent<ISpecial>());
 
                         //조커의 상태 bool on으로 바꿔야
                     }
                 }
 
 
-                board[a].transform.GetChild(0).GetComponent<CommonBlockInterface>().DestroySelf();
+                board[a].transform.GetChild(0).GetComponent<IMoveAndDesroyable>().DestroySelf();
             }
         }
 
@@ -295,9 +255,7 @@ public class MapManager
 
             if (newY != y)
             {
-
-                // 코루틴 실행 → 블럭을 실제로 움직임
-                moveTo(block.gameObject, board[(newY, x)].gameObject);
+                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>().move(board[(newY, x)].transform); //아래로 이동
             }
         }
 
@@ -310,7 +268,7 @@ public class MapManager
     {
         if (board.ContainsKey(pos)
             && board[pos].transform.childCount != 0
-            && board[pos].GetComponent<CommonBlockInterface>() == null) return true; //유효성 검사
+            && board[pos].GetComponent<IMoveAndDesroyable>() == null) return true; //유효성 검사
         else return false;
 
     }
