@@ -15,7 +15,7 @@ public class ManagerObject : MonoBehaviour
     {
         makeInstanceSelf();
         resourceManager.OnAwake();
-        gameManager.setLevel(resourceManager.LevelDatasJSON["Level_1"].text); //현재 스테이지에 따라 맞는 레벨 데이터 로드(지금은 Level_1만)
+        gameManager.setLevel(resourceManager.LevelDatasJSON["Level_1"].text); //현재 스테이지에 따라 맞는 레벨 데이터 로드(지금은 Level_1만)// 서버에서 받아오는 걸로 바꿔야함
         mapManager.OnAwake(gameManager.currentLevel); //
     }
 

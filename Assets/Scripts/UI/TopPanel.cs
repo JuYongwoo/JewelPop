@@ -17,6 +17,9 @@ public class TopPanel : MonoBehaviour
     {
         ManagerObject.instance.actionManager.getJokerGoalTranform  = () => { return topPanelObjs["TopCurrentScoreText"].transform; };
 
+        Image image = topPanelObjs["TopCurrentScoreFrontImg"].GetComponent<Image>();
+        image.fillMethod = Image.FillMethod.Vertical;
+        image.fillOrigin = 0; // 0 = 밑에서 위로, 1 = 위에서 아래로
 
     }
     private void setCurrentStage(int stage)
@@ -27,13 +30,8 @@ public class TopPanel : MonoBehaviour
     private void setScore(int currentScore, int goalScore)
     {
         topPanelObjs["TopCurrentScoreText"].GetComponent<Text>().text = currentScore.ToString();
-        topPanelObjs["TopGoalBodyText"].GetComponent<Text>().text = (goalScore-currentScore).ToString();
-
-
-        Image image = topPanelObjs["TopCurrentScoreFrontImg"].GetComponent<Image>();
-        image.fillMethod = UnityEngine.UI.Image.FillMethod.Vertical;
-        image.fillOrigin = 0; // 0 = 밑에서 위로, 1 = 위에서 아래로
-        image.fillAmount = Mathf.Clamp01((float)currentScore / (float)goalScore);
+        topPanelObjs["TopGoalBodyText"].GetComponent<Text>().text = (goalScore-currentScore) >= 0 ? (goalScore - currentScore).ToString() : "0";
+        topPanelObjs["TopCurrentScoreFrontImg"].GetComponent<Image>().fillAmount = Mathf.Clamp01((float)currentScore / (float)goalScore);
     }
 
 }
