@@ -9,6 +9,11 @@ public class Util
 {
 
 
+    public static T Load<T>(string key) where T : UnityEngine.Object
+    {
+        T obj = Addressables.LoadAssetAsync<T>(key).WaitForCompletion();
+        return obj;
+    }
     public static Dictionary<string, T> LoadDictByLabel<T>(string label) where T : UnityEngine.Object
     {
         var dict = new Dictionary<string, T>();

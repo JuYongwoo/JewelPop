@@ -9,16 +9,31 @@ public class TopPanel : MonoBehaviour
     private void Awake()
     {
         topPanelObjs = Util.mapDictionaryInChildrenAll<GameObject>(this.gameObject);
+        ActionManager.setScoreUI = setScore;
+        ActionManager.setCurrentStageUI = setCurrentStage;
     }
 
     private void Start()
     {
-        ManagerObject.instance.actionManager.getJokerGoalTranform  = () => { return topPanelObjs["TopScoreText"].transform; };
-        ManagerObject.instance.actionManager.setScoreUI = setScore;
+        ManagerObject.instance.actionManager.getJokerGoalTranform  = () => { return topPanelObjs["TopCurrentScoreText"].transform; };
+
+
+    }
+    private void setCurrentStage(int stage)
+    {
+        topPanelObjs["TopCurrentStageBodyText"].GetComponent<Text>().text = stage.ToString();
     }
 
-    private void setScore(int Score)
+    private void setScore(int currentScore, int goalScore)
     {
-        topPanelObjs["TopScoreText"].GetComponent<Text>().text = Score.ToString();
+        topPanelObjs["TopCurrentScoreText"].GetComponent<Text>().text = currentScore.ToString();
+        topPanelObjs["TopGoalBodyText"].GetComponent<Text>().text = (goalScore-currentScore).ToString();
+
+
+        Image image = topPanelObjs["TopCurrentScoreFrontImg"].GetComponent<Image>();
+        image.fillMethod = UnityEngine.UI.Image.FillMethod.Vertical;
+        image.fillOrigin = 0; // 0 = 밑에서 위로, 1 = 위에서 아래로
+        image.fillAmount = Mathf.Clamp01((float)currentScore / (float)goalScore);
     }
+
 }

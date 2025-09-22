@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
 public class ResourceManager
 {
-    public TextAsset mapJSON;
+    public Dictionary<string, TextAsset> LevelDatasJSON;
 
     public GameObject blockParentObjectPrefab;
     public Dictionary<string, GameObject> blockPrefabs = new Dictionary<string, GameObject>();
@@ -15,13 +14,13 @@ public class ResourceManager
 
     public void OnAwake()
     {
-        mapJSON = Addressables.LoadAssetAsync<TextAsset>("MapJSON").WaitForCompletion();
-        
-        blockParentObjectPrefab = Addressables.LoadAssetAsync<GameObject>("BlockParentObjectPrefab").WaitForCompletion();
+        LevelDatasJSON = Util.LoadDictByLabel<TextAsset>("LevelDatasJSON");
+
+        blockParentObjectPrefab = Util.Load<GameObject>("BlockParentObjectPrefab");
         blockPrefabs = Util.LoadDictByLabel<GameObject>("BlockChildPrefabs");
 
         blockCrushFxPrefabs = Util.LoadDictByLabel<GameObject>("BlockCrushFX");
-        jokerScoreFxPrefab = Addressables.LoadAssetAsync<GameObject>("JokerScore").WaitForCompletion();
+        jokerScoreFxPrefab = Util.Load<GameObject>("JokerScore");
     
     }
 

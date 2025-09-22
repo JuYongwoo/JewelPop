@@ -59,6 +59,7 @@ MonoBehaviour:
   m_BuildAddressablesWithPlayerBuild: 0
   m_overridePlayerVersion: '[UnityEditor.PlayerSettings.bundleVersion]'
   m_GroupAssets:
+  - {fileID: 11400000, guid: 64b26f0196ced1c43b1c108e280d4429, type: 2}
   - {fileID: 11400000, guid: 5ca7c0d6dd9545e4e811c9650d8172ae, type: 2}
   - {fileID: 11400000, guid: ca542a559ff88e34bb9aee20e4ec0e93, type: 2}
   - {fileID: 11400000, guid: e9ed175c72a97044882a318e79778a64, type: 2}
@@ -102,6 +103,7 @@ MonoBehaviour:
     m_LabelNames:
     - BlockChildPrefabs
     - BlockCrushFX
+    - LevelDatasJSON
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 4de53f1cee6e45e4d941ce287b9be5c9, type: 2}

@@ -1,5 +1,7 @@
 {
-  "id": 1,
+  "stage": 7,
+  "goalType" : "Joker",
+  "goalScore" : 5,
   "grids": [
 
     {"y":0,"x":0,"type":"p"},

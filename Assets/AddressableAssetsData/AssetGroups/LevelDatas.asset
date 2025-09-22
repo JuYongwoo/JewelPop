@@ -10,24 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Default Local Group
+  m_Name: LevelDatas
   m_EditorClassIdentifier: 
-  m_GroupName: Default Local Group
-  m_GUID: a9b28435c0a521d4fba3303cbb952f93
+  m_GroupName: LevelDatas
+  m_GUID: 2ea8f8dfa143e004ca99a07e141ecabe
   m_SerializeEntries:
-  - m_GUID: 064b3d27680ab744ba168395558e1d5b
-    m_Address: JokerScore
+  - m_GUID: dfa7064a1bcf43e43b8c15d5d1eb51fd
+    m_Address: Level_1
     m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 60528e8283317534a97d43202e18c794
-    m_Address: BlockParentObjectPrefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - LevelDatasJSON
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 19c596a09d6841c4c8e73b88a6f1ce21, type: 2}
-    - {fileID: 11400000, guid: c6a1323d6a3d7804a83c44bf9b978e8f, type: 2}
+    - {fileID: 11400000, guid: 8a5c23dcbaf4725448a118598de77091, type: 2}
+    - {fileID: 11400000, guid: cebe9812ca147104cac79bc2d86168a3, type: 2}

@@ -16,7 +16,6 @@ public class MapManager
 {
 
     private Dictionary<YX, BlockParent> board = new Dictionary<YX, BlockParent>();
-    private JSONVars jsonVars;
 
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
@@ -52,13 +51,11 @@ public class MapManager
     };
 
 
-    public void OnAwake()
+    public void OnAwake(JSONVars JSONvars)
     {
-        //JSON 읽기
-        jsonVars = JsonUtility.FromJson<JSONVars>(ManagerObject.instance.resourceManager.mapJSON.text); //JSON 파일을 JSONVars로 읽어온다
         
         //맵 제작
-        SetBlocks();
+        SetBlocks(JSONvars);
 
         //위치 중앙으로
         MoveMiddleBlockToOrigin();
@@ -103,7 +100,7 @@ public class MapManager
     }
 
 
-    private void SetBlocks()
+    private void SetBlocks(JSONVars jsonVars)
     {
         foreach (var grid in jsonVars.grids)
         {
