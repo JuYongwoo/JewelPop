@@ -4,16 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum BlockType{ //
-    g,
-    p,
-    pp,
-    y,
-    o,
-    r,
-    j
-
-}
 
 public class MapManager
 {
@@ -24,8 +14,8 @@ public class MapManager
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
 
-    private bool inMotion = false; //블럭이 움직이는 중인지
-    private bool isChanged = false;//보드 상태가 바뀐 상태인지
+    public bool isInMotion = false; //블럭이 움직이는 중인지
+    public bool isChanged { get; set; }//보드 상태가 바뀐 상태인지
 
 
 
@@ -67,14 +57,12 @@ public class MapManager
         MoveMiddleBlockToOrigin();
 
         //액션 intermediate
-        ManagerObject.instance.actionManager.blockChangeAction = BlockChange;
+        ManagerObject.instance.actionManager.inputBlockChangeAction = InputBlockChangeEvent;
+        ManagerObject.instance.actionManager.setIsInMotion = (a) => { isInMotion = a; };
+        ManagerObject.instance.actionManager.setIsBoardChanged = (a) => { isChanged = a; };
 
     }
 
-    public void OnStart()
-    {
-
-    }
 
     public void OnUpdate()
     {
@@ -85,7 +73,7 @@ public class MapManager
 
 
 
-            if (!inMotion) //모션 중이 아닐때만 생성&파괴
+            if (!isInMotion) //모션 중이 아닐때만 생성&파괴
             {
                 var dels = checkChains();
                 if (dels.Count != 0)
@@ -119,8 +107,8 @@ public class MapManager
 
 
             //자식 오브젝트(블록)
-            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[(BlockType)Enum.Parse(typeof(BlockType), grid.type)], board[(grid.y, grid.x)].transform);
-            child.GetComponent<BlockChild>().SetBlockType((BlockType)Enum.Parse(typeof(BlockType), grid.type)); // 여기서 타입을 설정
+            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[(grid.y, grid.x)].transform);
+            child.GetComponent<BlockChild>().SetBlockType(grid.type); // 여기서 타입을 설정
 
         }
     }
@@ -145,19 +133,26 @@ public class MapManager
             go.transform.localPosition += new Vector3(offset.x, offset.y, 0);
     }
 
-    private void BlockChange(GameObject startArg, GameObject nextArg)
+    private void InputBlockChangeEvent(GameObject startChild, GameObject endChild)
     {
 
-        if (!GetNeighbors(startArg.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()).Contains(nextArg.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()))
+        if (!GetNeighbors(startChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()).Contains(endChild.transform.parent.GetComponent<BlockParent>().GetGridPositionYX()))
         {
             return; //이웃이 아니면 리턴
         }
 
 
-        moveTo(startArg.transform.parent.gameObject, nextArg.transform.parent.gameObject, true);
+        //var startParentTransform = startChild.transform.parent;
+        //var endParentTransform = endChild.transform.parent;
+
+        //startChild.GetComponent<Basic>().move(endParentTransform);
+        //endChild.GetComponent<Basic>().move(startParentTransform);
+
+
+        moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
     }
 
-    void moveTo(GameObject startArg, GameObject nextArg, bool isSwap = false)
+    public void moveTo(GameObject startArg, GameObject nextArg, bool isSwap = false) //반드시 이 함수를 통해 이동
     {
 
 
@@ -180,11 +175,12 @@ public class MapManager
         child.SetParent(targetParent, true);
         float t = 0f, speed = 5f, snap2 = 0.01f * 0.01f;
         
-        inMotion = true; //모션중
+        isInMotion = true; //모션중
         isChanged = true; // 어딘가 움직였다는 것은 보드 상태가 변했다는 것을 의미
         
         while (true)
         {
+            if(child == null) yield break; //파괴된 경우
             t += Time.deltaTime * speed; if (t > 1f) t = 1f;
             child.position = Vector3.Lerp(startPos, endPos, t);
             if ((child.position - endPos).sqrMagnitude <= snap2) break;
@@ -193,7 +189,7 @@ public class MapManager
 
         child.position = endPos;
 
-        inMotion = false;
+        isInMotion = false;
     }
 
 
@@ -213,14 +209,36 @@ public class MapManager
 
     private void DestroyBlocks(List<(int y, int x)> dels)
     {
+        HashSet<SpecialBlock> specials = new HashSet<SpecialBlock>(); //중복 참조 방지, 셋 사용
 
         foreach (var a in dels)
         {
             if (IsValid(a))
             {
-                board[a].transform.GetChild(0).GetComponent<BlockChild>().DestroySelf();
+
+
+                foreach (var n in GetNeighbors(a))
+                {
+                    if (board[n].transform.GetChild(0).GetComponent<SpecialBlock>() != null) //blockparent의 type으로 검사해도 무방
+                    {
+                        specials.Add(board[n].transform.GetChild(0).GetComponent<SpecialBlock>());
+
+                        //조커의 상태 bool on으로 바꿔야
+                    }
+                }
+
+
+                board[a].transform.GetChild(0).GetComponent<CommonBlockInterface>().DestroySelf();
             }
         }
+
+
+
+        foreach (var special in specials)
+        {
+            special.specialMotion();
+        }
+
 
     }
 
@@ -228,13 +246,13 @@ public class MapManager
     private void AddNewBlocks(List<(int y, int x)> tops)
     {
 
-
+        string[] str = new string[] {"r", "p", "pp", "o", "r", "y" };
         // tops에 있는 위치에 새 블록 소환
         foreach (var pos in tops)
         {
-            BlockType randomType = (BlockType)UnityEngine.Random.Range(0, Enum.GetNames(typeof(BlockType)).Length - 1); // j 제외
-            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[randomType], board[pos].transform);
-            child.GetComponent<BlockChild>().SetBlockType(randomType); // 여기서 타입을 설정
+            var rd = str[UnityEngine.Random.Range(0, str.Length)];
+            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[rd], board[pos].transform);
+            child.GetComponent<BlockChild>().SetBlockType(rd); // 여기서 타입을 설정
         }
 
 
@@ -288,9 +306,11 @@ public class MapManager
     }
 
 
-    private bool IsValid((int y, int x) pos)
+    private bool IsValid((int y, int x) pos) //움직이고 부수는 블럭은 CommonBlock만 해당
     {
-        if (board.ContainsKey(pos) && board[pos].transform.childCount != 0) return true; //맵에 등록 & 자식오브젝트가 있는가
+        if (board.ContainsKey(pos)
+            && board[pos].transform.childCount != 0
+            && board[pos].GetComponent<CommonBlockInterface>() == null) return true; //유효성 검사
         else return false;
 
     }
@@ -327,9 +347,9 @@ public class MapManager
     }
 
 
-    private List<(int y, int x)> CheckIsBurstable((int y, int x) baseYX)
+    private HashSet<(int y, int x)> CheckIsBurstable((int y, int x) baseYX)
     {
-        List<(int y, int x)> burstables = new List<(int y, int x)>();
+        HashSet<(int y, int x)> burstables = new HashSet<(int y, int x)>();
         (int dy, int dx)[] directions = (baseYX.x % 2 == 1) ? oddXDirections : evenXDirections;
 
         for (int i = 0; i < directions.Length; i += 2)
@@ -362,21 +382,6 @@ public class MapManager
 
 
 
-        if (burstables.Count != 0)
-        {
-            foreach (var a in burstables)
-            {
-                foreach (var n in GetNeighbors(a))
-                {
-                    if (board[n].transform.GetChild(0).GetComponent<Joker>() != null) //blockparent의 type으로 검사해도 무방
-                    {
-                        board[n].transform.GetChild(0).GetComponent<Joker>().motionStart();//중복 실행되도 플래그 사용하여 무방
-                        //조커의 상태 bool on으로 바꿔야
-                    }
-                }
-            }
-
-        }
         /////조커 확인
         ///
         ////////

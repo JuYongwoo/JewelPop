@@ -3,9 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class Util
 {
+
+
+    public static Dictionary<string, T> LoadDictByLabel<T>(string label) where T : UnityEngine.Object
+    {
+        var dict = new Dictionary<string, T>();
+
+        // 라벨에 해당하는 모든 리소스 위치 가져오기
+        IList<IResourceLocation> locations = Addressables.LoadResourceLocationsAsync(label, typeof(T)).WaitForCompletion();
+
+        foreach (var loc in locations)
+        {
+            // Address(PrimaryKey)가 곧 Dictionary의 key
+            string key = loc.PrimaryKey;
+
+            // 동기 로드
+            T asset = Addressables.LoadAssetAsync<T>(key).WaitForCompletion();
+
+            dict[key] = asset;
+        }
+
+        return dict;
+    }
 
     public static Dictionary<string, T2> mapDictionaryInChildrenAll<T2>(GameObject go) where T2 : UnityEngine.Object
     {

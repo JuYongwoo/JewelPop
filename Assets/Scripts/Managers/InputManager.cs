@@ -52,7 +52,12 @@ public class InputManager
 
     private void HandleClicking()
     {
-
+        if (startBlock == null) //누르고 있는 동안 사라졌다
+        {
+            UnClick();
+            return;
+        }
+        
         //맞은 객체가 바뀌는 순간 그 블럭과 교체한다.
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -63,7 +68,7 @@ public class InputManager
 
             if (hit.collider.gameObject != startBlock)
             {
-                ManagerObject.instance.actionManager.blockChangeAction(startBlock, hit.collider.gameObject);
+                ManagerObject.instance.actionManager.inputBlockChangeAction(startBlock, hit.collider.gameObject);
                 UnClick();
             }
         }

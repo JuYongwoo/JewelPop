@@ -4,19 +4,16 @@ public abstract class BlockChild : MonoBehaviour
 {
 
     [HideInInspector]
-    private BlockType blockType; //GameManage에서 오브젝트 생성과 함께 JSON에서 받아온 타입이 대입
+    private string blockType; //GameManage에서 오브젝트 생성과 함께 JSON에서 받아온 타입이 대입
 
-    public void SetBlockType(BlockType blockType)
+    public void SetBlockType(string blockType)
     {
         this.blockType = blockType;
     }
-    public BlockType GetBlockType()
+    public string GetBlockType()
     {
         return blockType;
     }
-
-    public abstract void DestroySelf();// 블럭종류마다 파괴 모션이 다르므로 자식에서 구현 강제화
-
 
     protected void turnoff() // 파괴 연출을 위해 게임에 지장 없도록 삭제하지 않고 기능만 끄는 함수.
     {

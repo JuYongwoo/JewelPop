@@ -13,6 +13,7 @@ public class TopPanel : MonoBehaviour
 
     private void Start()
     {
+        ManagerObject.instance.actionManager.getJokerGoalTranform  = () => { return topPanelObjs["TopScoreText"].transform; };
         ManagerObject.instance.actionManager.setScoreUI = setScore;
     }
 
