@@ -20,7 +20,7 @@ public class ManagerObject : MonoBehaviour
     }
 
     private void Start()
-    {
+    {;
         Application.targetFrameRate = 60; //프레임 레이트 설정 (안드로이드 30프레임 저하 차단)
         gameManager.OnStart();
     }

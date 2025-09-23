@@ -4,7 +4,8 @@ using UnityEngine;
 
 public struct YX
 {
-    public YX(int y, int x) {
+    public YX(int y, int x)
+    {
         this.y = y;
         this.x = x;
     }
@@ -14,6 +15,18 @@ public struct YX
 
 public class MapManager
 {
+    // ==================== FSM 추가 (분기 전용) ====================
+    private enum BoardFSMState
+    {
+        Dropping,   // 블럭 내리는중
+        Destroying, // 연속 찾고 파괴하는중
+        Spawning    // 새로운 블럭생성하는중
+    }
+
+    private BoardFSMState fsmState = BoardFSMState.Dropping;
+    private int _lastDelsCount = 0;
+    private int _lastTopsCount = 0;
+    // ============================================================
 
     private Dictionary<YX, BlockParent> board = new Dictionary<YX, BlockParent>();
 
@@ -23,13 +36,10 @@ public class MapManager
     public bool isInMotion = false; //블럭이 움직이는 중인지
     public bool isChanged { get; set; }//보드 상태가 바뀐 상태인지
 
-
-
-    (int dy, int dx)[] oddXDirections = new(int dy, int dx)[] {
+    (int dy, int dx)[] oddXDirections = new (int dy, int dx)[] {
         //각 두개마다 base가 들어가면 연속 3블럭
         (-1, -1),
         (0, 1),
-
 
         (-1, 1),
         (0, -1),
@@ -42,7 +52,6 @@ public class MapManager
         (1, -1),
         (0, 1),
 
-
         (1, 1),
         (0, -1),
 
@@ -50,10 +59,8 @@ public class MapManager
         (-1, 0),
     };
 
-
     public void OnAwake(JSONVars JSONvars)
     {
-        
         //맵 제작
         SetBlocks(JSONvars);
 
@@ -66,39 +73,66 @@ public class MapManager
         ManagerObject.instance.actionManager.setIsInMotion = (a) => { isInMotion = a; };
         ManagerObject.instance.actionManager.getIsBoardChanged = () => { return isChanged; };
         ManagerObject.instance.actionManager.setIsBoardChanged = (a) => { isChanged = a; };
-
     }
-
 
     public void OnUpdate()
     {
-
-        if (isChanged)
+        // 안정 상태면 FSM 리셋 후 종료 (분기만 FSM으로, 로직 불변)
+        if (!isChanged)
         {
-            DropAllBlocks(); //이동부분을 관장
+            fsmState = BoardFSMState.Dropping;
+            return;
+        }
 
-
-
-            if (!isInMotion) //모션 중이 아닐때만 생성&파괴
-            {
-                var dels = checkAllChains();
-                if (dels.Count != 0)
+        switch (fsmState)
+        {
+            case BoardFSMState.Dropping: // 블럭 내리는중
                 {
-                    DestroyBlocks(dels);
+                    DropAllBlocks(); // 원래 그대로
+
+                    // 원래 로직대로, 움직임 끝난 뒤 다음 단계로
+                    if (!isInMotion)
+                    {
+                        fsmState = BoardFSMState.Destroying;
+                    }
+                    break;
                 }
 
-                var tops = checkEmptyTops();
-                if (tops.Count != 0)
+            case BoardFSMState.Destroying: // 연속 찾고 파괴하는중
                 {
-                    AddNewBlocks(tops);
+                    var dels = checkAllChains();                // 원래 로직 유지
+                    _lastDelsCount = dels.Count;               // 안정 판정에 사용하기 위해 저장
+                    if (_lastDelsCount != 0)
+                    {
+                        DestroyBlocks(dels);                   // 원래 로직 유지
+                    }
+
+                    // 다음은 생성 단계
+                    fsmState = BoardFSMState.Spawning;
+                    break;
                 }
 
-                if(dels.Count == 0 && tops.Count == 0) isChanged = false; //생성도 파괴도 할 것이 없으면 안정된 상태
+            case BoardFSMState.Spawning: // 새로운 블럭생성하는중
+                {
+                    var tops = checkEmptyTops();               // 원래 로직 유지
+                    _lastTopsCount = tops.Count;               // 안정 판정에 사용하기 위해 저장
+                    if (_lastTopsCount != 0)
+                    {
+                        AddNewBlocks(tops);                    // 원래 로직 유지
+                    }
 
-            }
+                    // 원래 OnUpdate의 안정 판정 로직 그대로
+                    if (_lastDelsCount == 0 && _lastTopsCount == 0)
+                    {
+                        isChanged = false;                     // 안정된 상태
+                    }
+
+                    // 다음 프레임에는 낙하부터 재개
+                    fsmState = BoardFSMState.Dropping;
+                    break;
+                }
         }
     }
-
 
     private void SetBlocks(JSONVars jsonVars)
     {
@@ -112,19 +146,14 @@ public class MapManager
             board[yx].SetGridPositionYX(yx); //그리드 좌표
             board[yx].SetUnityPositionYX(grid.x % 2 == 1 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep) : (-grid.y * yStep, grid.x * xStep)); //유니티 좌표, 지그재그, 홀수 X는 위로 반칸
 
-
             //자식 오브젝트(블록)
             GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[yx].transform);
             child.GetComponent<BlockChild>().SetBlockType(grid.type); // 여기서 타입을 설정
-
         }
     }
 
-
-
     private void MoveMiddleBlockToOrigin()
     {
-
         // 무게중심
         Vector2 centroid = Vector2.zero;
         foreach (var go in board.Values)
@@ -149,7 +178,6 @@ public class MapManager
             return; //이웃이 아니면 리턴
         }
 
-
         Dictionary<YX, BlockParent> fakeBoard = new Dictionary<YX, BlockParent>(board); //얕은 복사
 
         // 블록 위치를 교환 시뮬레이션
@@ -167,7 +195,6 @@ public class MapManager
             cates.Add(n); //도착지점의 이웃들 추가
         }
 
-
         //이 후보지들 중에 3라인이 가능한 곳이 있는가?
         bool canBurst = false;
 
@@ -181,27 +208,18 @@ public class MapManager
             }
         }
 
-
-
         //TODO JYW
         //이동해봤는데 CheckIsBurstable(새로운 위치와 그 neighbors) 의 개수가 0이면 moveandback
         //이동해봤는데 개수가 1이상이면 move
         //이동해 볼 때 가짜 보드를 하나 만들고
 
-
-
-
-
-
         var startParentTransform = startChild.transform.parent;
         var endParentTransform = endChild.transform.parent;
-
 
         if (canBurst)
         {
             startChild.GetComponent<IMoveAndDesroyable>().Move(endParentTransform);
             endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
-
         }
         else if (!canBurst)
         {
@@ -209,12 +227,8 @@ public class MapManager
             endChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(startParentTransform);
         }
 
-
         //moveTo(startChild.transform.parent.gameObject, endChild.transform.parent.gameObject, true);
     }
-
-
-
 
     private List<YX> checkAllChains()
     {
@@ -223,10 +237,8 @@ public class MapManager
             foreach (var del in CheckIsBurstable(grid.Key))
                 dels.Add(del);
 
-
         return dels;
     }
-
 
     private void DestroyBlocks(List<YX> dels)
     {
@@ -236,8 +248,6 @@ public class MapManager
         {
             if (IsValid(a))
             {
-
-
                 foreach (var n in GetNeighbors(a))
                 {
                     if (board[n].transform.GetChild(0).GetComponent<ISpecial>() != null) //blockparent의 type으로 검사해도 무방
@@ -248,26 +258,19 @@ public class MapManager
                     }
                 }
 
-
                 board[a].transform.GetChild(0).GetComponent<IMoveAndDesroyable>().DestroySelf();
             }
         }
-
-
 
         foreach (var special in specials)
         {
             special.SpecialMotion();
         }
-
-
     }
-
 
     private void AddNewBlocks(List<YX> tops)
     {
-
-        string[] str = new string[] {"r", "p", "pp", "o", "r", "y" };
+        string[] str = new string[] { "r", "p", "pp", "o", "r", "y" };
         // tops에 있는 위치에 새 블록 소환
         foreach (var pos in tops)
         {
@@ -275,9 +278,8 @@ public class MapManager
             GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[rd], board[pos].transform);
             child.GetComponent<BlockChild>().SetBlockType(rd); // 여기서 타입을 설정
         }
-
-
     }
+
     private List<YX> checkEmptyTops()
     {
         List<YX> tops = new List<YX>();
@@ -294,8 +296,6 @@ public class MapManager
     private void DropAllBlocks()
     {
         // y가 큰 블럭부터 검사 (위에서 아래로 내려오기 때문에)
-
-        
         var keys = board.Keys.OrderByDescending(k => k.y).ToList(); //내림차순, y값이 높을 수록 아래에 위치 // 아래에서 위로 탐색
 
         foreach (var key in keys)
@@ -309,7 +309,7 @@ public class MapManager
             int newY = y;
 
             // 밑으로 갈 수 있는 만큼 내림(아래칸의 자식 오브젝트가 없으면)
-            while (board.ContainsKey(new YX(newY+1, x)) && board[new YX(newY + 1, x)].transform.childCount==0)
+            while (board.ContainsKey(new YX(newY + 1, x)) && board[new YX(newY + 1, x)].transform.childCount == 0)
             {
                 newY++;
             }
@@ -320,20 +320,17 @@ public class MapManager
             }
         }
 
-
         //ClearAll3Chains(); //다시 재귀적으로 흘러간다.
     }
 
-
     private bool IsValid(YX pos, Dictionary<YX, BlockParent> pBoard = null) //움직이고 부수는 블럭은 CommonBlock만 해당
     {
-        if(pBoard == null) pBoard = board;
+        if (pBoard == null) pBoard = board;
 
         if (pBoard.ContainsKey(pos)
             && pBoard[pos].transform.childCount != 0
             && pBoard[pos].GetComponent<IMoveAndDesroyable>() == null) return true; //유효성 검사
         else return false;
-
     }
 
     private bool IsTop(YX yx)
@@ -348,7 +345,6 @@ public class MapManager
         }
     }
 
-
     private List<YX> GetNeighbors(YX baseYX, Dictionary<YX, BlockParent> pBoard = null)
     {
         if (pBoard == null) pBoard = board;
@@ -362,17 +358,14 @@ public class MapManager
             YX newYX = new YX(baseYX.y + directions[i].dy, baseYX.x + directions[i].dx);
             if (IsValid(newYX))
                 neighbors.Add(newYX);
-
         }
 
         return neighbors;
-
     }
-
 
     private HashSet<YX> CheckIsBurstable(YX baseYX, Dictionary<YX, BlockParent> pBoard = null)
     {
-        if(pBoard == null) pBoard = board;
+        if (pBoard == null) pBoard = board;
 
         HashSet<YX> burstables = new HashSet<YX>();
         (int dy, int dx)[] directions = (baseYX.x % 2 == 1) ? oddXDirections : evenXDirections;
@@ -384,8 +377,6 @@ public class MapManager
 
             if (!IsValid(baseYX) || !IsValid(p1) || !IsValid(p2)) continue;
             if (pBoard[baseYX] == null || pBoard[p1] == null || pBoard[p2] == null) continue;
-
-
 
             //// 자식 없으면 스킵
             //if (board[(baseYX.y, baseYX.x)].transform.childCount == 0
@@ -404,19 +395,10 @@ public class MapManager
             }
         }
 
-
-
-
         /////조커 확인
         ///
         ////////
 
-
-
-
-
         return burstables;
     }
-
-
 }
