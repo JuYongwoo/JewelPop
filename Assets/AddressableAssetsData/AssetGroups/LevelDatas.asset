@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: 2ea8f8dfa143e004ca99a07e141ecabe
   m_SerializeEntries:
   - m_GUID: dfa7064a1bcf43e43b8c15d5d1eb51fd
-    m_Address: Level_1
+    m_Address: 1
     m_ReadOnly: 0
     m_SerializedLabels:
     - LevelDatasJSON

@@ -57,6 +57,7 @@ public class JokerFX : MonoBehaviour
 
         if (t >= 1f)
         {
+            AudioSource.PlayClipAtPoint(ManagerObject.instance.resourceManager.gamsSFXPrefabs[SFX.ScoreGetSFX], transform.position);
             Destroy(gameObject);
         }
     }

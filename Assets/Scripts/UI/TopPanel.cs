@@ -8,7 +8,7 @@ public class TopPanel : MonoBehaviour
 
     private void Awake()
     {
-        topPanelObjs = Util.mapDictionaryInChildrenAll<GameObject>(this.gameObject);
+        topPanelObjs = Util.MapAllChildObjects<GameObject>(this.gameObject);
         ActionManager.setScoreUI = setScore;
         ActionManager.setCurrentStageUI = setCurrentStage;
     }

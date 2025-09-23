@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: SFX
+  m_EditorClassIdentifier: 
+  m_GroupName: SFX
+  m_GUID: 31de4193ef98eb749b8b57e7ba4558e8
+  m_SerializeEntries:
+  - m_GUID: 0f86eeb19bd1b6847b550027761ed88e
+    m_Address: ScoreGetSFX
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SFX
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7fce4fb4ad0048b4b8f7ccb7d4b1fae0
+    m_Address: Block3SFX
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SFX
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d4c4dbaddc8f1354dae665292cb46049
+    m_Address: Block4SFX
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SFX
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 4b46534fa82c86745b939a561fdf7fc9, type: 2}
+    - {fileID: 11400000, guid: 93be01fdb7489794ab9a90d9ce458a35, type: 2}

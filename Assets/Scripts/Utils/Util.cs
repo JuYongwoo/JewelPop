@@ -14,12 +14,12 @@ public class Util
         T obj = Addressables.LoadAssetAsync<T>(key).WaitForCompletion();
         return obj;
     }
-    public static Dictionary<string, T> LoadDictByLabel<T>(string label) where T : UnityEngine.Object
+    public static Dictionary<T1, T2> LoadDictByLabel<T1, T2>(string label) where T2 : UnityEngine.Object
     {
-        var dict = new Dictionary<string, T>();
+        var dict = new Dictionary<T1, T2>();
 
         // 라벨에 해당하는 모든 리소스 위치 가져오기
-        IList<IResourceLocation> locations = Addressables.LoadResourceLocationsAsync(label, typeof(T)).WaitForCompletion();
+        IList<IResourceLocation> locations = Addressables.LoadResourceLocationsAsync(label, typeof(T2)).WaitForCompletion();
 
         foreach (var loc in locations)
         {
@@ -27,15 +27,95 @@ public class Util
             string key = loc.PrimaryKey;
 
             // 동기 로드
-            T asset = Addressables.LoadAssetAsync<T>(key).WaitForCompletion();
+            T2 asset = Addressables.LoadAssetAsync<T2>(key).WaitForCompletion();
 
-            dict[key] = asset;
+
+            object parsedKey;
+
+            if (typeof(T1) == typeof(string))
+            {
+                parsedKey = key;
+            }
+            else if (typeof(T1).IsEnum)
+            {
+                parsedKey = Enum.Parse(typeof(T1), key);
+            }
+            else if (typeof(T1) == typeof(int))
+            {
+                parsedKey = int.Parse(key);
+            }
+            else
+            {
+                throw new NotSupportedException($"Unsupported key type: {typeof(T1)}");
+            }
+
+            dict[(T1)parsedKey] = asset;
+            
         }
 
         return dict;
     }
 
-    public static Dictionary<string, T2> mapDictionaryInChildrenAll<T2>(GameObject go) where T2 : UnityEngine.Object
+
+    public static Dictionary<TEnum, TObject> LoadDictWithEnumAndLabel<TEnum, TObject>(string label) where TEnum : Enum where TObject : UnityEngine.Object
+    {
+        var dict = new Dictionary<TEnum, TObject>();
+        var locHandle = Addressables.LoadResourceLocationsAsync(label, typeof(TObject));
+        var addressList = locHandle.WaitForCompletion();
+
+        if (addressList == null || addressList.Count == 0)
+        {
+            Debug.LogWarning($"[Util] No Addressable assets found for label {label}");
+            return dict;
+        }
+
+        foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
+        {
+            string enumName = e.ToString();
+            foreach (var addr in addressList)
+            {
+                if (addr.PrimaryKey.Equals(enumName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var assetHandle = Addressables.LoadAssetAsync<TObject>(addr);
+                    var asset = assetHandle.WaitForCompletion();
+                    dict[e] = asset;
+                    break;
+                }
+            }
+            if (!dict.ContainsKey(e))
+            {
+                Debug.LogWarning($"[Util] No matching asset for Enum {enumName} in label {label}");
+                dict[e] = null;
+            }
+        }
+        return dict;
+    }
+
+    public static Dictionary<TEnum, TObject> LoadDictWithOnlyLabelsFromEnumAndParameter<TEnum, TObject>(string commonLabel) where TEnum : Enum where TObject : UnityEngine.Object
+    {
+        var dict = new Dictionary<TEnum, TObject>();
+        foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
+        {
+            IEnumerable keys = new[] { commonLabel, e.ToString() };
+            var locHandle = Addressables.LoadResourceLocationsAsync(keys, Addressables.MergeMode.Intersection, typeof(TObject));
+            var locations = locHandle.WaitForCompletion();
+
+            if (locations == null || locations.Count == 0)
+            {
+                Debug.LogWarning($"[MapEnumToAddressablesByLabels] No asset found for Enum {e} with label '{commonLabel}'");
+                continue;
+            }
+            var assetHandle = Addressables.LoadAssetAsync<TObject>(locations[0]);
+            var asset = assetHandle.WaitForCompletion();
+            dict[e] = asset;
+
+            Addressables.Release(locHandle);
+            Addressables.Release(assetHandle);
+        }
+        return dict;
+    }
+
+    public static Dictionary<string, T2> MapAllChildObjects<T2>(GameObject go) where T2 : UnityEngine.Object
     {
         Dictionary<string, T2> dict = new Dictionary<string, T2>();
         Transform[] children = go.GetComponentsInChildren<Transform>();
@@ -50,7 +130,7 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<T, T2> MapDictionaryInChildrenWithEnum<T, T2>(GameObject go) where T : Enum where T2 : UnityEngine.Object
+    public static Dictionary<T, T2> MapEnumChildObjects<T, T2>(GameObject go) where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         Transform[] children = go.GetComponentsInChildren<Transform>();
@@ -89,7 +169,7 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<T, T2> MapEnumToObjectWithEnumKey<T, T2>() where T : Enum where T2 : UnityEngine.Object
+    public static Dictionary<T, T2> LoadDictWithEnum<T, T2>() where T : Enum where T2 : UnityEngine.Object
     {
         Dictionary<T, T2> dict = new Dictionary<T, T2>();
         foreach (T s in Enum.GetValues(typeof(T)))
@@ -97,63 +177,6 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<TEnum, TObject> MapEnumToObjectWithLabelAndEnumKey<TEnum, TObject>(string label) where TEnum : Enum where TObject : UnityEngine.Object
-    {
-        var dict = new Dictionary<TEnum, TObject>();
-        var locHandle = Addressables.LoadResourceLocationsAsync(label, typeof(TObject));
-        var addressList = locHandle.WaitForCompletion();
-
-        if (addressList == null || addressList.Count == 0)
-        {
-            Debug.LogWarning($"[Util] No Addressable assets found for label {label}");
-            return dict;
-        }
-
-        foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
-        {
-            string enumName = e.ToString();
-            foreach (var addr in addressList)
-            {
-                if (addr.PrimaryKey.Equals(enumName, StringComparison.OrdinalIgnoreCase))
-                {
-                    var assetHandle = Addressables.LoadAssetAsync<TObject>(addr);
-                    var asset = assetHandle.WaitForCompletion();
-                    dict[e] = asset;
-                    break;
-                }
-            }
-            if (!dict.ContainsKey(e))
-            {
-                Debug.LogWarning($"[Util] No matching asset for Enum {enumName} in label {label}");
-                dict[e] = null;
-            }
-        }
-        return dict;
-    }
-
-    public static Dictionary<TEnum, TObject> MapEnumToObjectWithOnlyLabels<TEnum, TObject>(string commonLabel) where TEnum : Enum where TObject : UnityEngine.Object
-    {
-        var dict = new Dictionary<TEnum, TObject>();
-        foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
-        {
-            IEnumerable keys = new[] { commonLabel, e.ToString() };
-            var locHandle = Addressables.LoadResourceLocationsAsync(keys, Addressables.MergeMode.Intersection, typeof(TObject));
-            var locations = locHandle.WaitForCompletion();
-
-            if (locations == null || locations.Count == 0)
-            {
-                Debug.LogWarning($"[MapEnumToAddressablesByLabels] No asset found for Enum {e} with label '{commonLabel}'");
-                continue;
-            }
-            var assetHandle = Addressables.LoadAssetAsync<TObject>(locations[0]);
-            var asset = assetHandle.WaitForCompletion();
-            dict[e] = asset;
-
-            Addressables.Release(locHandle);
-            Addressables.Release(assetHandle);
-        }
-        return dict;
-    }
 
     /*
     public static Dictionary<string, TObject> MapStringKeyToObjectWithLabel<TObject>(string commonLabel)

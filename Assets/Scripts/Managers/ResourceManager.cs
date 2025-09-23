@@ -1,27 +1,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BlockPrefabs
+{
+    r,
+    g,
+    p,
+    pp,
+    y,
+    o,
+    j
+}
+
+public enum BlockCrushFXPrefabs
+{
+    BlockCrush_r,
+    BlockCrush_g,
+    BlockCrush_p,
+    BlockCrush_pp,
+    BlockCrush_y,
+    BlockCrush_o
+}
+
+public enum SFX
+{
+    Block4SFX,
+    Block3SFX,
+    ScoreGetSFX
+}
+
 public class ResourceManager
 {
-    public Dictionary<string, TextAsset> LevelDatasJSON;
+    public Dictionary<int, TextAsset> LevelDatasJSON;
 
+    public Dictionary<BlockPrefabs, GameObject> blockPrefabs;
     public GameObject blockParentObjectPrefab;
-    public Dictionary<string, GameObject> blockPrefabs = new Dictionary<string, GameObject>();
 
-    public Dictionary<string, GameObject> blockCrushFxPrefabs;
+    public Dictionary<BlockCrushFXPrefabs, GameObject> blockCrushFxPrefabs;
     public GameObject jokerScoreFxPrefab;
+
+    public Dictionary<SFX, AudioClip> gamsSFXPrefabs;
 
 
     public void OnAwake()
     {
-        LevelDatasJSON = Util.LoadDictByLabel<TextAsset>("LevelDatasJSON");
+        LevelDatasJSON = Util.LoadDictByLabel<int, TextAsset>("LevelDatasJSON");
 
         blockParentObjectPrefab = Util.Load<GameObject>("BlockParentObjectPrefab");
-        blockPrefabs = Util.LoadDictByLabel<GameObject>("BlockChildPrefabs");
+        blockPrefabs = Util.LoadDictWithEnum<BlockPrefabs, GameObject>();
 
-        blockCrushFxPrefabs = Util.LoadDictByLabel<GameObject>("BlockCrushFX");
+        blockCrushFxPrefabs = Util.LoadDictWithEnum<BlockCrushFXPrefabs, GameObject>();
         jokerScoreFxPrefab = Util.Load<GameObject>("JokerScore");
-    
+
+        gamsSFXPrefabs = Util.LoadDictWithEnum<SFX, AudioClip>();
+
     }
 
 }

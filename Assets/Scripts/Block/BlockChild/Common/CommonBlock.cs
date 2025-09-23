@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
 
     public void DestroySelf() //일반 블럭의 파괴 모션
     {
-        Instantiate(ManagerObject.instance.resourceManager.blockCrushFxPrefabs["BlockCrush_" + GetBlockType()], transform.position, Quaternion.identity); //파괴 이펙트 소환 후 자신 파괴
+        Instantiate(ManagerObject.instance.resourceManager.blockCrushFxPrefabs[Enum.Parse<BlockCrushFXPrefabs>("BlockCrush_" + GetBlockType())], transform.position, Quaternion.identity); //파괴 이펙트 소환 후 자신 파괴
+        AudioSource.PlayClipAtPoint(ManagerObject.instance.resourceManager.gamsSFXPrefabs[SFX.Block3SFX], transform.position);
         DestroyImmediate(gameObject);
     }
 
@@ -16,11 +18,11 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
     {
         var aPos = new Vector3(transform.parent.position.x, transform.transform.parent.position.y, transform.position.z);
         var bPos = new Vector3(targetParent.position.x, targetParent.position.y, transform.position.z);
-        StartCoroutine(moveCoroutine(targetParent, aPos, bPos));
+        StartCoroutine(MoveCoroutine(targetParent, aPos, bPos));
     }
 
     // 자식 Transform을 직접 받아서 이동 (부모에서 다시 GetChild(0) 하지 않음)
-    private IEnumerator moveCoroutine(Transform targetParent, Vector3 startPos, Vector3 endPos)
+    private IEnumerator MoveCoroutine(Transform targetParent, Vector3 startPos, Vector3 endPos)
     {
         transform.SetParent(targetParent, true);
         float t = 0f;
@@ -48,10 +50,10 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
     {
         var aPos = new Vector3(transform.parent.position.x, transform.transform.parent.position.y, transform.position.z);
         var bPos = new Vector3(targetParent.position.x, targetParent.position.y, transform.position.z);
-        StartCoroutine(moveAndBackCoroutine(targetParent, aPos, bPos));
+        StartCoroutine(MoveAndBackCoroutine(targetParent, aPos, bPos));
     }
 
-    private IEnumerator moveAndBackCoroutine(Transform targetParent, Vector3 startPos, Vector3 endPos)
+    private IEnumerator MoveAndBackCoroutine(Transform targetParent, Vector3 startPos, Vector3 endPos)
     {
         float t = 0f;
         float t2 = 0f;
@@ -87,5 +89,12 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
 
         ManagerObject.instance.actionManager.setIsInMotion(false);
         transform.position = startPos;
+    }
+
+    public void Turnoff() // 파괴 연출을 위해 게임에 지장 없도록 삭제하지 않고 기능만 끄는 함수.
+    {
+        GetComponent<SpriteRenderer>().enabled = false;
+        transform.SetParent(null);// 부모 벗어나고 neighbor감지 안되도록
+        GetComponent<Collider2D>().enabled = false; //터치 안되도록
     }
 }

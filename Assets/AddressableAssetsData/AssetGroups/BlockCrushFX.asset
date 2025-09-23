@@ -15,6 +15,11 @@ MonoBehaviour:
   m_GroupName: BlockCrushFX
   m_GUID: b493011b797a7d145a9beffcd46474e9
   m_SerializeEntries:
+  - m_GUID: 064b3d27680ab744ba168395558e1d5b
+    m_Address: JokerScore
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4188ab313fed855498627de32ba85223
     m_Address: BlockCrush_o
     m_ReadOnly: 0

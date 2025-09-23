@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -145,8 +146,8 @@ public class MapManager
                 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep)
                 : (-grid.y * yStep, grid.x * xStep));
 
-            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[grid.type], board[yx].transform);
-            child.GetComponent<BlockChild>().SetBlockType(grid.type);
+            GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[Enum.Parse<BlockPrefabs>(grid.type)], board[yx].transform);
+            child.GetComponent<BlockChild>().SetBlockType(Enum.Parse<BlockPrefabs>(grid.type));
         }
     }
 
@@ -236,10 +237,9 @@ public class MapManager
 
     private void AddNewBlocks(List<YX> tops)
     {
-        string[] str = new string[] { "r", "p", "pp", "o", "r", "y" };
         foreach (var pos in tops)
         {
-            var rd = str[UnityEngine.Random.Range(0, str.Length)];
+            var rd = (BlockPrefabs)UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockPrefabs)).Length-1); // 炼目 力寇 场 1 皑家
             GameObject child = UnityEngine.Object.Instantiate(ManagerObject.instance.resourceManager.blockPrefabs[rd], board[pos].transform);
             child.GetComponent<BlockChild>().SetBlockType(rd);
         }
@@ -268,16 +268,14 @@ public class MapManager
             int x = key.x;
             int newY = y;
 
-            while (board.ContainsKey(new YX(newY + 1, x)) &&
-                   board[new YX(newY + 1, x)].transform.childCount == 0)
+            while (board.ContainsKey(new YX(newY + 1, x)) && board[new YX(newY + 1, x)].transform.childCount == 0)
             {
                 newY++;
             }
 
             if (newY != y)
             {
-                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>()
-                    .Move(board[new YX(newY, x)].transform);
+                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>().Move(board[new YX(newY, x)].transform);
             }
         }
     }

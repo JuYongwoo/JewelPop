@@ -14,17 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_GroupName: Default Local Group
   m_GUID: a9b28435c0a521d4fba3303cbb952f93
-  m_SerializeEntries:
-  - m_GUID: 064b3d27680ab744ba168395558e1d5b
-    m_Address: JokerScore
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 60528e8283317534a97d43202e18c794
-    m_Address: BlockParentObjectPrefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}
   m_SchemaSet:
