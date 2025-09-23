@@ -15,14 +15,14 @@ MonoBehaviour:
   m_GroupName: SFX
   m_GUID: 31de4193ef98eb749b8b57e7ba4558e8
   m_SerializeEntries:
-  - m_GUID: 0f86eeb19bd1b6847b550027761ed88e
-    m_Address: ScoreGetSFX
+  - m_GUID: 7fce4fb4ad0048b4b8f7ccb7d4b1fae0
+    m_Address: Block3SFX
     m_ReadOnly: 0
     m_SerializedLabels:
     - SFX
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7fce4fb4ad0048b4b8f7ccb7d4b1fae0
-    m_Address: Block3SFX
+  - m_GUID: b17a331e7c84bd54780843f58d44d9f6
+    m_Address: ScoreGetSFX
     m_ReadOnly: 0
     m_SerializedLabels:
     - SFX
