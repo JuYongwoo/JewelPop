@@ -1,6 +1,4 @@
-using System.Runtime.Versioning;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class ManagerObject : MonoBehaviour
 {
