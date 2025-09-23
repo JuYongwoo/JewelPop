@@ -7,8 +7,9 @@ public class BlockCrushFX : MonoBehaviour
 {
 
 
-    public void Start() //일반 블럭의 파괴 모션
+    private void Start() //일반 블럭의 파괴 모션
     {
+        ManagerObject.instance.soundManager.PlaySound(Sounds.Block3SFX, false);
         StartCoroutine(DestroyAfterBlockCrushMotion());
     }
 

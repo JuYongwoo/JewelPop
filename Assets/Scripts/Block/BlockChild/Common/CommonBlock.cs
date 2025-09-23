@@ -9,9 +9,10 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
 
     public void DestroySelf() //일반 블럭의 파괴 모션
     {
-        Instantiate(ManagerObject.instance.resourceManager.blockCrushFxPrefabs[Enum.Parse<BlockCrushFXPrefabs>("BlockCrush_" + GetBlockType())], transform.position, Quaternion.identity); //파괴 이펙트 소환 후 자신 파괴
-        AudioSource.PlayClipAtPoint(ManagerObject.instance.resourceManager.gamsSFXPrefabs[SFX.Block3SFX], transform.position);
-        DestroyImmediate(gameObject);
+
+        //OnDestroy()에서 소환 시 문제는 없으나 에디터에 남는 유니티 버그 발생
+        Instantiate(ManagerObject.instance.resourceManager.blockCrushFxPrefabs[Enum.Parse<BlockCrushFXPrefabs>("BlockCrush_" + GetBlockType())], transform.position, Quaternion.identity); //파괴 이펙트 프리팹 소환
+        Destroy(gameObject);
     }
 
     public void Move(Transform targetParent)

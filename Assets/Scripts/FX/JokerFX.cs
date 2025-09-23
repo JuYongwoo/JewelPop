@@ -18,6 +18,8 @@ public class JokerFX : MonoBehaviour
 
     void Start()
     {
+        ManagerObject.instance.soundManager.PlaySound(Sounds.ScoreGetSFX, false);
+
         goalTranform = ManagerObject.instance.actionManager.getJokerGoalTranform();
 
         // 시작/목표 (z는 현재 오브젝트 z 유지)
@@ -57,7 +59,7 @@ public class JokerFX : MonoBehaviour
 
         if (t >= 1f)
         {
-            AudioSource.PlayClipAtPoint(ManagerObject.instance.resourceManager.gamsSFXPrefabs[SFX.ScoreGetSFX], transform.position);
+            AudioSource.PlayClipAtPoint(ManagerObject.instance.resourceManager.gameSoundClips[Sounds.ScoreGetSFX], transform.position);
             Destroy(gameObject);
         }
     }

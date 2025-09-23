@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public enum BlockPrefabs
 {
     r,
@@ -22,11 +23,12 @@ public enum BlockCrushFXPrefabs
     BlockCrush_o
 }
 
-public enum SFX
+public enum Sounds
 {
     Block4SFX,
     Block3SFX,
-    ScoreGetSFX
+    ScoreGetSFX,
+    BGM1
 }
 
 public class ResourceManager
@@ -39,7 +41,7 @@ public class ResourceManager
     public Dictionary<BlockCrushFXPrefabs, GameObject> blockCrushFxPrefabs;
     public GameObject jokerScoreFxPrefab;
 
-    public Dictionary<SFX, AudioClip> gamsSFXPrefabs;
+    public Dictionary<Sounds, AudioClip> gameSoundClips;
 
 
     public void OnAwake()
@@ -52,7 +54,7 @@ public class ResourceManager
         blockCrushFxPrefabs = Util.LoadDictWithEnum<BlockCrushFXPrefabs, GameObject>();
         jokerScoreFxPrefab = Util.Load<GameObject>("JokerScore");
 
-        gamsSFXPrefabs = Util.LoadDictWithEnum<SFX, AudioClip>();
+        gameSoundClips = Util.LoadDictWithEnum<Sounds, AudioClip>();
 
     }
 
