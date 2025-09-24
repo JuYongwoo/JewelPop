@@ -10,28 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: SFX
+  m_Name: Sounds
   m_EditorClassIdentifier: 
-  m_GroupName: SFX
+  m_GroupName: Sounds
   m_GUID: 31de4193ef98eb749b8b57e7ba4558e8
   m_SerializeEntries:
   - m_GUID: 7fce4fb4ad0048b4b8f7ccb7d4b1fae0
     m_Address: Block3SFX
     m_ReadOnly: 0
     m_SerializedLabels:
-    - SFX
+    - Sounds
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 974456f82c70bcb498621c2a1e34b87b
+    m_Address: BGM1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sounds
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b17a331e7c84bd54780843f58d44d9f6
     m_Address: ScoreGetSFX
     m_ReadOnly: 0
     m_SerializedLabels:
-    - SFX
+    - Sounds
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: d4c4dbaddc8f1354dae665292cb46049
     m_Address: Block4SFX
     m_ReadOnly: 0
     m_SerializedLabels:
-    - SFX
+    - Sounds
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}

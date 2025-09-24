@@ -37,7 +37,7 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
         currentScore = 0;
         ActionManager.setCurrentStageUI(currentStage);
         ActionManager.setScoreUI(currentScore, goalScore);
-        ManagerObject.instance.soundManager.PlaySound(Sounds.BGM1, true);
+        ManagerObject.instance.soundManager.PlaySound(Sounds.BGM1, 0.25f, true);
     }
 
 
