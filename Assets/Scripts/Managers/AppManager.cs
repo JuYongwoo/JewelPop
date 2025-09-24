@@ -1,0 +1,41 @@
+using UnityEngine;
+
+public class AppManager : MonoBehaviour
+{
+    public static AppManager instance;
+    public ActionManager actionManager = new ActionManager();
+    public ResourceManager resourceManager = new ResourceManager();
+    public SoundManager soundManager = new SoundManager();
+    public InputManager inputManager = new InputManager();
+
+    private void Awake()
+    {
+        makeInstanceSelf();
+
+        resourceManager.Init();
+    }
+
+    private void Start()
+    {
+        Application.targetFrameRate = 60;
+
+
+    }
+
+    private void Update()
+    {
+        inputManager.OnUpdate();
+    }
+    
+    private void makeInstanceSelf()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+}
