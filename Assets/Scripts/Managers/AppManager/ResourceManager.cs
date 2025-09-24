@@ -28,6 +28,7 @@ public enum Sounds
     Block4SFX,
     Block3SFX,
     ScoreGetSFX,
+    Victory,
     BGM1
 }
 

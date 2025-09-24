@@ -20,6 +20,14 @@ public class SoundManager
             audioSource[sound].Play();
     }
 
+    public void StopSound(Sounds sound)
+    {
+        if (audioSource.ContainsKey(sound))
+        {
+            audioSource[sound].Stop();
+        }
+    }
+
 
 
 }

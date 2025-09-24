@@ -27,6 +27,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Sounds
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9d82edf2838dbc84bb7bbec34f5bbb80
+    m_Address: Victory
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Sounds
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b17a331e7c84bd54780843f58d44d9f6
     m_Address: ScoreGetSFX
     m_ReadOnly: 0
