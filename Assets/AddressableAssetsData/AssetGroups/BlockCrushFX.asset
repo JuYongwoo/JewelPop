@@ -20,30 +20,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4188ab313fed855498627de32ba85223
-    m_Address: BlockCrush_o
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockCrushFX
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 4389fcb9b105bfc4dba55d2353ab26e6
-    m_Address: BlockCrush_g
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockCrushFX
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 7741476c8819b944497d1685705cfb6b
-    m_Address: BlockCrush_pp
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockCrushFX
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: e196a0a815d57a24dbef4bbeecb51ce5
-    m_Address: BlockCrush_p
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - BlockCrushFX
-    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}
   m_SchemaSet:

@@ -15,6 +15,21 @@ MonoBehaviour:
   m_GroupName: LevelDatas
   m_GUID: 2ea8f8dfa143e004ca99a07e141ecabe
   m_SerializeEntries:
+  - m_GUID: 594c673ddcf3f2a4bb443c84fbd3f570
+    m_Address: BlockCrush_g
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e693a77cad6db243b8a186e3ef4a0bd
+    m_Address: BlockCrush_o
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8999898341d4e6a419865a15734faaf1
+    m_Address: BlockCrush_p
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bb3ed16902c6acf4fb85252a8d61c9e9
     m_Address: BlockCrush_r
     m_ReadOnly: 0
@@ -30,6 +45,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - LevelDatasJSON
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e21c2b66f95d3ac45b4df7b53c9ead05
+    m_Address: BlockCrush_pp
+    m_ReadOnly: 0
+    m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 61749d36cdf9f324eb6efb3f962200fb, type: 2}
