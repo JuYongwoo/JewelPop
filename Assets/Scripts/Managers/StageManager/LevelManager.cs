@@ -59,11 +59,10 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
 
     private void GameClear()
     {
+        Time.timeScale = 0f;
         AppManager.instance.actionManager.showResultPopup();
         AppManager.instance.soundManager.StopSound(Sounds.BGM1);
         AppManager.instance.soundManager.PlaySound(Sounds.Victory, 0.25f, false);
-        //소리도 나오게
-        //예: 다음 스테이지로 이동, 결과 화면 표시 등
     }
 
 

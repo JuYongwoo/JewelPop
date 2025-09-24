@@ -20,12 +20,14 @@ public class BasePopupEffect : MonoBehaviour
     {
         if (!playing) return;
 
+        float dt = Time.unscaledDeltaTime * speed;
+
         if (overshootPhase)
         {
             transform.localScale = Vector3.Lerp(
                 transform.localScale,
                 Vector3.one * overshoot,
-                Time.deltaTime * speed
+                dt
             );
 
             if (transform.localScale.x >= overshoot - 0.01f)
@@ -38,7 +40,7 @@ public class BasePopupEffect : MonoBehaviour
             transform.localScale = Vector3.Lerp(
                 transform.localScale,
                 targetScale,
-                Time.deltaTime * speed
+                dt
             );
 
             if (Vector3.Distance(transform.localScale, targetScale) < 0.01f)
