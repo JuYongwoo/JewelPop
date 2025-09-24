@@ -3,8 +3,8 @@ using UnityEngine;
 public class BasePopupEffect : MonoBehaviour
 {
     [Header("Popup Effect Settings")]
-    public float speed = 10f;        // 스케일 변화 속도
-    public float overshoot = 1.2f;   // 튀어나올 때 배율
+    public float speed = 10f;
+    public float overshoot = 1.2f;
     protected Vector3 targetScale = Vector3.one;
     protected bool playing = false;
     protected bool overshootPhase = true;
@@ -22,7 +22,6 @@ public class BasePopupEffect : MonoBehaviour
 
         if (overshootPhase)
         {
-            // Overshoot 단계 (1.2배까지)
             transform.localScale = Vector3.Lerp(
                 transform.localScale,
                 Vector3.one * overshoot,
@@ -36,7 +35,6 @@ public class BasePopupEffect : MonoBehaviour
         }
         else
         {
-            // 최종 크기(1배)로 수렴
             transform.localScale = Vector3.Lerp(
                 transform.localScale,
                 targetScale,
