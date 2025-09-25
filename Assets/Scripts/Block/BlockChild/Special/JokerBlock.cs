@@ -10,7 +10,7 @@ public class JokerBlock : BlockChild, ISpecial
     {
         //gameObject.GetComponent<Animator>().SetTrigger("open");
         Instantiate(AppManager.instance.resourceManager.jokerScoreFxPrefab, transform.position, Quaternion.identity);
-        StageManager.instance.levelManager.deltaScore(1);
+        StageScene.instance.levelManager.deltaScore(1);
     }
 
 

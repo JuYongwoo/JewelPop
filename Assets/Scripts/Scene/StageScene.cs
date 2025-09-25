@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class StageManager : MonoBehaviour
+public class StageScene : MonoBehaviour
 {
-    public static StageManager instance;
+    public static StageScene instance;
 
     public MapManager mapManager = new MapManager();
     public LevelManager<JSONVars> levelManager = new LevelManager<JSONVars>();
