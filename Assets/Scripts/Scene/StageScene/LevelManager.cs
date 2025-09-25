@@ -28,8 +28,6 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
         currentStage = currentLevel.stage;
         currentScore = 0;
 
-
-
         //UI 초기화
         ActionManager.setCurrentStageUI(currentStage);
         ActionManager.setScoreUI(currentScore, goalScore);
