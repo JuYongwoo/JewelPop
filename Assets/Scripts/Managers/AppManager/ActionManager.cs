@@ -12,5 +12,6 @@ public class ActionManager
     public Func<bool> getIsBoardChanged;
     public Action<bool> setIsBoardChanged;
     public Action showResultPopup;
+    public Action StageSceneInputController;
 
 }

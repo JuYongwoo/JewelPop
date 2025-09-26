@@ -12,7 +12,7 @@ public class AppManager : MonoBehaviour
     {
         makeInstanceSelf();
 
-        resourceManager.Init();
+        resourceManager.StartPreload();
     }
 
     private void Start()
