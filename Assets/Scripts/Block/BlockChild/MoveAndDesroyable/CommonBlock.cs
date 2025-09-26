@@ -10,7 +10,7 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
     public void DestroySelf()
     {
 
-        Instantiate(AppManager.instance.resourceManager.GetBlockCrushFx(Enum.Parse<BlockCrushFXPrefabs>("BlockCrush_" + GetBlockType())), transform.position, Quaternion.identity);
+        Instantiate(AppManager.instance.resourceManager.blockCrushFxPrefabsHandles[Enum.Parse<BlockCrushFXPrefabs>("BlockCrush_" + GetBlockType())].Result, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 

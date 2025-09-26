@@ -16,7 +16,7 @@ public class SoundManager
             audioSource[sound].loop = isLoop;
             
             audioSource[sound].Stop();
-            audioSource[sound].clip = AppManager.instance.resourceManager.GetSound(sound);
+            audioSource[sound].clip = AppManager.instance.resourceManager.gameSoundClipsHandles[sound].Result;
             audioSource[sound].Play();
     }
 
