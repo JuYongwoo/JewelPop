@@ -3,20 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
 public class Util
 {
 
 
-    public static T Load<T>(string key) where T : UnityEngine.Object
+    public static AsyncOperationHandle<T> AsyncLoad<T>(string key) where T : UnityEngine.Object
     {
-        T obj = Addressables.LoadAssetAsync<T>(key).WaitForCompletion();
+        AsyncOperationHandle<T> obj = Addressables.LoadAssetAsync<T>(key);
         return obj;
     }
-    public static Dictionary<T1, T2> LoadDictByLabel<T1, T2>(string label) where T2 : UnityEngine.Object
+
+
+    public static Dictionary<T, AsyncOperationHandle<T2>> LoadDictWithEnum<T, T2>() where T : Enum where T2 : UnityEngine.Object
     {
-        var dict = new Dictionary<T1, T2>();
+        Dictionary<T, AsyncOperationHandle<T2>> dict = new Dictionary<T, AsyncOperationHandle<T2>>();
+        foreach (T s in Enum.GetValues(typeof(T)))
+            dict[s] = Addressables.LoadAssetAsync<T2>(s.ToString());
+        return dict;
+    }
+
+    public static Dictionary<T1, AsyncOperationHandle<T2>> LoadDictByLabel<T1, T2>(string label) where T2 : UnityEngine.Object
+    {
+        var dict = new Dictionary<T1, AsyncOperationHandle<T2>>();
 
         // 라벨에 해당하는 모든 리소스 위치 가져오기
         IList<IResourceLocation> locations = Addressables.LoadResourceLocationsAsync(label, typeof(T2)).WaitForCompletion();
@@ -27,7 +38,7 @@ public class Util
             string key = loc.PrimaryKey;
 
             // 동기 로드
-            T2 asset = Addressables.LoadAssetAsync<T2>(key).WaitForCompletion();
+            AsyncOperationHandle<T2> asset = Addressables.LoadAssetAsync<T2>(key);
 
 
             object parsedKey;
@@ -50,18 +61,19 @@ public class Util
             }
 
             dict[(T1)parsedKey] = asset;
-            
+
         }
 
         return dict;
     }
 
 
-    public static Dictionary<TEnum, TObject> LoadDictWithEnumAndLabel<TEnum, TObject>(string label) where TEnum : Enum where TObject : UnityEngine.Object
+    public static Dictionary<TEnum, AsyncOperationHandle<TObject>> LoadDictWithEnumAndLabel<TEnum, TObject>(string label) where TEnum : Enum where TObject : UnityEngine.Object
     {
-        var dict = new Dictionary<TEnum, TObject>();
+        var dict = new Dictionary<TEnum, AsyncOperationHandle<TObject>>();
+
         var locHandle = Addressables.LoadResourceLocationsAsync(label, typeof(TObject));
-        var addressList = locHandle.WaitForCompletion();
+        var addressList = locHandle.Result; // ← FIX: 핸들 자체가 아니라 결과 리스트를 써야 함
 
         if (addressList == null || addressList.Count == 0)
         {
@@ -77,23 +89,23 @@ public class Util
                 if (addr.PrimaryKey.Equals(enumName, StringComparison.OrdinalIgnoreCase))
                 {
                     var assetHandle = Addressables.LoadAssetAsync<TObject>(addr);
-                    var asset = assetHandle.WaitForCompletion();
-                    dict[e] = asset;
+                    dict[e] = assetHandle;
                     break;
                 }
             }
             if (!dict.ContainsKey(e))
             {
                 Debug.LogWarning($"[Util] No matching asset for Enum {enumName} in label {label}");
-                dict[e] = null;
+                dict[e] = default; // ← FIX: AsyncOperationHandle<T>는 struct라 null 할당 불가
             }
         }
         return dict;
     }
 
-    public static Dictionary<TEnum, TObject> LoadDictWithOnlyLabelsFromEnumAndParameter<TEnum, TObject>(string commonLabel) where TEnum : Enum where TObject : UnityEngine.Object
+
+    public static Dictionary<TEnum, AsyncOperationHandle<TObject>> LoadDictWithOnlyLabelsFromEnumAndParameter<TEnum, TObject>(string commonLabel) where TEnum : Enum where TObject : UnityEngine.Object
     {
-        var dict = new Dictionary<TEnum, TObject>();
+        var dict = new Dictionary<TEnum, AsyncOperationHandle<TObject>>();
         foreach (TEnum e in Enum.GetValues(typeof(TEnum)))
         {
             IEnumerable keys = new[] { commonLabel, e.ToString() };
@@ -106,7 +118,7 @@ public class Util
                 continue;
             }
             var assetHandle = Addressables.LoadAssetAsync<TObject>(locations[0]);
-            var asset = assetHandle.WaitForCompletion();
+            var asset = assetHandle;
             dict[e] = asset;
 
             Addressables.Release(locHandle);
@@ -169,13 +181,6 @@ public class Util
         return dict;
     }
 
-    public static Dictionary<T, T2> LoadDictWithEnum<T, T2>() where T : Enum where T2 : UnityEngine.Object
-    {
-        Dictionary<T, T2> dict = new Dictionary<T, T2>();
-        foreach (T s in Enum.GetValues(typeof(T)))
-            dict[s] = Addressables.LoadAssetAsync<T2>(s.ToString()).WaitForCompletion();
-        return dict;
-    }
 
 
     /*

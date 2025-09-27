@@ -45,27 +45,13 @@ public class ResourceManager
 
     public void StartPreload()
     {
-        levelDatasJSONHandle = Addressables.LoadAssetAsync<TextAsset>("1");
-        blockParentObjectHandle = Addressables.LoadAssetAsync<GameObject>("BlockParentObjectPrefab");
-        jokerScoreFxHandle = Addressables.LoadAssetAsync<GameObject>("JokerScore");
+        levelDatasJSONHandle = Util.AsyncLoad<TextAsset>("1");
+        blockParentObjectHandle = Util.AsyncLoad<GameObject>("BlockParentObjectPrefab");
+        jokerScoreFxHandle = Util.AsyncLoad<GameObject>("JokerScore");
         
-        blockPrefabsHandles = new Dictionary<BlockPrefabs, AsyncOperationHandle<GameObject>>();
-        foreach (BlockPrefabs e in System.Enum.GetValues(typeof(BlockPrefabs)))
-        {
-            blockPrefabsHandles[e] = Addressables.LoadAssetAsync<GameObject>(e.ToString());
-        }
-
-        blockCrushFxPrefabsHandles = new Dictionary<BlockCrushFXPrefabs, AsyncOperationHandle<GameObject>>();
-        foreach (BlockCrushFXPrefabs e in System.Enum.GetValues(typeof(BlockCrushFXPrefabs)))
-        {
-            blockCrushFxPrefabsHandles[e] = Addressables.LoadAssetAsync<GameObject>(e.ToString());
-        }
-
-        gameSoundClipsHandles = new Dictionary<Sounds, AsyncOperationHandle<AudioClip>>();
-        foreach (Sounds e in System.Enum.GetValues(typeof(Sounds)))
-        {
-            gameSoundClipsHandles[e] = Addressables.LoadAssetAsync<AudioClip>(e.ToString());
-        }
+        blockPrefabsHandles = Util.LoadDictWithEnum<BlockPrefabs, GameObject>();
+        blockCrushFxPrefabsHandles = Util.LoadDictWithEnum<BlockCrushFXPrefabs, GameObject>();
+        gameSoundClipsHandles = Util.LoadDictWithEnum<Sounds, AudioClip>();
     }
 }
 
