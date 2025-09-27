@@ -3,16 +3,20 @@ using UnityEngine;
 
 public class TitlePanel : MonoBehaviour
 {
+    public enum TitleUI
+    {
+        TitleStartBtn
+    }
 
-    private Dictionary<string, GameObject> uiElements = new Dictionary<string, GameObject>();
+    private Dictionary<TitleUI, GameObject> uiElements = new Dictionary<TitleUI, GameObject>();
     private void Awake()
     {
-        uiElements = Util.MapAllChildObjects<GameObject>(gameObject);
+        uiElements = Util.MapEnumChildObjects<TitleUI, GameObject>(this.gameObject);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        uiElements["StartBtn"].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        uiElements[TitleUI.TitleStartBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Stage");
         });
