@@ -126,11 +126,49 @@ public class MapManager
         // FSM 초기 상태
         ChangeState(BoardFSMState.DroppingEnter);
 
-        AppManager.instance.actionManager.inputBlockChangeAction = InputBlockChangeEvent;
-        AppManager.instance.actionManager.getIsInMotion = () => { return isInMotion; };
-        AppManager.instance.actionManager.setIsInMotion = (a) => { isInMotion = a; };
-        AppManager.instance.actionManager.getIsBoardChanged = () => { return isChanged; };
-        AppManager.instance.actionManager.setIsBoardChanged = (a) => { isChanged = a; };
+        AppManager.instance.actionManager.inputBlockChangeAction -= InputBlockChangeEvent;
+        AppManager.instance.actionManager.inputBlockChangeAction += InputBlockChangeEvent;
+
+        AppManager.instance.actionManager.getIsInMotion -= getIsInMotion;
+        AppManager.instance.actionManager.getIsInMotion += getIsInMotion;
+
+        AppManager.instance.actionManager.setIsInMotion -= setIsInMotion;
+        AppManager.instance.actionManager.setIsInMotion += setIsInMotion;
+
+        AppManager.instance.actionManager.getIsBoardChanged -= getIsBoardChanged;
+        AppManager.instance.actionManager.getIsBoardChanged += getIsBoardChanged;
+
+        AppManager.instance.actionManager.setIsBoardChanged -= setIsBoardChanged;
+        AppManager.instance.actionManager.setIsBoardChanged += setIsBoardChanged;
+    }
+
+    public void OnDestroy()
+    {
+        AppManager.instance.actionManager.inputBlockChangeAction -= InputBlockChangeEvent;
+        AppManager.instance.actionManager.getIsInMotion -= getIsInMotion;
+        AppManager.instance.actionManager.setIsInMotion -= setIsInMotion;
+        AppManager.instance.actionManager.getIsBoardChanged -= getIsBoardChanged;
+        AppManager.instance.actionManager.setIsBoardChanged -= setIsBoardChanged;
+    }
+
+    private bool getIsInMotion()
+    {
+        return isInMotion;
+    }
+
+    private void setIsInMotion(bool a)
+    {
+        isInMotion = a;
+    }
+
+    private bool getIsBoardChanged()
+    {
+        return isChanged;
+    }
+
+    private void setIsBoardChanged(bool a)
+    {
+        isChanged = a;
     }
 
 

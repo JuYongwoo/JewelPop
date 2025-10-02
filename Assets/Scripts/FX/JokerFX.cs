@@ -19,7 +19,7 @@ public class JokerFX : MonoBehaviour
     {
         AppManager.instance.soundManager.PlaySound(Sounds.ScoreGetSFX, 0.2f, false);
 
-        goalTranform = AppManager.instance.actionManager.getJokerGoalTranform();
+        goalTranform = AppManager.instance.actionManager.getJokerGoalTranformM();
 
         startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         goalPos = new Vector3(goalTranform.position.x, goalTranform.position.y, transform.position.z);

@@ -27,8 +27,8 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
         float t = 0f;
         float endDist = 0.01f * 0.01f;
 
-        AppManager.instance.actionManager.setIsInMotion(true);
-        AppManager.instance.actionManager.setIsBoardChanged(true);
+        AppManager.instance.actionManager.setIsInMotionM(true);
+        AppManager.instance.actionManager.setIsBoardChangedM(true);
 
         while (true)
         {
@@ -40,7 +40,7 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
             yield return null;
         }
 
-        AppManager.instance.actionManager.setIsInMotion(false);
+        AppManager.instance.actionManager.setIsInMotionM(false);
         transform.position = endPos;
     }
 
@@ -57,8 +57,8 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
         float t2 = 0f;
         float endDist = 0.01f * 0.01f;
 
-        AppManager.instance.actionManager.setIsInMotion(true);
-        AppManager.instance.actionManager.setIsBoardChanged(true);
+        AppManager.instance.actionManager.setIsInMotionM(true);
+        AppManager.instance.actionManager.setIsBoardChangedM(true);
 
         while (true)
         {
@@ -83,7 +83,7 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
             yield return null;
         }
 
-        AppManager.instance.actionManager.setIsInMotion(false);
+        AppManager.instance.actionManager.setIsInMotionM(false);
         transform.position = startPos;
     }
 

@@ -12,7 +12,7 @@ public class JokerBlock : BlockChild, ISpecial
 
 
         Instantiate(AppManager.instance.resourceManager.jokerScoreFxHandle.Result, transform.position, Quaternion.identity);
-        StageScene.instance.levelManager.deltaScore(1);
+        AppManager.instance.actionManager.DeltaScoreM(1);
     }
 
 

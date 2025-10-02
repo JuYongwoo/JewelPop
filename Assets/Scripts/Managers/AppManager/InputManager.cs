@@ -6,7 +6,7 @@ public class InputManager
     
     public void OnUpdate()
     {
-        AppManager.instance.actionManager.StageSceneInputController?.Invoke();
+        AppManager.instance.actionManager.StageSceneInputControllerM();
 
     }
     
