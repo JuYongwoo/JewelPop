@@ -16,7 +16,7 @@ public class StageScene : MonoBehaviour
     private void Start()
     {
 
-
+        AppManager.instance.poolManager.CleanPool();
         //JYW
         //타이틀 씬에서 AppManager가 이미 초기화 되어있어야 하는데 현재 Title 씬 부재
         //때문에 지금은 StageManager는 Start에서 초기화

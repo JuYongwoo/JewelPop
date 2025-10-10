@@ -16,7 +16,7 @@ public class BlockCrushFX : MonoBehaviour
     private IEnumerator DestroyAfterBlockCrushMotion()
     {
         yield return new WaitForSeconds(0.8f);
-        Destroy(gameObject);
+        AppManager.instance.poolManager.DestroyPooled(gameObject);
 
     }
 

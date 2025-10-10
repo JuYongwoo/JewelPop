@@ -7,6 +7,7 @@ public class AppManager : MonoBehaviour
     public ResourceManager resourceManager = new ResourceManager();
     public SoundManager soundManager = new SoundManager();
     public InputManager inputManager = new InputManager();
+    public PoolManager poolManager = new PoolManager();
 
     private void Awake()
     {

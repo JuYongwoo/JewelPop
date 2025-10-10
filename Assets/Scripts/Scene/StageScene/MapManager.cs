@@ -177,14 +177,14 @@ public class MapManager
         foreach (var grid in jsonVars.grids)
         {
             YX yx = new YX(grid.y, grid.x);
-            board.Add(yx, UnityEngine.Object.Instantiate(AppManager.instance.resourceManager.blockParentObjectHandle.Result).GetComponent<BlockParent>());
+            board.Add(yx, AppManager.instance.poolManager.Spawn(AppManager.instance.resourceManager.blockParentObjectHandle.Result).GetComponent<BlockParent>());
             board[yx].name = $"y{grid.y}x{grid.x}";
             board[yx].SetGridPositionYX(yx);
             board[yx].SetUnityPositionYX(grid.x % 2 == 1
                 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep)
                 : (-grid.y * yStep, grid.x * xStep));
 
-            GameObject child = UnityEngine.Object.Instantiate(AppManager.instance.resourceManager.blockPrefabsHandles[Enum.Parse<BlockPrefabs>(grid.type)].Result, board[yx].transform);
+            GameObject child = AppManager.instance.poolManager.Spawn(AppManager.instance.resourceManager.blockPrefabsHandles[Enum.Parse<BlockPrefabs>(grid.type)].Result, board[yx].transform);
             child.GetComponent<BlockChild>().SetBlockType(Enum.Parse<BlockPrefabs>(grid.type));
         }
     }
@@ -278,7 +278,7 @@ public class MapManager
         foreach (var pos in tops)
         {
             var rd = (BlockPrefabs)UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockPrefabs)).Length-1); // 炼目 力寇 场 1 皑家
-            GameObject child = UnityEngine.Object.Instantiate(AppManager.instance.resourceManager.blockPrefabsHandles[rd].Result, board[pos].transform);
+            GameObject child = AppManager.instance.poolManager.Spawn(AppManager.instance.resourceManager.blockPrefabsHandles[rd].Result, board[pos].transform);
             child.GetComponent<BlockChild>().SetBlockType(rd);
         }
     }

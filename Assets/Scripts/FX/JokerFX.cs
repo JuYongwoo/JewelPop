@@ -52,7 +52,7 @@ public class JokerFX : MonoBehaviour
 
         if (t >= 1f)
         {
-            Destroy(gameObject);
+            AppManager.instance.poolManager.DestroyPooled(gameObject);
         }
     }
 }
