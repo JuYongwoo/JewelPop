@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class CommonBlock : BlockChild, IMoveAndDesroyable
+public class CommonBlock : BlockChild, IMoveAndDestroyable
 {
     [SerializeField]
     private float speed = 2f;

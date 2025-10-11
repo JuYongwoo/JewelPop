@@ -232,13 +232,13 @@ public class MapManager
 
         if (canBurst)
         {
-            startChild.GetComponent<IMoveAndDesroyable>().Move(endParentTransform);
-            endChild.GetComponent<IMoveAndDesroyable>().Move(startParentTransform);
+            startChild.GetComponent<IMoveAndDestroyable>().Move(endParentTransform);
+            endChild.GetComponent<IMoveAndDestroyable>().Move(startParentTransform);
         }
         else
         {
-            startChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(endParentTransform);
-            endChild.GetComponent<IMoveAndDesroyable>().MoveAndBack(startParentTransform);
+            startChild.GetComponent<IMoveAndDestroyable>().MoveAndBack(endParentTransform);
+            endChild.GetComponent<IMoveAndDestroyable>().MoveAndBack(startParentTransform);
         }
     }
 
@@ -265,7 +265,7 @@ public class MapManager
                         specials.Add(board[n].transform.GetChild(0).GetComponent<ISpecial>());
                 }
 
-                board[a].transform.GetChild(0).GetComponent<IMoveAndDesroyable>().DestroySelf();
+                board[a].transform.GetChild(0).GetComponent<IMoveAndDestroyable>().DestroySelf();
             }
         }
 
@@ -313,7 +313,7 @@ public class MapManager
 
             if (newY != y)
             {
-                block.transform.GetChild(0).GetComponent<IMoveAndDesroyable>().Move(board[new YX(newY, x)].transform);
+                block.transform.GetChild(0).GetComponent<IMoveAndDestroyable>().Move(board[new YX(newY, x)].transform);
             }
         }
     }
@@ -324,7 +324,7 @@ public class MapManager
 
         return pBoard.ContainsKey(pos)
             && pBoard[pos].transform.childCount != 0
-            && pBoard[pos].GetComponent<IMoveAndDesroyable>() == null;
+            && pBoard[pos].GetComponent<IMoveAndDestroyable>() == null;
     }
 
     private bool IsTop(YX yx)
