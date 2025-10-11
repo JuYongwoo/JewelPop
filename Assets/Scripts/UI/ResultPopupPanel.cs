@@ -22,8 +22,8 @@ public class ResultPopupPanel : BasePopupEffect
     {
         resultPopupPanelObjs = Util.MapEnumChildObjects<ResultPopupObjects, GameObject>(this.gameObject);
 
-        AppManager.instance.actionManager.showResultPopup -= setActive;
-        AppManager.instance.actionManager.showResultPopup += setActive;
+        GameManager.instance.actionManager.showResultPopup -= setActive;
+        GameManager.instance.actionManager.showResultPopup += setActive;
 
 
 
@@ -37,7 +37,7 @@ public class ResultPopupPanel : BasePopupEffect
     }
     private void OnDestroy()
     {
-        AppManager.instance.actionManager.showResultPopup -= setActive;
+        GameManager.instance.actionManager.showResultPopup -= setActive;
 
     }
 

@@ -16,15 +16,15 @@ public class StageScene : MonoBehaviour
     private void Start()
     {
 
-        AppManager.instance.poolManager.CleanPool();
+        GameManager.instance.poolManager.CleanPool();
         //JYW
         //타이틀 씬에서 AppManager가 이미 초기화 되어있어야 하는데 현재 Title 씬 부재
         //때문에 지금은 StageManager는 Start에서 초기화
 
-        AppManager.instance.actionManager.StageSceneInputController -= stageSceneInputConrol;
-        AppManager.instance.actionManager.StageSceneInputController += stageSceneInputConrol;
+        GameManager.instance.actionManager.StageSceneInputController -= stageSceneInputConrol;
+        GameManager.instance.actionManager.StageSceneInputController += stageSceneInputConrol;
 
-        levelManager.Init(AppManager.instance.resourceManager.levelDatasJSONHandle.Result.text); //현재 스테이지에 따라 맞는 레벨 데이터 로드(지금은 Level_1만)// dict 키값은 서버에서 받아오는 것으로
+        levelManager.Init(GameManager.instance.resourceManager.levelDatasJSONHandle.Result.text); //현재 스테이지에 따라 맞는 레벨 데이터 로드(지금은 Level_1만)// dict 키값은 서버에서 받아오는 것으로
         mapManager.Init(levelManager.currentLevel);
         
         
@@ -35,7 +35,7 @@ public class StageScene : MonoBehaviour
 
     private void OnDestroy()
     {
-        AppManager.instance.actionManager.StageSceneInputController -= stageSceneInputConrol;
+        GameManager.instance.actionManager.StageSceneInputController -= stageSceneInputConrol;
         mapManager.OnDestroy();
         levelManager.OnDestroy();
     }
@@ -48,7 +48,7 @@ public class StageScene : MonoBehaviour
 
     private void stageSceneInputConrol()
     {
-        if (AppManager.instance.actionManager.getIsInMotionM() || AppManager.instance.actionManager.getIsBoardChangedM()) return; //이동 중에는 입력 무시
+        if (GameManager.instance.actionManager.getIsInMotionM() || GameManager.instance.actionManager.getIsBoardChangedM()) return; //이동 중에는 입력 무시
         if (Input.GetMouseButtonDown(0))
         {
             Click();
@@ -110,7 +110,7 @@ public class StageScene : MonoBehaviour
 
             if (hit.collider.gameObject != startBlock)
             {
-                AppManager.instance.actionManager.inputBlockChangeActionM(startBlock, hit.collider.gameObject);
+                GameManager.instance.actionManager.inputBlockChangeActionM(startBlock, hit.collider.gameObject);
                 UnClick();
             }
         }

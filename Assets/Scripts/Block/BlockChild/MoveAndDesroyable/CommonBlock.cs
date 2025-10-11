@@ -9,8 +9,8 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
 
     public void DestroySelf()
     {
-        AppManager.instance.poolManager.Spawn(AppManager.instance.resourceManager.blockCrushFxPrefabsHandles[Enum.Parse<BlockCrushFXPrefabs>("BlockCrush_" + GetBlockType())].Result, transform.position, Quaternion.identity);
-        AppManager.instance.poolManager.DestroyPooled(gameObject);
+        GameManager.instance.poolManager.Spawn(GameManager.instance.resourceManager.blockCrushFxPrefabsHandles[Enum.Parse<BlockCrushFXPrefabs>("BlockCrush_" + GetBlockType())].Result, transform.position, Quaternion.identity);
+        GameManager.instance.poolManager.DestroyPooled(gameObject);
     }
 
     public void Move(Transform targetParent)
@@ -26,8 +26,8 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
         float t = 0f;
         float endDist = 0.01f * 0.01f;
 
-        AppManager.instance.actionManager.setIsInMotionM(true);
-        AppManager.instance.actionManager.setIsBoardChangedM(true);
+        GameManager.instance.actionManager.setIsInMotionM(true);
+        GameManager.instance.actionManager.setIsBoardChangedM(true);
 
         while (true)
         {
@@ -39,7 +39,7 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
             yield return null;
         }
 
-        AppManager.instance.actionManager.setIsInMotionM(false);
+        GameManager.instance.actionManager.setIsInMotionM(false);
         transform.position = endPos;
     }
 
@@ -56,8 +56,8 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
         float t2 = 0f;
         float endDist = 0.01f * 0.01f;
 
-        AppManager.instance.actionManager.setIsInMotionM(true);
-        AppManager.instance.actionManager.setIsBoardChangedM(true);
+        GameManager.instance.actionManager.setIsInMotionM(true);
+        GameManager.instance.actionManager.setIsBoardChangedM(true);
 
         while (true)
         {
@@ -82,7 +82,7 @@ public class CommonBlock : BlockChild, IMoveAndDesroyable
             yield return null;
         }
 
-        AppManager.instance.actionManager.setIsInMotionM(false);
+        GameManager.instance.actionManager.setIsInMotionM(false);
         transform.position = startPos;
     }
 

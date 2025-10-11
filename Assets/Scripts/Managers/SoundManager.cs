@@ -10,13 +10,13 @@ public class SoundManager
     {
         if (!audioSource.ContainsKey(sound))
         {
-            audioSource.Add(sound, AppManager.instance.gameObject.AddComponent<AudioSource>());
+            audioSource.Add(sound, GameManager.instance.gameObject.AddComponent<AudioSource>());
         }
             audioSource[sound].volume = volume;
             audioSource[sound].loop = isLoop;
             
             audioSource[sound].Stop();
-            audioSource[sound].clip = AppManager.instance.resourceManager.gameSoundClipsHandles[sound].Result;
+            audioSource[sound].clip = GameManager.instance.resourceManager.gameSoundClipsHandles[sound].Result;
             audioSource[sound].Play();
     }
 

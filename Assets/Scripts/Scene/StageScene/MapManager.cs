@@ -126,29 +126,29 @@ public class MapManager
         // FSM 초기 상태
         ChangeState(BoardFSMState.DroppingEnter);
 
-        AppManager.instance.actionManager.inputBlockChangeAction -= InputBlockChangeEvent;
-        AppManager.instance.actionManager.inputBlockChangeAction += InputBlockChangeEvent;
+        GameManager.instance.actionManager.inputBlockChangeAction -= InputBlockChangeEvent;
+        GameManager.instance.actionManager.inputBlockChangeAction += InputBlockChangeEvent;
 
-        AppManager.instance.actionManager.getIsInMotion -= getIsInMotion;
-        AppManager.instance.actionManager.getIsInMotion += getIsInMotion;
+        GameManager.instance.actionManager.getIsInMotion -= getIsInMotion;
+        GameManager.instance.actionManager.getIsInMotion += getIsInMotion;
 
-        AppManager.instance.actionManager.setIsInMotion -= setIsInMotion;
-        AppManager.instance.actionManager.setIsInMotion += setIsInMotion;
+        GameManager.instance.actionManager.setIsInMotion -= setIsInMotion;
+        GameManager.instance.actionManager.setIsInMotion += setIsInMotion;
 
-        AppManager.instance.actionManager.getIsBoardChanged -= getIsBoardChanged;
-        AppManager.instance.actionManager.getIsBoardChanged += getIsBoardChanged;
+        GameManager.instance.actionManager.getIsBoardChanged -= getIsBoardChanged;
+        GameManager.instance.actionManager.getIsBoardChanged += getIsBoardChanged;
 
-        AppManager.instance.actionManager.setIsBoardChanged -= setIsBoardChanged;
-        AppManager.instance.actionManager.setIsBoardChanged += setIsBoardChanged;
+        GameManager.instance.actionManager.setIsBoardChanged -= setIsBoardChanged;
+        GameManager.instance.actionManager.setIsBoardChanged += setIsBoardChanged;
     }
 
     public void OnDestroy()
     {
-        AppManager.instance.actionManager.inputBlockChangeAction -= InputBlockChangeEvent;
-        AppManager.instance.actionManager.getIsInMotion -= getIsInMotion;
-        AppManager.instance.actionManager.setIsInMotion -= setIsInMotion;
-        AppManager.instance.actionManager.getIsBoardChanged -= getIsBoardChanged;
-        AppManager.instance.actionManager.setIsBoardChanged -= setIsBoardChanged;
+        GameManager.instance.actionManager.inputBlockChangeAction -= InputBlockChangeEvent;
+        GameManager.instance.actionManager.getIsInMotion -= getIsInMotion;
+        GameManager.instance.actionManager.setIsInMotion -= setIsInMotion;
+        GameManager.instance.actionManager.getIsBoardChanged -= getIsBoardChanged;
+        GameManager.instance.actionManager.setIsBoardChanged -= setIsBoardChanged;
     }
 
     private bool getIsInMotion()
@@ -177,14 +177,14 @@ public class MapManager
         foreach (var grid in jsonVars.grids)
         {
             YX yx = new YX(grid.y, grid.x);
-            board.Add(yx, AppManager.instance.poolManager.Spawn(AppManager.instance.resourceManager.blockParentObjectHandle.Result).GetComponent<BlockParent>());
+            board.Add(yx, GameManager.instance.poolManager.Spawn(GameManager.instance.resourceManager.blockParentObjectHandle.Result).GetComponent<BlockParent>());
             board[yx].name = $"y{grid.y}x{grid.x}";
             board[yx].SetGridPositionYX(yx);
             board[yx].SetUnityPositionYX(grid.x % 2 == 1
                 ? (-grid.y * yStep + yStep * 0.5f, grid.x * xStep)
                 : (-grid.y * yStep, grid.x * xStep));
 
-            GameObject child = AppManager.instance.poolManager.Spawn(AppManager.instance.resourceManager.blockPrefabsHandles[Enum.Parse<BlockPrefabs>(grid.type)].Result, board[yx].transform);
+            GameObject child = GameManager.instance.poolManager.Spawn(GameManager.instance.resourceManager.blockPrefabsHandles[Enum.Parse<BlockPrefabs>(grid.type)].Result, board[yx].transform);
             child.GetComponent<BlockChild>().SetBlockType(Enum.Parse<BlockPrefabs>(grid.type));
         }
     }
@@ -278,7 +278,7 @@ public class MapManager
         foreach (var pos in tops)
         {
             var rd = (BlockPrefabs)UnityEngine.Random.Range(0, Enum.GetValues(typeof(BlockPrefabs)).Length-1); // 조커 제외 끝 1 감소
-            GameObject child = AppManager.instance.poolManager.Spawn(AppManager.instance.resourceManager.blockPrefabsHandles[rd].Result, board[pos].transform);
+            GameObject child = GameManager.instance.poolManager.Spawn(GameManager.instance.resourceManager.blockPrefabsHandles[rd].Result, board[pos].transform);
             child.GetComponent<BlockChild>().SetBlockType(rd);
         }
     }

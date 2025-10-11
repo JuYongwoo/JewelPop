@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class AppManager : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
-    public static AppManager instance;
+    public static GameManager instance;
     public ActionManager actionManager = new ActionManager();
     public ResourceManager resourceManager = new ResourceManager();
     public SoundManager soundManager = new SoundManager();

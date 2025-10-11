@@ -9,14 +9,14 @@ public class BlockCrushFX : MonoBehaviour
 
     private void Start() //일반 블럭의 파괴 모션
     {
-        AppManager.instance.soundManager.PlaySound(Sounds.Block3SFX, 0.5f, false);
+        GameManager.instance.soundManager.PlaySound(Sounds.Block3SFX, 0.5f, false);
         StartCoroutine(DestroyAfterBlockCrushMotion());
     }
 
     private IEnumerator DestroyAfterBlockCrushMotion()
     {
         yield return new WaitForSeconds(0.8f);
-        AppManager.instance.poolManager.DestroyPooled(gameObject);
+        GameManager.instance.poolManager.DestroyPooled(gameObject);
 
     }
 

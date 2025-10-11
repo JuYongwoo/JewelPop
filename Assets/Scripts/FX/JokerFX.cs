@@ -17,9 +17,9 @@ public class JokerFX : MonoBehaviour
 
     void Start()
     {
-        AppManager.instance.soundManager.PlaySound(Sounds.ScoreGetSFX, 0.2f, false);
+        GameManager.instance.soundManager.PlaySound(Sounds.ScoreGetSFX, 0.2f, false);
 
-        goalTranform = AppManager.instance.actionManager.getJokerGoalTranformM();
+        goalTranform = GameManager.instance.actionManager.getJokerGoalTranformM();
 
         startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         goalPos = new Vector3(goalTranform.position.x, goalTranform.position.y, transform.position.z);
@@ -52,7 +52,7 @@ public class JokerFX : MonoBehaviour
 
         if (t >= 1f)
         {
-            AppManager.instance.poolManager.DestroyPooled(gameObject);
+            GameManager.instance.poolManager.DestroyPooled(gameObject);
         }
     }
 }

@@ -18,16 +18,16 @@ public enum TopPanelObjects
     private void Awake()
     {
         topPanelObjs = Util.MapEnumChildObjects<TopPanelObjects, GameObject>(this.gameObject);
-        AppManager.instance.actionManager.setScoreUI -= setScore;
-        AppManager.instance.actionManager.setScoreUI += setScore;
-        AppManager.instance.actionManager.setCurrentStageUI -= setCurrentStage;
-        AppManager.instance.actionManager.setCurrentStageUI += setCurrentStage;
+        GameManager.instance.actionManager.setScoreUI -= setScore;
+        GameManager.instance.actionManager.setScoreUI += setScore;
+        GameManager.instance.actionManager.setCurrentStageUI -= setCurrentStage;
+        GameManager.instance.actionManager.setCurrentStageUI += setCurrentStage;
     }
 
     private void Start()
     {
-        AppManager.instance.actionManager.getJokerGoalTranform -= getJokerGoalTranform;
-        AppManager.instance.actionManager.getJokerGoalTranform += getJokerGoalTranform;
+        GameManager.instance.actionManager.getJokerGoalTranform -= getJokerGoalTranform;
+        GameManager.instance.actionManager.getJokerGoalTranform += getJokerGoalTranform;
 
         Image image = topPanelObjs[TopPanelObjects.TopCurrentScoreFrontImg].GetComponent<Image>();
         image.fillMethod = Image.FillMethod.Vertical;
@@ -37,9 +37,9 @@ public enum TopPanelObjects
 
     private void OnDestroy()
     {
-        AppManager.instance.actionManager.setScoreUI -= setScore;
-        AppManager.instance.actionManager.setCurrentStageUI -= setCurrentStage;
-        AppManager.instance.actionManager.getJokerGoalTranform -= getJokerGoalTranform;
+        GameManager.instance.actionManager.setScoreUI -= setScore;
+        GameManager.instance.actionManager.setCurrentStageUI -= setCurrentStage;
+        GameManager.instance.actionManager.getJokerGoalTranform -= getJokerGoalTranform;
     }
 
     private Transform getJokerGoalTranform()
