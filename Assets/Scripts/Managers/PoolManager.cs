@@ -2,10 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public interface PooledObejct
+{
+    public abstract void PoolDestroy();
+    public abstract void PoolStart();
+}
+
 public class PoolManager
 {
-    private Dictionary<GameObject, Queue<GameObject>> _pools = new(); // 중복되는 키들을 밸류 속 큐에 넣는다
-    private Dictionary<GameObject, GameObject> _instanceToPrefab = new(); // 모든 키들에 대한 원본 프리팹 값
+    private Dictionary<GameObject, Queue<GameObject>> _pools = new();
+    private Dictionary<GameObject, GameObject> _instanceToPrefab = new();
+
 
     private Transform _PooledObjects;
     private Transform PooledObjects
@@ -44,7 +51,7 @@ public class PoolManager
         _pools[prefab] = q;
     }
 
-    public GameObject Spawn(GameObject prefab)
+    private GameObject SpawnInternal(GameObject prefab)
     {
         if (prefab == null) return null;
 
@@ -57,22 +64,45 @@ public class PoolManager
         GameObject instance = (q.Count > 0) ? q.Dequeue() : Object.Instantiate(prefab);
         _instanceToPrefab[instance] = prefab;
         instance.SetActive(true);
+
+        PooledObejct[] classes = instance.GetComponents<PooledObejct>();
+        for (int i = 0; i < classes.Length; i++) classes[i].PoolStart();
+        return instance;
+    }
+
+    public GameObject Spawn(GameObject prefab)
+    {
+        GameObject instance = SpawnInternal(prefab);
+        if (instance == null) return null;
         return instance;
     }
 
     public GameObject Spawn(GameObject prefab, Transform parent)
     {
-        GameObject instance = Spawn(prefab);
+        GameObject instance = SpawnInternal(prefab);
         if (instance == null) return null;
+        
+        
+        
+        Vector3 originalScale = prefab.transform.localScale; //프리팹 원본 스케일 저장
         instance.transform.SetParent(parent, false);
+        instance.transform.localScale = originalScale;       // 원본 크기로 복원
+        
+
+
         return instance;
     }
 
     public GameObject Spawn(GameObject prefab, Vector3 pos, Quaternion rot)
     {
-        GameObject instance = Spawn(prefab);
+        GameObject instance = SpawnInternal(prefab);
         if (instance == null) return null;
+        
+        
+        
         instance.transform.SetPositionAndRotation(pos, rot);
+
+
         return instance;
     }
 
@@ -83,6 +113,9 @@ public class PoolManager
             Object.Destroy(instance);
             return;
         }
+
+        PooledObejct[] classes = instance.GetComponents<PooledObejct>();
+        for (int i = 0; i < classes.Length; i++) classes[i].PoolDestroy();
 
         instance.transform.SetParent(PooledObjects, false);
         instance.SetActive(false);
