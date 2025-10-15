@@ -6,7 +6,7 @@ public class InputManager
     
     public void OnUpdate()
     {
-        GameManager.instance.actionManager.StageSceneInputControllerM();
+        GameManager.instance.actionManager.OnStageSceneInputController();
 
     }
     

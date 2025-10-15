@@ -26,8 +26,8 @@ public class CommonBlock : BlockChild, IMoveAndDestroyable
         float t = 0f;
         float endDist = 0.01f * 0.01f;
 
-        GameManager.instance.actionManager.setIsInMotionM(true);
-        GameManager.instance.actionManager.setIsBoardChangedM(true);
+        GameManager.instance.actionManager.OnSetIsInMotion(true);
+        GameManager.instance.actionManager.OnSetIsBoardChanged(true);
 
         while (true)
         {
@@ -39,7 +39,7 @@ public class CommonBlock : BlockChild, IMoveAndDestroyable
             yield return null;
         }
 
-        GameManager.instance.actionManager.setIsInMotionM(false);
+        GameManager.instance.actionManager.OnSetIsInMotion(false);
         transform.position = endPos;
     }
 
@@ -56,8 +56,8 @@ public class CommonBlock : BlockChild, IMoveAndDestroyable
         float t2 = 0f;
         float endDist = 0.01f * 0.01f;
 
-        GameManager.instance.actionManager.setIsInMotionM(true);
-        GameManager.instance.actionManager.setIsBoardChangedM(true);
+        GameManager.instance.actionManager.OnSetIsInMotion(true);
+        GameManager.instance.actionManager.OnSetIsBoardChanged(true);
 
         while (true)
         {
@@ -82,7 +82,7 @@ public class CommonBlock : BlockChild, IMoveAndDestroyable
             yield return null;
         }
 
-        GameManager.instance.actionManager.setIsInMotionM(false);
+        GameManager.instance.actionManager.OnSetIsInMotion(false);
         transform.position = startPos;
     }
 

@@ -29,22 +29,22 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
         currentScore = 0;
 
         //UI 초기화
-        GameManager.instance.actionManager.DeltaScore -= deltaScore;
-        GameManager.instance.actionManager.DeltaScore += deltaScore;
-        GameManager.instance.actionManager.setCurrentStageUIM(currentStage);
-        GameManager.instance.actionManager.setScoreUIM(currentScore, goalScore);
+        GameManager.instance.actionManager.DeltaScoreEvent -= deltaScore;
+        GameManager.instance.actionManager.DeltaScoreEvent += deltaScore;
+        GameManager.instance.actionManager.OnSetCurrentStageUI(currentStage);
+        GameManager.instance.actionManager.OnSetScoreUI(currentScore, goalScore);
         GameManager.instance.soundManager.PlaySound(Sounds.BGM1, 0.25f, true);
     }
 
     public void OnDestroy()
     {
-        GameManager.instance.actionManager.DeltaScore -= deltaScore;
+        GameManager.instance.actionManager.DeltaScoreEvent -= deltaScore;
     }
 
     public void deltaScore(int delta) //점수 증가는 반드시 이것을 사용
     {
         currentScore += delta;
-        GameManager.instance.actionManager.setScoreUIM(currentScore, goalScore);
+        GameManager.instance.actionManager.OnSetScoreUI(currentScore, goalScore);
 
 
         //점수 도달 시
@@ -64,7 +64,7 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
     private void GameClear()
     {
         Time.timeScale = 0f;
-        GameManager.instance.actionManager.showResultPopupM();
+        GameManager.instance.actionManager.OnShowResultPopup();
         GameManager.instance.soundManager.StopSound(Sounds.BGM1);
         GameManager.instance.soundManager.PlaySound(Sounds.Victory, 0.25f, false);
     }

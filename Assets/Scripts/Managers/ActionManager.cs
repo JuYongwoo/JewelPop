@@ -3,69 +3,69 @@ using UnityEngine;
 
 public class ActionManager
 {
-    public event Func<Transform> getJokerGoalTranform;
-    public event Action<GameObject, GameObject> inputBlockChangeAction;
-    public event Action<int, int> setScoreUI;
-    public event Action<int> setCurrentStageUI;
-    public event Func<bool> getIsInMotion;
-    public event Action<bool> setIsInMotion;
-    public event Func<bool> getIsBoardChanged;
-    public event Action<bool> setIsBoardChanged;
-    public event Action showResultPopup;
-    public event Action StageSceneInputController;
-    public event Action<int> DeltaScore;
+    public event Func<Transform> GetJokerGoalTranformEvent;
+    public event Action<GameObject, GameObject> inputBlockChangeEvent;
+    public event Action<int, int> SetScoreUIEvent;
+    public event Action<int> SetCurrentStageUIEvent;
+    public event Func<bool> GetIsInMotionEvent;
+    public event Action<bool> SetIsInMotionEvent;
+    public event Func<bool> GetIsBoardChangedEvent;
+    public event Action<bool> SetIsBoardCangedEvent;
+    public event Action ShowResultPopupEvent;
+    public event Action StageSceneInputControllerEvent;
+    public event Action<int> DeltaScoreEvent;
 
-    public Transform getJokerGoalTranformM()
+    public Transform OnGetJokerGoalTranform()
     {
-        return getJokerGoalTranform?.Invoke() ?? null;
+        return GetJokerGoalTranformEvent?.Invoke() ?? null;
     }
-    public void inputBlockChangeActionM(GameObject a, GameObject b)
+    public void OnInputBlockChange(GameObject a, GameObject b)
     {
-        inputBlockChangeAction?.Invoke(a, b);
-    }
-
-    public void setScoreUIM(int a, int b)
-    {
-        setScoreUI?.Invoke(a, b);
+        inputBlockChangeEvent?.Invoke(a, b);
     }
 
-    public void setCurrentStageUIM(int a)
+    public void OnSetScoreUI(int a, int b)
     {
-        setCurrentStageUI?.Invoke(a);
+        SetScoreUIEvent?.Invoke(a, b);
     }
 
-    public bool getIsInMotionM()
+    public void OnSetCurrentStageUI(int a)
     {
-        return getIsInMotion?.Invoke() ?? false;
+        SetCurrentStageUIEvent?.Invoke(a);
     }
 
-    public void setIsInMotionM(bool a)
+    public bool OnGetIsInMotion()
     {
-        setIsInMotion?.Invoke(a);
+        return GetIsInMotionEvent?.Invoke() ?? false;
     }
 
-    public bool getIsBoardChangedM()
+    public void OnSetIsInMotion(bool a)
     {
-        return getIsBoardChanged?.Invoke() ?? false;
+        SetIsInMotionEvent?.Invoke(a);
     }
 
-    public void setIsBoardChangedM(bool a)
+    public bool OnGetIsBoardChanged()
     {
-        setIsBoardChanged?.Invoke(a);
+        return GetIsBoardChangedEvent?.Invoke() ?? false;
     }
 
-    public void showResultPopupM()
+    public void OnSetIsBoardChanged(bool a)
     {
-        showResultPopup?.Invoke();
+        SetIsBoardCangedEvent?.Invoke(a);
     }
 
-    public void StageSceneInputControllerM()
+    public void OnShowResultPopup()
     {
-        StageSceneInputController?.Invoke();
+        ShowResultPopupEvent?.Invoke();
     }
 
-    public void DeltaScoreM(int a)
+    public void OnStageSceneInputController()
     {
-        DeltaScore?.Invoke(a);
+        StageSceneInputControllerEvent?.Invoke();
+    }
+
+    public void OnDeltaScore(int a)
+    {
+        DeltaScoreEvent?.Invoke(a);
     }
 }
