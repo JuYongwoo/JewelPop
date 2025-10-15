@@ -3,16 +3,12 @@ using System;
 
 public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
 {
-    public enum GoalType
-    {
-        Joker
-    }
 
-    GoalType goalType = GoalType.Joker; //TODO 게임 확장 시 / JYW 목표 타입마다 게임 목표 다르게 설정
+
+    public GoalType goalType = GoalType.Joker; //TODO 게임 확장 시 / JYW 목표 타입마다 게임 목표 다르게 설정
     
     
     private int currentStage = 0;
-
     private int currentScore = 0;
     private int goalScore = 0;
 
@@ -29,8 +25,8 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
         currentScore = 0;
 
         //UI 초기화
-        GameManager.instance.actionManager.DeltaScoreEvent -= deltaScore;
-        GameManager.instance.actionManager.DeltaScoreEvent += deltaScore;
+        GameManager.instance.actionManager.DeltaScoreEvent -= DeltaScore;
+        GameManager.instance.actionManager.DeltaScoreEvent += DeltaScore;
         GameManager.instance.actionManager.OnSetCurrentStageUI(currentStage);
         GameManager.instance.actionManager.OnSetScoreUI(currentScore, goalScore);
         GameManager.instance.soundManager.PlaySound(Sounds.BGM1, 0.25f, true);
@@ -38,10 +34,10 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
 
     public void OnDestroy()
     {
-        GameManager.instance.actionManager.DeltaScoreEvent -= deltaScore;
+        GameManager.instance.actionManager.DeltaScoreEvent -= DeltaScore;
     }
 
-    public void deltaScore(int delta) //점수 증가는 반드시 이것을 사용
+    private void DeltaScore(int delta) //점수 증가는 반드시 이것을 사용
     {
         currentScore += delta;
         GameManager.instance.actionManager.OnSetScoreUI(currentScore, goalScore);
@@ -56,10 +52,6 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
 
     }
 
-    public int getScore()
-    {
-        return currentScore;
-    }
 
     private void GameClear()
     {

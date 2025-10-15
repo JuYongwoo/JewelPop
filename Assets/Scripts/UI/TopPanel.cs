@@ -5,29 +5,29 @@ using UnityEngine.UI;
 
 public class TopPanel : MonoBehaviour
 {
-public enum TopPanelObjects
-{
-    TopCurrentScoreText,
-    TopGoalBodyText,
-    TopCurrentStageBodyText,
-    TopCurrentScoreFrontImg
-}
+    private enum TopPanelObjects
+    {
+        TopCurrentScoreText,
+        TopGoalBodyText,
+        TopCurrentStageBodyText,
+        TopCurrentScoreFrontImg
+    }
 
     Dictionary<TopPanelObjects, GameObject> topPanelObjs = new Dictionary<TopPanelObjects, GameObject>();
 
     private void Awake()
     {
         topPanelObjs = Util.MapEnumChildObjects<TopPanelObjects, GameObject>(this.gameObject);
-        GameManager.instance.actionManager.SetScoreUIEvent -= setScore;
-        GameManager.instance.actionManager.SetScoreUIEvent += setScore;
-        GameManager.instance.actionManager.SetCurrentStageUIEvent -= setCurrentStage;
-        GameManager.instance.actionManager.SetCurrentStageUIEvent += setCurrentStage;
+        GameManager.instance.actionManager.SetScoreUIEvent -= SetScore;
+        GameManager.instance.actionManager.SetScoreUIEvent += SetScore;
+        GameManager.instance.actionManager.SetCurrentStageUIEvent -= SetCurrentStage;
+        GameManager.instance.actionManager.SetCurrentStageUIEvent += SetCurrentStage;
     }
 
     private void Start()
     {
-        GameManager.instance.actionManager.GetJokerGoalTranformEvent -= getJokerGoalTranform;
-        GameManager.instance.actionManager.GetJokerGoalTranformEvent += getJokerGoalTranform;
+        GameManager.instance.actionManager.GetJokerGoalTranformEvent -= GetJokerGoalTranform;
+        GameManager.instance.actionManager.GetJokerGoalTranformEvent += GetJokerGoalTranform;
 
         Image image = topPanelObjs[TopPanelObjects.TopCurrentScoreFrontImg].GetComponent<Image>();
         image.fillMethod = Image.FillMethod.Vertical;
@@ -37,24 +37,24 @@ public enum TopPanelObjects
 
     private void OnDestroy()
     {
-        GameManager.instance.actionManager.SetScoreUIEvent -= setScore;
-        GameManager.instance.actionManager.SetCurrentStageUIEvent -= setCurrentStage;
-        GameManager.instance.actionManager.GetJokerGoalTranformEvent -= getJokerGoalTranform;
+        GameManager.instance.actionManager.SetScoreUIEvent -= SetScore;
+        GameManager.instance.actionManager.SetCurrentStageUIEvent -= SetCurrentStage;
+        GameManager.instance.actionManager.GetJokerGoalTranformEvent -= GetJokerGoalTranform;
     }
 
-    private Transform getJokerGoalTranform()
+    private Transform GetJokerGoalTranform()
     {
         topPanelObjs.TryGetValue(TopPanelObjects.TopCurrentScoreText, out var scoreText);
         return scoreText.transform;
     }
 
-    private void setCurrentStage(int stage)
+    private void SetCurrentStage(int stage)
     {
         topPanelObjs.TryGetValue(TopPanelObjects.TopCurrentStageBodyText, out var bodyText);
         bodyText.GetComponent<Text>().text = stage.ToString();
     }
 
-    private void setScore(int currentScore, int goalScore)
+    private void SetScore(int currentScore, int goalScore)
     {
 
         topPanelObjs.TryGetValue(TopPanelObjects.TopCurrentScoreText, out var scoreText);
@@ -62,7 +62,7 @@ public enum TopPanelObjects
         topPanelObjs.TryGetValue(TopPanelObjects.TopCurrentScoreFrontImg, out var frontImg);
 
         scoreText.GetComponent<Text>().text = currentScore.ToString();
-        bodyText.GetComponent<Text>().text = (goalScore-currentScore) >= 0 ? (goalScore - currentScore).ToString() : "0";
+        bodyText.GetComponent<Text>().text = (goalScore - currentScore) >= 0 ? (goalScore - currentScore).ToString() : "0";
         frontImg.GetComponent<Image>().fillAmount = Mathf.Clamp01((float)currentScore / (float)goalScore);
     }
 

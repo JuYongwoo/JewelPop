@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TitlePanel : MonoBehaviour
 {
-    public enum TitleUI
+    private enum TitleUI
     {
         TitleStartBtn
     }
@@ -13,7 +13,7 @@ public class TitlePanel : MonoBehaviour
     {
         uiElements = Util.MapEnumChildObjects<TitleUI, GameObject>(this.gameObject);
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         uiElements[TitleUI.TitleStartBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
@@ -22,9 +22,4 @@ public class TitlePanel : MonoBehaviour
         });
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

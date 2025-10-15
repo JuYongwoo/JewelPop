@@ -19,7 +19,7 @@ public class BlockParent : MonoBehaviour
 
     public void SetUnityPositionYX((float y, float x) yx)
     {
-        this.gameObject.transform.localPosition = new Vector2(yx.x, yx.y);
+        gameObject.transform.localPosition = new Vector2(yx.x, yx.y);
     }
 
 

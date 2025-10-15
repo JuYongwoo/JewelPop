@@ -1,7 +1,4 @@
 using UnityEngine;
-
-
-
 public interface IMoveAndDestroyable //움직이고 터질 수 있는 블럭들은 반드시 이 인터페이스를 상속
 {
 

@@ -65,7 +65,7 @@ public class MapManager
                 break;
 
             case BoardFSMState.DestroyingUpdate:
-                var dels = checkAllChains();
+                var dels = CheckAllChains();
                 _lastDelsCount = dels.Count;
                 if (_lastDelsCount != 0)
                     DestroyBlocks(dels);
@@ -81,7 +81,7 @@ public class MapManager
                 break;
 
             case BoardFSMState.SpawningUpdate:
-                var tops = checkEmptyTops();
+                var tops = CheckEmptyTops();
                 _lastTopsCount = tops.Count;
                 if (_lastTopsCount != 0)
                     AddNewBlocks(tops);
@@ -103,8 +103,8 @@ public class MapManager
     private const float xStep = 0.6f;
     private const float yStep = 0.7f;
 
-    public bool isInMotion = false;
-    public bool isChanged { get; set; }
+    private bool isInMotion = false;
+    private bool isChanged { get; set; }
 
     (int dy, int dx)[] oddXDirections = new (int, int)[] {
         (-1, -1), (0, 1),
@@ -129,44 +129,44 @@ public class MapManager
         GameManager.instance.actionManager.inputBlockChangeEvent -= InputBlockChangeEvent;
         GameManager.instance.actionManager.inputBlockChangeEvent += InputBlockChangeEvent;
 
-        GameManager.instance.actionManager.GetIsInMotionEvent -= getIsInMotion;
-        GameManager.instance.actionManager.GetIsInMotionEvent += getIsInMotion;
+        GameManager.instance.actionManager.GetIsInMotionEvent -= GetIsInMotion;
+        GameManager.instance.actionManager.GetIsInMotionEvent += GetIsInMotion;
 
-        GameManager.instance.actionManager.SetIsInMotionEvent -= setIsInMotion;
-        GameManager.instance.actionManager.SetIsInMotionEvent += setIsInMotion;
+        GameManager.instance.actionManager.SetIsInMotionEvent -= SetIsInMotion;
+        GameManager.instance.actionManager.SetIsInMotionEvent += SetIsInMotion;
 
-        GameManager.instance.actionManager.GetIsBoardChangedEvent -= getIsBoardChanged;
-        GameManager.instance.actionManager.GetIsBoardChangedEvent += getIsBoardChanged;
+        GameManager.instance.actionManager.GetIsBoardChangedEvent -= GetIsBoardChanged;
+        GameManager.instance.actionManager.GetIsBoardChangedEvent += GetIsBoardChanged;
 
-        GameManager.instance.actionManager.SetIsBoardCangedEvent -= setIsBoardChanged;
-        GameManager.instance.actionManager.SetIsBoardCangedEvent += setIsBoardChanged;
+        GameManager.instance.actionManager.SetIsBoardCangedEvent -= SetIsBoardChanged;
+        GameManager.instance.actionManager.SetIsBoardCangedEvent += SetIsBoardChanged;
     }
 
     public void OnDestroy()
     {
         GameManager.instance.actionManager.inputBlockChangeEvent -= InputBlockChangeEvent;
-        GameManager.instance.actionManager.GetIsInMotionEvent -= getIsInMotion;
-        GameManager.instance.actionManager.SetIsInMotionEvent -= setIsInMotion;
-        GameManager.instance.actionManager.GetIsBoardChangedEvent -= getIsBoardChanged;
-        GameManager.instance.actionManager.SetIsBoardCangedEvent -= setIsBoardChanged;
+        GameManager.instance.actionManager.GetIsInMotionEvent -= GetIsInMotion;
+        GameManager.instance.actionManager.SetIsInMotionEvent -= SetIsInMotion;
+        GameManager.instance.actionManager.GetIsBoardChangedEvent -= GetIsBoardChanged;
+        GameManager.instance.actionManager.SetIsBoardCangedEvent -= SetIsBoardChanged;
     }
 
-    private bool getIsInMotion()
+    private bool GetIsInMotion()
     {
         return isInMotion;
     }
 
-    private void setIsInMotion(bool a)
+    private void SetIsInMotion(bool a)
     {
         isInMotion = a;
     }
 
-    private bool getIsBoardChanged()
+    private bool GetIsBoardChanged()
     {
         return isChanged;
     }
 
-    private void setIsBoardChanged(bool a)
+    private void SetIsBoardChanged(bool a)
     {
         isChanged = a;
     }
@@ -242,7 +242,7 @@ public class MapManager
         }
     }
 
-    private List<YX> checkAllChains()
+    private List<YX> CheckAllChains()
     {
         List<YX> dels = new List<YX>();
         foreach (var grid in board)
@@ -283,7 +283,7 @@ public class MapManager
         }
     }
 
-    private List<YX> checkEmptyTops()
+    private List<YX> CheckEmptyTops()
     {
         List<YX> tops = new List<YX>();
         foreach (var key in board.Keys)

@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
+public enum GoalType
+{
+    Joker
+
+}
 public enum BlockPrefabs
 {
     r,

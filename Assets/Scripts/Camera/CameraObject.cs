@@ -9,7 +9,7 @@ public class CameraObject : MonoBehaviour
         cam = GetComponent<Camera>();
     }
 
-    void Start()
+    private void Start()
     {
         float targetAspect = 9f/19f;
         float windowAspect = (float)Screen.width / (float)Screen.height;
@@ -34,11 +34,5 @@ public class CameraObject : MonoBehaviour
             cam.rect = rect;
         }
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

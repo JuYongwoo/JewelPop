@@ -15,7 +15,7 @@ public class JokerFX : MonoBehaviour
     private float approxLen = 1f;
     private bool isLeft;
 
-    void Start()
+    private void Start()
     {
         GameManager.instance.soundManager.PlaySound(Sounds.ScoreGetSFX, 0.2f, false);
 
@@ -41,7 +41,7 @@ public class JokerFX : MonoBehaviour
         if (approxLen < 0.001f) approxLen = Mathf.Max(dist, 1f);
     }
 
-    void Update()
+    private void Update()
     {
         float dt = (moveSpeed * Time.deltaTime) / approxLen;
         t = Mathf.Clamp01(t + dt);

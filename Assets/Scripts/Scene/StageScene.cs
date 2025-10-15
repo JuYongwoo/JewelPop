@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class StageScene : MonoBehaviour
 {
@@ -21,8 +20,8 @@ public class StageScene : MonoBehaviour
         //타이틀 씬에서 AppManager가 이미 초기화 되어있어야 하는데 현재 Title 씬 부재
         //때문에 지금은 StageManager는 Start에서 초기화
 
-        GameManager.instance.actionManager.StageSceneInputControllerEvent -= stageSceneInputConrol;
-        GameManager.instance.actionManager.StageSceneInputControllerEvent += stageSceneInputConrol;
+        GameManager.instance.actionManager.StageSceneInputControllerEvent -= StageSceneInputConrol;
+        GameManager.instance.actionManager.StageSceneInputControllerEvent += StageSceneInputConrol;
 
         levelManager.Init(GameManager.instance.resourceManager.levelDatasJSONHandle.Result.text); //현재 스테이지에 따라 맞는 레벨 데이터 로드(지금은 Level_1만)// dict 키값은 서버에서 받아오는 것으로
         mapManager.Init(levelManager.currentLevel);
@@ -35,7 +34,7 @@ public class StageScene : MonoBehaviour
 
     private void OnDestroy()
     {
-        GameManager.instance.actionManager.StageSceneInputControllerEvent -= stageSceneInputConrol;
+        GameManager.instance.actionManager.StageSceneInputControllerEvent -= StageSceneInputConrol;
         mapManager.OnDestroy();
         levelManager.OnDestroy();
     }
@@ -46,7 +45,7 @@ public class StageScene : MonoBehaviour
 
     }
 
-    private void stageSceneInputConrol()
+    private void StageSceneInputConrol()
     {
         if (GameManager.instance.actionManager.OnGetIsInMotion() || GameManager.instance.actionManager.OnGetIsBoardChanged()) return; //이동 중에는 입력 무시
         if (Input.GetMouseButtonDown(0))

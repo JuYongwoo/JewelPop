@@ -1,11 +1,6 @@
 using UnityEngine;
-
-
-
 public class JokerBlock : BlockChild, ISpecial
 {
-
-
     public void SpecialMotion()
     {
         //gameObject.GetComponent<Animator>().SetTrigger("open");
@@ -13,7 +8,5 @@ public class JokerBlock : BlockChild, ISpecial
         GameManager.instance.poolManager.Spawn(GameManager.instance.resourceManager.jokerScoreFxHandle.Result, transform.position, Quaternion.identity);
         GameManager.instance.actionManager.OnDeltaScore(1);
     }
-
-
 
 }
