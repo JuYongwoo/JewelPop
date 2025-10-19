@@ -57,7 +57,7 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
     {
         Time.timeScale = 0f;
         GameManager.instance.actionManager.OnShowResultPopup();
-        GameManager.instance.soundManager.StopAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result);
+        GameManager.instance.actionManager.OnStopAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result);
         GameManager.instance.actionManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.Victory].Result, 0.25f, false);
     }
 
