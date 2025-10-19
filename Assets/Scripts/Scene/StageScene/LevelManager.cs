@@ -29,7 +29,7 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
         GameManager.instance.actionManager.DeltaScoreEvent += DeltaScore;
         GameManager.instance.actionManager.OnSetCurrentStageUI(currentStage);
         GameManager.instance.actionManager.OnSetScoreUI(currentScore, goalScore);
-        GameManager.instance.soundManager.PlaySound(Sounds.BGM1, 0.25f, true);
+        GameManager.instance.actionManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result, 0.25f, true);
     }
 
     public void OnDestroy()
@@ -57,8 +57,8 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
     {
         Time.timeScale = 0f;
         GameManager.instance.actionManager.OnShowResultPopup();
-        GameManager.instance.soundManager.StopSound(Sounds.BGM1);
-        GameManager.instance.soundManager.PlaySound(Sounds.Victory, 0.25f, false);
+        GameManager.instance.soundManager.StopAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result);
+        GameManager.instance.actionManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.Victory].Result, 0.25f, false);
     }
 
 

@@ -14,7 +14,10 @@ public class ActionManager
     public event Action ShowResultPopupEvent;
     public event Action StageSceneInputControllerEvent;
     public event Action<int> DeltaScoreEvent;
-
+    public event Action<AudioClip, float, bool> PlayAudioClipEvent;
+    public event Action<AudioClip> StopAudioClipEvent;
+    public event Action StopAllAudioClipEvent;
+    public event Action<float> SetMasterVolumeEvent;
     public Transform OnGetJokerGoalTranform()
     {
         return GetJokerGoalTranformEvent?.Invoke() ?? null;
@@ -68,4 +71,25 @@ public class ActionManager
     {
         DeltaScoreEvent?.Invoke(a);
     }
+
+    public void OnPlayAudioClip(AudioClip ac, float volume, bool isLoop)
+    {
+        PlayAudioClipEvent?.Invoke(ac, volume, isLoop);
+    }
+
+    public void OnStopAudioClip(AudioClip ac)
+    {
+        StopAudioClipEvent?.Invoke(ac);
+    }
+
+    public void OnStopAllAudioClip()
+    {
+        StopAllAudioClipEvent?.Invoke();
+    }
+
+    public void OnSetMasterVolume(float vol)
+    {
+        SetMasterVolumeEvent?.Invoke(vol);
+    }
+
 }

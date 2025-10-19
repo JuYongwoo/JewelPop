@@ -17,7 +17,7 @@ public class JokerFX : MonoBehaviour
 
     private void Start()
     {
-        GameManager.instance.soundManager.PlaySound(Sounds.ScoreGetSFX, 0.2f, false);
+        GameManager.instance.actionManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.ScoreGetSFX].Result, 0.2f, false);
 
         goalTranform = GameManager.instance.actionManager.OnGetJokerGoalTranform();
 

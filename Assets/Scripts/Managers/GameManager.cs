@@ -14,13 +14,17 @@ public class GameManager : MonoBehaviour
         makeInstanceSelf();
 
         resourceManager.StartPreload();
+        soundManager.OnStart();
     }
 
     private void Start()
     {
         Application.targetFrameRate = 60;
+    }
 
-
+    private void OnDestroy()
+    {
+        soundManager.OnDestroy();
     }
 
     private void Update()
