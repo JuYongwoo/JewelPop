@@ -17,9 +17,9 @@ public class JokerFX : MonoBehaviour
 
     private void Start()
     {
-        GameManager.instance.actionManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.ScoreGetSFX].Result, 0.2f, false);
+        GameManager.instance.eventManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.ScoreGetSFX].Result, 0.2f, false);
 
-        goalTranform = GameManager.instance.actionManager.OnGetJokerGoalTranform();
+        goalTranform = GameManager.instance.eventManager.OnGetJokerGoalTranform();
 
         startPos = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         goalPos = new Vector3(goalTranform.position.x, goalTranform.position.y, transform.position.z);

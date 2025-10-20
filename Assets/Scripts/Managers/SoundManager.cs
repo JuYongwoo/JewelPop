@@ -10,21 +10,21 @@ public class SoundManager
 
     public void OnStart()
     {
-        GameManager.instance.actionManager.PlayAudioClipEvent -= PlayAudioClip;
-        GameManager.instance.actionManager.PlayAudioClipEvent += PlayAudioClip;
-        GameManager.instance.actionManager.StopAudioClipEvent -= StopAudioClip;
-        GameManager.instance.actionManager.StopAudioClipEvent += StopAudioClip;
-        GameManager.instance.actionManager.StopAllAudioClipEvent -= StopAllAudioClip;
-        GameManager.instance.actionManager.StopAllAudioClipEvent += StopAllAudioClip;
-        GameManager.instance.actionManager.SetMasterVolumeEvent -= SetMasterVolume;
-        GameManager.instance.actionManager.SetMasterVolumeEvent += SetMasterVolume;
+        GameManager.instance.eventManager.PlayAudioClipEvent -= PlayAudioClip;
+        GameManager.instance.eventManager.PlayAudioClipEvent += PlayAudioClip;
+        GameManager.instance.eventManager.StopAudioClipEvent -= StopAudioClip;
+        GameManager.instance.eventManager.StopAudioClipEvent += StopAudioClip;
+        GameManager.instance.eventManager.StopAllAudioClipEvent -= StopAllAudioClip;
+        GameManager.instance.eventManager.StopAllAudioClipEvent += StopAllAudioClip;
+        GameManager.instance.eventManager.SetMasterVolumeEvent -= SetMasterVolume;
+        GameManager.instance.eventManager.SetMasterVolumeEvent += SetMasterVolume;
     }
     public void OnDestroy()
     {
-        GameManager.instance.actionManager.PlayAudioClipEvent -= PlayAudioClip;
-        GameManager.instance.actionManager.StopAudioClipEvent -= StopAudioClip;
-        GameManager.instance.actionManager.StopAllAudioClipEvent -= StopAllAudioClip;
-        GameManager.instance.actionManager.SetMasterVolumeEvent -= SetMasterVolume;
+        GameManager.instance.eventManager.PlayAudioClipEvent -= PlayAudioClip;
+        GameManager.instance.eventManager.StopAudioClipEvent -= StopAudioClip;
+        GameManager.instance.eventManager.StopAllAudioClipEvent -= StopAllAudioClip;
+        GameManager.instance.eventManager.SetMasterVolumeEvent -= SetMasterVolume;
 
     }
 

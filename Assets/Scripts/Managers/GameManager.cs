@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public ActionManager actionManager = new ActionManager();
+    public EventManager eventManager = new EventManager();
     public ResourceManager resourceManager = new ResourceManager();
     public SoundManager soundManager = new SoundManager();
     public InputManager inputManager = new InputManager();

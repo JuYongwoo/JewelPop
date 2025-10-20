@@ -4,23 +4,25 @@ using UnityEngine.SceneManagement;
 
 public class ResultPopupPanel : BasePopupEffect
 {
-    private enum ResultPopupObjects
+    private enum ResultPopupPanelObjects
     {
         ResultRetryBtn
     }
 
-    Dictionary<ResultPopupObjects, GameObject> resultPopupPanelObjs = new Dictionary<ResultPopupObjects, GameObject>();
+    Dictionary<ResultPopupPanelObjects, GameObject> resultPopupPanelObjsMap = new Dictionary<ResultPopupPanelObjects, GameObject>();
+
+    private void Awake()
+    {
+        resultPopupPanelObjsMap = Util.MapEnumChildObjects<ResultPopupPanelObjects, GameObject>(this.gameObject);
+    }
 
     private void Start()
     {
-        resultPopupPanelObjs = Util.MapEnumChildObjects<ResultPopupObjects, GameObject>(this.gameObject);
 
-        GameManager.instance.actionManager.ShowResultPopupEvent -= SetActive;
-        GameManager.instance.actionManager.ShowResultPopupEvent += SetActive;
+        GameManager.instance.eventManager.ShowResultPopupEvent -= SetActive;
+        GameManager.instance.eventManager.ShowResultPopupEvent += SetActive;
 
-
-
-        resultPopupPanelObjs[ResultPopupObjects.ResultRetryBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        resultPopupPanelObjsMap[ResultPopupPanelObjects.ResultRetryBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         });
@@ -30,7 +32,7 @@ public class ResultPopupPanel : BasePopupEffect
     }
     private void OnDestroy()
     {
-        GameManager.instance.actionManager.ShowResultPopupEvent -= SetActive;
+        GameManager.instance.eventManager.ShowResultPopupEvent -= SetActive;
 
     }
 

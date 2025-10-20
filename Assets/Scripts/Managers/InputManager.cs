@@ -3,7 +3,7 @@ public class InputManager
     
     public void OnUpdate()
     {
-        GameManager.instance.actionManager.OnStageSceneInputController();
+        GameManager.instance.eventManager.OnStageSceneInputController();
 
     }
     

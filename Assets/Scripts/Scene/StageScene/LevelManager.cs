@@ -25,22 +25,22 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
         currentScore = 0;
 
         //UI 초기화
-        GameManager.instance.actionManager.DeltaScoreEvent -= DeltaScore;
-        GameManager.instance.actionManager.DeltaScoreEvent += DeltaScore;
-        GameManager.instance.actionManager.OnSetCurrentStageUI(currentStage);
-        GameManager.instance.actionManager.OnSetScoreUI(currentScore, goalScore);
-        GameManager.instance.actionManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result, 0.25f, true);
+        GameManager.instance.eventManager.DeltaScoreEvent -= DeltaScore;
+        GameManager.instance.eventManager.DeltaScoreEvent += DeltaScore;
+        GameManager.instance.eventManager.OnSetCurrentStageUI(currentStage);
+        GameManager.instance.eventManager.OnSetScoreUI(currentScore, goalScore);
+        GameManager.instance.eventManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result, 0.25f, true);
     }
 
     public void OnDestroy()
     {
-        GameManager.instance.actionManager.DeltaScoreEvent -= DeltaScore;
+        GameManager.instance.eventManager.DeltaScoreEvent -= DeltaScore;
     }
 
     private void DeltaScore(int delta) //점수 증가는 반드시 이것을 사용
     {
         currentScore += delta;
-        GameManager.instance.actionManager.OnSetScoreUI(currentScore, goalScore);
+        GameManager.instance.eventManager.OnSetScoreUI(currentScore, goalScore);
 
 
         //점수 도달 시
@@ -56,9 +56,9 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
     private void GameClear()
     {
         Time.timeScale = 0f;
-        GameManager.instance.actionManager.OnShowResultPopup();
-        GameManager.instance.actionManager.OnStopAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result);
-        GameManager.instance.actionManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.Victory].Result, 0.25f, false);
+        GameManager.instance.eventManager.OnShowResultPopup();
+        GameManager.instance.eventManager.OnStopAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result);
+        GameManager.instance.eventManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.Victory].Result, 0.25f, false);
     }
 
 

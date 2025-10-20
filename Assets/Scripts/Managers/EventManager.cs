@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class ActionManager
+public class EventManager
 {
     public event Func<Transform> GetJokerGoalTranformEvent;
     public event Action<GameObject, GameObject> inputBlockChangeEvent;

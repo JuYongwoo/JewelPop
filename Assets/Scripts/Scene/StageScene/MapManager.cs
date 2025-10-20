@@ -126,29 +126,29 @@ public class MapManager
         // FSM 초기 상태
         ChangeState(BoardFSMState.DroppingEnter);
 
-        GameManager.instance.actionManager.inputBlockChangeEvent -= InputBlockChangeEvent;
-        GameManager.instance.actionManager.inputBlockChangeEvent += InputBlockChangeEvent;
+        GameManager.instance.eventManager.inputBlockChangeEvent -= InputBlockChangeEvent;
+        GameManager.instance.eventManager.inputBlockChangeEvent += InputBlockChangeEvent;
 
-        GameManager.instance.actionManager.GetIsInMotionEvent -= GetIsInMotion;
-        GameManager.instance.actionManager.GetIsInMotionEvent += GetIsInMotion;
+        GameManager.instance.eventManager.GetIsInMotionEvent -= GetIsInMotion;
+        GameManager.instance.eventManager.GetIsInMotionEvent += GetIsInMotion;
 
-        GameManager.instance.actionManager.SetIsInMotionEvent -= SetIsInMotion;
-        GameManager.instance.actionManager.SetIsInMotionEvent += SetIsInMotion;
+        GameManager.instance.eventManager.SetIsInMotionEvent -= SetIsInMotion;
+        GameManager.instance.eventManager.SetIsInMotionEvent += SetIsInMotion;
 
-        GameManager.instance.actionManager.GetIsBoardChangedEvent -= GetIsBoardChanged;
-        GameManager.instance.actionManager.GetIsBoardChangedEvent += GetIsBoardChanged;
+        GameManager.instance.eventManager.GetIsBoardChangedEvent -= GetIsBoardChanged;
+        GameManager.instance.eventManager.GetIsBoardChangedEvent += GetIsBoardChanged;
 
-        GameManager.instance.actionManager.SetIsBoardCangedEvent -= SetIsBoardChanged;
-        GameManager.instance.actionManager.SetIsBoardCangedEvent += SetIsBoardChanged;
+        GameManager.instance.eventManager.SetIsBoardCangedEvent -= SetIsBoardChanged;
+        GameManager.instance.eventManager.SetIsBoardCangedEvent += SetIsBoardChanged;
     }
 
     public void OnDestroy()
     {
-        GameManager.instance.actionManager.inputBlockChangeEvent -= InputBlockChangeEvent;
-        GameManager.instance.actionManager.GetIsInMotionEvent -= GetIsInMotion;
-        GameManager.instance.actionManager.SetIsInMotionEvent -= SetIsInMotion;
-        GameManager.instance.actionManager.GetIsBoardChangedEvent -= GetIsBoardChanged;
-        GameManager.instance.actionManager.SetIsBoardCangedEvent -= SetIsBoardChanged;
+        GameManager.instance.eventManager.inputBlockChangeEvent -= InputBlockChangeEvent;
+        GameManager.instance.eventManager.GetIsInMotionEvent -= GetIsInMotion;
+        GameManager.instance.eventManager.SetIsInMotionEvent -= SetIsInMotion;
+        GameManager.instance.eventManager.GetIsBoardChangedEvent -= GetIsBoardChanged;
+        GameManager.instance.eventManager.SetIsBoardCangedEvent -= SetIsBoardChanged;
     }
 
     private bool GetIsInMotion()

@@ -3,20 +3,20 @@ using UnityEngine;
 
 public class TitlePanel : MonoBehaviour
 {
-    private enum TitleUI
+    private enum TitlePanelObjs
     {
         TitleStartBtn
     }
 
-    private Dictionary<TitleUI, GameObject> uiElements = new Dictionary<TitleUI, GameObject>();
+    private Dictionary<TitlePanelObjs, GameObject> titlePanelObjsMap = new Dictionary<TitlePanelObjs, GameObject>();
     private void Awake()
     {
-        uiElements = Util.MapEnumChildObjects<TitleUI, GameObject>(this.gameObject);
+        titlePanelObjsMap = Util.MapEnumChildObjects<TitlePanelObjs, GameObject>(this.gameObject);
     }
 
     void Start()
     {
-        uiElements[TitleUI.TitleStartBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        titlePanelObjsMap[TitlePanelObjs.TitleStartBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene("Stage");
         });
