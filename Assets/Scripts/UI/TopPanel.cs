@@ -22,12 +22,12 @@ public class TopPanel : MonoBehaviour
         GameManager.instance.eventManager.SetScoreUIEvent += SetScore;
         GameManager.instance.eventManager.SetCurrentStageUIEvent -= SetCurrentStage;
         GameManager.instance.eventManager.SetCurrentStageUIEvent += SetCurrentStage;
+        GameManager.instance.eventManager.GetJokerGoalTranformEvent -= GetJokerGoalTranform;
+        GameManager.instance.eventManager.GetJokerGoalTranformEvent += GetJokerGoalTranform;
     }
 
     private void Start()
     {
-        GameManager.instance.eventManager.GetJokerGoalTranformEvent -= GetJokerGoalTranform;
-        GameManager.instance.eventManager.GetJokerGoalTranformEvent += GetJokerGoalTranform;
 
         Image image = topPanelObjsMap[TopPanelObjects.TopCurrentScoreFrontImg].GetComponent<Image>();
         image.fillMethod = Image.FillMethod.Vertical;
