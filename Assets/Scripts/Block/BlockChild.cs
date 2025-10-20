@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class BlockChild : MonoBehaviour, PooledObejct
+public abstract class BlockChild : MonoBehaviour, PooledObject
 {
 
     [HideInInspector]
