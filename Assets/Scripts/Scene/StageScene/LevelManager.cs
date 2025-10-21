@@ -19,9 +19,9 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
 
         //JSON 토대로 레벨 데이터 초기화
         currentLevel = JsonUtility.FromJson<T>(json);
-        goalScore = currentLevel.goalScore;
-        goalType = Enum.Parse<GoalType>(currentLevel.goalType);
-        currentStage = currentLevel.stage;
+        goalScore = currentLevel.GoalScore;
+        goalType = Enum.Parse<GoalType>(currentLevel.GoalType);
+        currentStage = currentLevel.Stage;
         currentScore = 0;
 
         //UI 초기화

@@ -174,7 +174,7 @@ public class MapManager
 
     private void SetBlocks(JSONVars jsonVars)
     {
-        foreach (var grid in jsonVars.grids)
+        foreach (var grid in jsonVars.Grids)
         {
             YX yx = new YX(grid.y, grid.x);
             board.Add(yx, GameManager.instance.poolManager.Spawn(GameManager.instance.resourceManager.blockParentObjectHandle.Result).GetComponent<BlockParent>());
