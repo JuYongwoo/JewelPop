@@ -14,19 +14,16 @@ public class ResultPopupPanel : BasePopupEffect
     private void Awake()
     {
         resultPopupPanelObjsMap = Util.MapEnumChildObjects<ResultPopupPanelObjects, GameObject>(this.gameObject);
+        resultPopupPanelObjsMap[ResultPopupPanelObjects.ResultRetryBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        });
         GameManager.instance.eventManager.ShowResultPopupEvent -= SetActive;
         GameManager.instance.eventManager.ShowResultPopupEvent += SetActive;
     }
 
     private void Start()
     {
-
-
-        resultPopupPanelObjsMap[ResultPopupPanelObjects.ResultRetryBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        });
-
         gameObject.SetActive(false);
 
     }
