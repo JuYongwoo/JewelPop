@@ -2,24 +2,26 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-[Serializable]
-public class Grid { public int x; public int y; public string type; }
-
-[Serializable]
-public class JSONVars
+namespace JYW.JewelPop.JSON
 {
-    [SerializeField]
-    private int stage;
-    [SerializeField]
-    private string goalType;
-    [SerializeField]
-    private int goalScore;
-    [SerializeField]
-    private List<Grid> grids;
+    [Serializable]
+    public class Grid { public int x; public int y; public string type; }
 
-    public int Stage => stage;
-    public string GoalType => goalType;
-    public int GoalScore => goalScore;
-    public List<Grid> Grids => grids;
+    [Serializable]
+    public class JSONVars
+    {
+        [SerializeField]
+        private int stage;
+        [SerializeField]
+        private string goalType;
+        [SerializeField]
+        private int goalScore;
+        [SerializeField]
+        private List<Grid> grids;
+
+        public int Stage => stage;
+        public string GoalType => goalType;
+        public int GoalScore => goalScore;
+        public List<Grid> Grids => grids;
+    }
 }

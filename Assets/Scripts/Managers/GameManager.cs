@@ -1,46 +1,49 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace JYW.JewelPop.Managers
 {
-    public static GameManager instance;
-    public EventManager eventManager = new EventManager();
-    public ResourceManager resourceManager = new ResourceManager();
-    public SoundManager soundManager = new SoundManager();
-    public InputManager inputManager = new InputManager();
-    public PoolManager poolManager = new PoolManager();
-
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        makeInstanceSelf();
+        public static GameManager instance;
+        public EventManager eventManager = new EventManager();
+        public ResourceManager resourceManager = new ResourceManager();
+        public SoundManager soundManager = new SoundManager();
+        public InputManager inputManager = new InputManager();
+        public PoolManager poolManager = new PoolManager();
 
-        resourceManager.StartPreload();
-        soundManager.OnStart();
-    }
-
-    private void Start()
-    {
-        Application.targetFrameRate = 60;
-    }
-
-    private void OnDestroy()
-    {
-        soundManager.OnDestroy();
-    }
-
-    private void Update()
-    {
-        inputManager.OnUpdate();
-    }
-    
-    private void makeInstanceSelf()
-    {
-        if (instance != null && instance != this)
+        private void Awake()
         {
-            Destroy(gameObject);
-            return;
+            makeInstanceSelf();
+
+            resourceManager.StartPreload();
+            soundManager.OnStart();
         }
 
-        instance = this;
-        DontDestroyOnLoad(gameObject);
+        private void Start()
+        {
+            Application.targetFrameRate = 60;
+        }
+
+        private void OnDestroy()
+        {
+            soundManager.OnDestroy();
+        }
+
+        private void Update()
+        {
+            inputManager.OnUpdate();
+        }
+
+        private void makeInstanceSelf()
+        {
+            if (instance != null && instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
 }

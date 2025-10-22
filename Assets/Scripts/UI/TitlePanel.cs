@@ -1,21 +1,25 @@
+using JYW.JewelPop.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TitlePanel : MonoBehaviour
+namespace JYW.JewelPop.UI
 {
-    private enum TitlePanelObjs
+    public class TitlePanel : MonoBehaviour
     {
-        TitleStartBtn
-    }
-
-    private Dictionary<TitlePanelObjs, GameObject> titlePanelObjsMap = new Dictionary<TitlePanelObjs, GameObject>();
-    private void Awake()
-    {
-        titlePanelObjsMap = Util.MapEnumChildObjects<TitlePanelObjs, GameObject>(this.gameObject);
-        titlePanelObjsMap[TitlePanelObjs.TitleStartBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        private enum TitlePanelObjs
         {
-            UnityEngine.SceneManagement.SceneManager.LoadScene("Stage");
-        });
-    }
+            TitleStartBtn
+        }
 
+        private Dictionary<TitlePanelObjs, GameObject> titlePanelObjsMap = new Dictionary<TitlePanelObjs, GameObject>();
+        private void Awake()
+        {
+            titlePanelObjsMap = Util.MapEnumChildObjects<TitlePanelObjs, GameObject>(this.gameObject);
+            titlePanelObjsMap[TitlePanelObjs.TitleStartBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+            {
+                UnityEngine.SceneManagement.SceneManager.LoadScene("Stage");
+            });
+        }
+
+    }
 }

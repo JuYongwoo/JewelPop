@@ -1,43 +1,48 @@
+using JYW.JewelPop.Managers;
+using JYW.JewelPop.Utils;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ResultPopupPanel : BasePopupEffect
+namespace JYW.JewelPop.UI
 {
-    private enum ResultPopupPanelObjects
-    {
-        ResultRetryBtn
-    }
 
-    Dictionary<ResultPopupPanelObjects, GameObject> resultPopupPanelObjsMap = new Dictionary<ResultPopupPanelObjects, GameObject>();
-
-    private void Awake()
+    public class ResultPopupPanel : BasePopupEffect
     {
-        resultPopupPanelObjsMap = Util.MapEnumChildObjects<ResultPopupPanelObjects, GameObject>(this.gameObject);
-        resultPopupPanelObjsMap[ResultPopupPanelObjects.ResultRetryBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+        private enum ResultPopupPanelObjects
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        });
-        GameManager.instance.eventManager.ShowResultPopupEvent -= SetActive;
-        GameManager.instance.eventManager.ShowResultPopupEvent += SetActive;
+            ResultRetryBtn
+        }
+
+        Dictionary<ResultPopupPanelObjects, GameObject> resultPopupPanelObjsMap = new Dictionary<ResultPopupPanelObjects, GameObject>();
+
+        private void Awake()
+        {
+            resultPopupPanelObjsMap = Util.MapEnumChildObjects<ResultPopupPanelObjects, GameObject>(this.gameObject);
+            resultPopupPanelObjsMap[ResultPopupPanelObjects.ResultRetryBtn].GetComponent<UnityEngine.UI.Button>().onClick.AddListener(() =>
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            });
+            GameManager.instance.eventManager.ShowResultPopupEvent -= SetActive;
+            GameManager.instance.eventManager.ShowResultPopupEvent += SetActive;
+        }
+
+        private void Start()
+        {
+            gameObject.SetActive(false);
+
+        }
+        private void OnDestroy()
+        {
+            GameManager.instance.eventManager.ShowResultPopupEvent -= SetActive;
+
+        }
+
+        private void SetActive()
+        {
+            gameObject.SetActive(true);
+        }
+
     }
-
-    private void Start()
-    {
-        gameObject.SetActive(false);
-
-    }
-    private void OnDestroy()
-    {
-        GameManager.instance.eventManager.ShowResultPopupEvent -= SetActive;
-
-    }
-
-    private void SetActive()
-    {
-        gameObject.SetActive(true);
-    }
-
 
 }
-

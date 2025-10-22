@@ -1,20 +1,24 @@
+using JYW.JewelPop.Managers;
 using System.Collections;
 using UnityEngine;
 
-public class BlockCrushFX : MonoBehaviour
+namespace JYW.JewelPop.FX
 {
-
-    private void Start() //일반 블럭의 파괴 모션
+    public class BlockCrushFX : MonoBehaviour
     {
-        GameManager.instance.eventManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.Block3SFX].Result, 0.5f, false);
-        StartCoroutine(DestroyAfterBlockCrushMotion());
+
+        private void Start() //일반 블럭의 파괴 모션
+        {
+            GameManager.instance.eventManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.Block3SFX].Result, 0.5f, false);
+            StartCoroutine(DestroyAfterBlockCrushMotion());
+        }
+
+        private IEnumerator DestroyAfterBlockCrushMotion()
+        {
+            yield return new WaitForSeconds(0.8f);
+            GameManager.instance.poolManager.DestroyPooled(gameObject);
+
+        }
+
     }
-
-    private IEnumerator DestroyAfterBlockCrushMotion()
-    {
-        yield return new WaitForSeconds(0.8f);
-        GameManager.instance.poolManager.DestroyPooled(gameObject);
-
-    }
-
 }

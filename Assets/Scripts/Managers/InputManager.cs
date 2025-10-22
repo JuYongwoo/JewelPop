@@ -1,10 +1,13 @@
-public class InputManager
+namespace JYW.JewelPop.Managers
 {
-    
-    public void OnUpdate()
+    public class InputManager
     {
-        GameManager.instance.eventManager.OnStageSceneInputController();
+
+        public void OnUpdate()
+        {
+            GameManager.instance.eventManager.OnStageSceneInputController();
+
+        }
 
     }
-    
 }
