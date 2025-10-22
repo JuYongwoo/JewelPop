@@ -118,14 +118,8 @@ public class MapManager
         (1, 0), (-1, 0),
     };
 
-    public void Init(JSONVars JSONvars)
+    public void OnAwake()
     {
-        SetBlocks(JSONvars);
-        MoveMiddleBlockToOrigin();
-
-        // FSM 초기 상태
-        ChangeState(BoardFSMState.DroppingEnter);
-
         GameManager.instance.eventManager.inputBlockChangeEvent -= InputBlockChangeEvent;
         GameManager.instance.eventManager.inputBlockChangeEvent += InputBlockChangeEvent;
 
@@ -140,6 +134,16 @@ public class MapManager
 
         GameManager.instance.eventManager.SetIsBoardCangedEvent -= SetIsBoardChanged;
         GameManager.instance.eventManager.SetIsBoardCangedEvent += SetIsBoardChanged;
+    }
+
+    public void OnStart(JSONVars JSONvars)
+    {
+        SetBlocks(JSONvars);
+        MoveMiddleBlockToOrigin();
+
+        // FSM 초기 상태
+        ChangeState(BoardFSMState.DroppingEnter);
+
     }
 
     public void OnDestroy()

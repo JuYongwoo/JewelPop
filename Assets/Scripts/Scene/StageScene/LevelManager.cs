@@ -14,7 +14,13 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
 
     public T currentLevel;
 
-    public void Init(string json)
+    public void OnAwake()
+    {
+        GameManager.instance.eventManager.DeltaScoreEvent -= DeltaScore;
+        GameManager.instance.eventManager.DeltaScoreEvent += DeltaScore;
+    }
+
+    public void OnStart(string json)
     {
 
         //JSON 토대로 레벨 데이터 초기화
@@ -25,8 +31,6 @@ public class LevelManager<T> where T : JSONVars //점수와 같은 게임 정보를 관리
         currentScore = 0;
 
         //UI 초기화
-        GameManager.instance.eventManager.DeltaScoreEvent -= DeltaScore;
-        GameManager.instance.eventManager.DeltaScoreEvent += DeltaScore;
         GameManager.instance.eventManager.OnSetCurrentStageUI(currentStage);
         GameManager.instance.eventManager.OnSetScoreUI(currentScore, goalScore);
         GameManager.instance.eventManager.OnPlayAudioClip(GameManager.instance.resourceManager.gameSoundClipsHandles[Sounds.BGM1].Result, 0.25f, true);
